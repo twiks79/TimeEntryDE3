@@ -1,0 +1,14 @@
+azure-common==1.1.28
+azure-cosmosdb-nspkg==2.0.2
+azure-cosmosdb-table==1.0.6
+azure-nspkg==3.0.2
+Flask==3.0.0
+Flask-Cors==4.0.0
+gunicorn==20.1.0
+Jinja2==3.1.2
+json5==0.9.14
+jsonpointer==2.4
+jsonschema==4.19.1
+jsonschema-specifications==2023.7.1
+websocket-client==1.6.3
+Werkzeug==3.0.0
