@@ -1,6 +1,7 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
+
 export default NextAuth({
   providers: [
     CredentialsProvider({
@@ -12,6 +13,7 @@ export default NextAuth({
       async authorize(credentials) {
         // You need to provide your own logic here for user validation
         console.log('credentials', credentials);
+
         const user = { id: 1, name: 'J Smith' };
         if (
           credentials &&
@@ -26,11 +28,22 @@ export default NextAuth({
     }),
   ],
   callbacks: {
+    async redirect({ url, baseUrl }) {
+      // Allows relative callback URLs
+      if (url.startsWith("/")) return `${baseUrl}${url}`
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url
+      return baseUrl
+    },
     async session({ session, token }) {
+      console.log('session', session);
       session.user.id = token.sub;
+      // return session as json
       return session;
+      // return session;
     },
     async jwt({ token, user }) {
+      console.log('jwt', token);
       if (user) {
         token.sub = user.id;
       }
