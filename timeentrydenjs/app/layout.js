@@ -1,3 +1,5 @@
+'use client'
+
 import * as React from 'react';
 import Link from 'next/link';
 import AppBar from '@mui/material/AppBar';
@@ -19,11 +21,9 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import SupportIcon from '@mui/icons-material/Support';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ThemeRegistry from '@/components/ThemeRegistry/ThemeRegistry';
-
-export const metadata = {
-  title: 'Next.js App Router + Material UI v5',
-  description: 'Next.js App Router + Material UI v5',
-};
+import { useState } from 'react';
+import { SessionProvider, useSession, signIn, signOut } from 'next-auth/react';
+import { getSession } from 'next-auth/react';
 
 const DRAWER_WIDTH = 240;
 
@@ -39,11 +39,12 @@ const PLACEHOLDER_LINKS = [
   { text: 'Logout', icon: LogoutIcon },
 ];
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children, pageProps: { session } }) {
   return (
     <html lang="en">
       <body>
         <ThemeRegistry>
+        <SessionProvider session={pageProps.session}>
           <AppBar position="fixed" sx={{ zIndex: 2000 }}>
             <Toolbar sx={{ backgroundColor: 'background.paper' }}>
               <DashboardIcon sx={{ color: '#444', mr: 2, transform: 'translateY(-2px)' }} />
@@ -106,7 +107,9 @@ export default function RootLayout({ children }) {
           >
             {children}
           </Box>
+        </SessionProvider>
         </ThemeRegistry>
+        
       </body>
     </html>
   );
