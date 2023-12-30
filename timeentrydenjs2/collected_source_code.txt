@@ -1,0 +1,170 @@
+File: ./pages/api/auth/[...nextauth].js
+// app/api/auth/[...nextauth].js
+import NextAuth from 'next-auth';
+import OktaProvider from 'next-auth/providers/okta';
+import { OktaAuth } from "@okta/okta-auth-js";
+import { Okta } from "next-auth/providers/okta";
+
+console.log('OKTA_CLIENT_ID:', process.env.OKTA_CLIENT_ID);
+console.log('OKTA_CLIENT_SECRET:', process.env.OKTA_CLIENT_SECRET);
+console.log('OKTA_DOMAIN:', process.env.OKTA_DOMAIN);
+
+
+const oktaAuth = new OktaAuth({
+    issuer: `https://${process.env.OKTA_DOMAIN}/oauth2/default`,
+    clientId: process.env.OKTA_CLIENT_ID,
+    clientSecret: process.env.OKTA_CLIENT_SECRET,
+});
+
+export default NextAuth({
+    providers: [
+        OktaProvider({
+            id: 'okta',
+            clientId: process.env.OKTA_CLIENT_ID,
+            clientSecret: process.env.OKTA_CLIENT_SECRET,
+            issuer: `https://${process.env.OKTA_DOMAIN}/oauth2/default`,
+            responseType: 'token',
+            // authorizationParams: {
+            //     response_type: 'code',
+            //     code_challenge_method: 'S256',
+            //     pkce: true,
+            // },
+        }),
+        // ...other providers if needed
+    ],
+    secret: process.env.SECRET,
+    redirectUri: 'https://curly-space-eureka-74g79jxgxw7hx7rw-3000.app.github.dev/api/auth/callback/okta',
+    
+    // Additional NextAuth.js configurations...
+
+    callbacks: {
+        // Extract the user ID token from OAuth provider 
+        async signIn({ user, account, profile, email, credentials }) {
+            console.log('signIn user:', user);
+            console.log('signIn account:', account);
+            console.log('signIn profile:', profile);
+            console.log('signIn email:', email);
+            console.log('signIn credentials:', credentials);
+
+            return true;
+        }
+    }
+})File: ./pages/api/auth/signin.js
+// Temporary - replace with provider later
+export default function signIn() {
+    return {
+      redirect: '/'
+    }
+  }File: ./pages/api/hello.js
+// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+
+export default function handler(req, res) {
+  res.status(200).json({ name: 'John Doe' })
+}
+File: ./pages/_document.js
+import { Html, Head, Main, NextScript } from 'next/document'
+
+export default function Document() {
+  return (
+    <Html lang="en">
+      <Head />
+      <body>
+        <Main />
+        <NextScript />
+      </body>
+    </Html>
+  )
+}
+File: ./pages/_app.js
+import '@/styles/globals.css'
+
+import { SessionProvider } from 'next-auth/react'
+
+export default function App({ Component, pageProps: { session, ...pageProps }}) {
+  return (
+    <SessionProvider session={session}>
+      <Component {...pageProps} />
+    </SessionProvider>
+  )
+}File: ./pages/index.js
+import Image from 'next/image';
+import { Inter } from 'next/font/google';
+import { useSession, sessionStatus, signIn } from 'next-auth/react';
+import { providers } from './api/auth/[...nextauth]'
+
+const inter = Inter({ subsets: ['latin'] })
+
+
+
+
+export default function Home() {
+  const { data: session } = useSession()
+  console.log(providers.okta);
+  
+  if (session) {
+    return (
+      <main>
+        <div>
+          <p>Already signed in as {session.user.email}</p>
+          <button onClick={() => signOut()}>Sign out</button>
+        </div>
+      </main>
+    )
+  }
+
+  return (
+    <main>
+      <div>
+        <p>You are not signed in</p>
+        <button onClick={() => signIn('okta')}>Sign in</button>
+        <br></br>
+
+      </div>
+    </main>
+  )
+
+}
+File: ./next.config.js
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  images: {
+    domains: ['source.unsplash.com'],
+    domains: [],
+  },
+  // ... any other existing configuration
+  env: {
+      CLIENTID: process.env.CLIENTID,
+      OKTASECRET: process.env.OKTASECRECRET,
+      YOUROKTADOMAIN: process.env.YOUROKTADOMAIN,
+    },
+}
+
+module.exports = nextConfig;
+File: ./postcss.config.js
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+}
+File: ./tailwind.config.js
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    './pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
+  ],
+  theme: {
+    extend: {
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'gradient-conic':
+          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+      },
+    },
+  },
+  plugins: [],
+}

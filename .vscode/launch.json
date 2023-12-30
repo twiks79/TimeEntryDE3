@@ -5,7 +5,7 @@
             "name": "Next.js: debug server-side",
             "type": "node-terminal",
             "request": "launch",
-            "command": "cd timeentrydenjs && yarn dev"
+            "command": "cd timeentrydenjs2 && yarn dev"
         },
         {
             "name": "Next.js: debug client-side",

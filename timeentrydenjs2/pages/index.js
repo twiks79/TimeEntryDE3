@@ -1,34 +1,50 @@
-import Image from 'next/image';
-import { Inter } from 'next/font/google';
-import { useSession, sessionStatus, signIn } from 'next-auth/react';
 
-const inter = Inter({ subsets: ['latin'] })
-
-
-
+import { useSession, getSession } from 'next-auth/react';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 export default function Home() {
-  const { data: session } = useSession()
+  console.log('home')
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
-  if (session) {
-    return (
-      <main>
-        <div>
-          <p>Already signed in as {session.user.email}</p>
-          <button onClick={() => signOut()}>Sign out</button>
-        </div>
-      </main>
-    )
+  useEffect(() => {
+    console.log('useEffect')
+    if (status === 'unauthenticated') {
+      router.push('/signin');
+    }
+  }, [status, router]);
+
+  if (status === 'loading') {
+    return <p>Loading...</p>;
   }
 
   return (
     <main>
       <div>
-        <p>You are not signed in</p>
-        <button onClick={() => signIn('okta')}>Sign in</button>
-
-      </div>
+      {session ? (
+        // Render the dashboard UI
+        <div>Welcome to your dashboard, {session.user.name}!</div>
+      ) : (
+        // Fallback if not signed in
+        <div>You are not signed in.</div>
+      )}
+    </div>
     </main>
-  )
+  );
+}
 
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/signin',
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: { session },
+  };
 }
