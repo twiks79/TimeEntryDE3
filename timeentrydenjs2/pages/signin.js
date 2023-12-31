@@ -29,6 +29,7 @@ export default function SignIn() {
       // Handle error here, such as displaying a notification to the user
     } else {
       // Redirect the user to the callbackUrl if sign in was successful
+      console.log('Sign-in successful', result.url);
       window.location.href = result.url;
     }
   };
