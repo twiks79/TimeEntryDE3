@@ -1,61 +1,60 @@
 File: ./pages/api/auth/[...nextauth].js
-// app/api/auth/[...nextauth].js
 import NextAuth from 'next-auth';
-import OktaProvider from 'next-auth/providers/okta';
-import { OktaAuth } from "@okta/okta-auth-js";
-import { Okta } from "next-auth/providers/okta";
+import CredentialsProvider from 'next-auth/providers/credentials';
 
-console.log('OKTA_CLIENT_ID:', process.env.OKTA_CLIENT_ID);
-console.log('OKTA_CLIENT_SECRET:', process.env.OKTA_CLIENT_SECRET);
-console.log('OKTA_DOMAIN:', process.env.OKTA_DOMAIN);
-
-
-const oktaAuth = new OktaAuth({
-    issuer: `https://${process.env.OKTA_DOMAIN}/oauth2/default`,
-    clientId: process.env.OKTA_CLIENT_ID,
-    clientSecret: process.env.OKTA_CLIENT_SECRET,
-});
 
 export default NextAuth({
-    providers: [
-        OktaProvider({
-            id: 'okta',
-            clientId: process.env.OKTA_CLIENT_ID,
-            clientSecret: process.env.OKTA_CLIENT_SECRET,
-            issuer: `https://${process.env.OKTA_DOMAIN}/oauth2/default`,
-            responseType: 'token',
-            // authorizationParams: {
-            //     response_type: 'code',
-            //     code_challenge_method: 'S256',
-            //     pkce: true,
-            // },
-        }),
-        // ...other providers if needed
-    ],
-    secret: process.env.SECRET,
-    redirectUri: 'https://curly-space-eureka-74g79jxgxw7hx7rw-3000.app.github.dev/api/auth/callback/okta',
-    
-    // Additional NextAuth.js configurations...
+  providers: [
+    CredentialsProvider({
+      name: 'Credentials',
+      credentials: {
+        username: { label: "Username", type: "text", placeholder: "jsmith" },
+        password: { label: "Password", type: "password" }
+      },
+      async authorize(credentials, req) {
+        // You need to provide your own logic here for user validation
+        console.log('credentials', credentials);
+        console.log('req', req);
 
-    callbacks: {
-        // Extract the user ID token from OAuth provider 
-        async signIn({ user, account, profile, email, credentials }) {
-            console.log('signIn user:', user);
-            console.log('signIn account:', account);
-            console.log('signIn profile:', profile);
-            console.log('signIn email:', email);
-            console.log('signIn credentials:', credentials);
-
-            return true;
+        const user = { id: 1, name: 'J Smith' };
+        if (
+          credentials &&
+          credentials.username === 'jsmith' &&
+          credentials.password === 'password123'
+        ) {
+          return user;
+        } else {
+          return null;
         }
+      },
+    }),
+  ],
+  
+  callbacks: {
+    async redirect({ url, baseUrl }) {
+      // Allows relative callback URLs
+      if (url.startsWith("/")) return `${baseUrl}${url}`
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url
+      return baseUrl
+    },
+    async session({ session, token }) {
+      console.log('session', session);
+      session.user.id = token.sub;
+      // return session as json
+      return session;
+      // return session;
+    },
+    async jwt({ token, user }) {
+      console.log('jwt', token);
+      if (user) {
+        token.sub = user.id;
+      }
+      return token;
     }
-})File: ./pages/api/auth/signin.js
-// Temporary - replace with provider later
-export default function signIn() {
-    return {
-      redirect: '/'
-    }
-  }File: ./pages/api/hello.js
+  },
+  secret: process.env.SECRET,
+});File: ./pages/api/hello.js
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
 export default function handler(req, res) {
@@ -75,7 +74,65 @@ export default function Document() {
     </Html>
   )
 }
-File: ./pages/_app.js
+File: ./pages/signin.js
+// pages/signin.js
+import { useState } from 'react';
+import { signIn } from 'next-auth/react';
+
+export default function SignIn() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    console.log('handleSubmit');
+    
+    // Attempt to sign in
+    const result = await signIn('credentials', {
+      redirect: false, // Prevent NextAuth from redirecting automatically
+      username,
+      password,
+      callbackUrl: `${window.location.origin}` // redirect to this URL after sign in
+    });
+
+    console.log('result', result);
+
+    // Check if result.error exists and handle accordingly
+    if (result.error) {
+      console.error('Sign-in error:', result.error);
+      // Handle error here, such as displaying a notification to the user
+    } else {
+      // Redirect the user to the callbackUrl if sign in was successful
+      window.location.href = result.url;
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label htmlFor="username">Username</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+      </div>
+      <div>
+        <label htmlFor="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </div>
+      <button type="submit">Sign in</button>
+    </form>
+  );
+}File: ./pages/_app.js
 import '@/styles/globals.css'
 
 import { SessionProvider } from 'next-auth/react'
@@ -87,44 +144,47 @@ export default function App({ Component, pageProps: { session, ...pageProps }}) 
     </SessionProvider>
   )
 }File: ./pages/index.js
-import Image from 'next/image';
-import { Inter } from 'next/font/google';
-import { useSession, sessionStatus, signIn } from 'next-auth/react';
-import { providers } from './api/auth/[...nextauth]'
+import { getSession, signIn, signOut } from 'next-auth/react';
+import { useSession, useRouter } from 'next-auth/react';
 
-const inter = Inter({ subsets: ['latin'] })
+export default function Home({ session }) {
+  const router = useRouter();
 
-
-
-
-export default function Home() {
-  const { data: session } = useSession()
-  console.log(providers.okta);
-  
-  if (session) {
-    return (
-      <main>
-        <div>
-          <p>Already signed in as {session.user.email}</p>
-          <button onClick={() => signOut()}>Sign out</button>
-        </div>
-      </main>
-    )
+  if(!session) {
+    signIn();
+    return <p>Loading...</p>;
   }
 
   return (
     <main>
-      <div>
-        <p>You are not signed in</p>
-        <button onClick={() => signIn('okta')}>Sign in</button>
-        <br></br>
+      <p>Welcome {session.user.name}!</p>
 
-      </div>
+      <button onClick={() => signOut()}>
+        Sign out  
+      </button>
     </main>
-  )
-
+  );
 }
-File: ./next.config.js
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  if(!session) {
+    return {
+      redirect: {
+        destination: '/signin',
+        permanent: false
+      }
+    }
+  }
+
+  return {
+    props: {
+      session 
+    }
+  }
+
+}File: ./next.config.js
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {

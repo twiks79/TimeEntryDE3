@@ -1,4 +1,5 @@
 // pages/signin.js
+'use client';
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 
@@ -9,7 +10,8 @@ export default function SignIn() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log('handleSubmit');
-    
+    console.log('username', username, 'password', password);
+
     // Attempt to sign in
     const result = await signIn('credentials', {
       redirect: false, // Prevent NextAuth from redirecting automatically
@@ -18,7 +20,8 @@ export default function SignIn() {
       callbackUrl: `${window.location.origin}` // redirect to this URL after sign in
     });
 
-    console.log('result', result);
+    console.log('result.url', result.url);
+    console.log('callbackUrl', `${window.location.origin}`);
 
     // Check if result.error exists and handle accordingly
     if (result.error) {

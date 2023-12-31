@@ -10,9 +10,11 @@ export default NextAuth({
         username: { label: "Username", type: "text", placeholder: "jsmith" },
         password: { label: "Password", type: "password" }
       },
-      async authorize(credentials) {
+
+      async authorize(credentials, req) {
         // You need to provide your own logic here for user validation
         console.log('credentials', credentials);
+        // console.log('req', req);
 
         const user = { id: 1, name: 'J Smith' };
         if (
@@ -20,6 +22,7 @@ export default NextAuth({
           credentials.username === 'jsmith' &&
           credentials.password === 'password123'
         ) {
+          console.log('user login successful', user);
           return user;
         } else {
           return null;
@@ -27,6 +30,9 @@ export default NextAuth({
       },
     }),
   ],
+
+  secret: process.env.SECRET,
+
   callbacks: {
     async redirect({ url, baseUrl }) {
       // Allows relative callback URLs
@@ -35,13 +41,18 @@ export default NextAuth({
       else if (new URL(url).origin === baseUrl) return url
       return baseUrl
     },
+
     async session({ session, token }) {
+      // log timestamp
       console.log('session', session);
-      session.user.id = token.sub;
+      // console.log('timestamp', new Date().toISOString());
+
+      // session.user.id = token.sub;
       // return session as json
       return session;
-      // return session;
     },
+
+
     async jwt({ token, user }) {
       console.log('jwt', token);
       if (user) {
@@ -50,5 +61,9 @@ export default NextAuth({
       return token;
     }
   },
-  secret: process.env.SECRET,
+  
+  pages: {
+    signIn: '/signin',
+  }
+
 });
