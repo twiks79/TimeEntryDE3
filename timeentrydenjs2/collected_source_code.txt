@@ -1,5 +1,47 @@
 File: ./pages/api/auth/[...nextauth].js
-import NextAuth from 'next-auth';
+// Import providers
+import NextAuth from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+
+// Options
+const options = {
+  providers: [
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        username: { label: "Username", type: "text", placeholder: "jsmith" },
+        password: { label: "Password", type: "password" }
+      },
+      async authorize(credentials) {
+        const user = { id: "1", name: "ali", password: "ali123" };
+        console.log('credentials', credentials);
+        if (credentials?.username == user.name && credentials.password == user.password) {
+          console.log('user login successful', user);
+          return user;
+        } else {
+          return null;
+
+        }
+      }
+    })
+  ], secret: process.env.SECRET,
+  pages: {
+    signIn: "/"
+  },
+  session: {
+    strategy: "jwt",
+  },
+  jwt: {
+    secret: process.env.NEXTAUTH_SECRET,
+  },
+}
+
+export default NextAuth(options);
+
+
+
+
+/* import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
 
@@ -11,10 +53,11 @@ export default NextAuth({
         username: { label: "Username", type: "text", placeholder: "jsmith" },
         password: { label: "Password", type: "password" }
       },
+
       async authorize(credentials, req) {
         // You need to provide your own logic here for user validation
         console.log('credentials', credentials);
-        console.log('req', req);
+        // console.log('req', req);
 
         const user = { id: 1, name: 'J Smith' };
         if (
@@ -22,6 +65,7 @@ export default NextAuth({
           credentials.username === 'jsmith' &&
           credentials.password === 'password123'
         ) {
+          console.log('user login successful', user);
           return user;
         } else {
           return null;
@@ -29,7 +73,9 @@ export default NextAuth({
       },
     }),
   ],
-  
+
+  secret: process.env.SECRET,
+
   callbacks: {
     async redirect({ url, baseUrl }) {
       // Allows relative callback URLs
@@ -38,13 +84,18 @@ export default NextAuth({
       else if (new URL(url).origin === baseUrl) return url
       return baseUrl
     },
+
     async session({ session, token }) {
+      // log timestamp
       console.log('session', session);
-      session.user.id = token.sub;
+      // console.log('timestamp', new Date().toISOString());
+
+      // session.user.id = token.sub;
       // return session as json
       return session;
-      // return session;
     },
+
+
     async jwt({ token, user }) {
       console.log('jwt', token);
       if (user) {
@@ -53,8 +104,12 @@ export default NextAuth({
       return token;
     }
   },
-  secret: process.env.SECRET,
-});File: ./pages/api/hello.js
+  
+  pages: {
+    signIn: '/signin',
+  }
+
+}); */File: ./pages/api/hello.js
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
 export default function handler(req, res) {
@@ -76,6 +131,8 @@ export default function Document() {
 }
 File: ./pages/signin.js
 // pages/signin.js
+'use client';
+
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 
@@ -86,7 +143,8 @@ export default function SignIn() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log('handleSubmit');
-    
+    console.log('username', username, 'password', password);
+
     // Attempt to sign in
     const result = await signIn('credentials', {
       redirect: false, // Prevent NextAuth from redirecting automatically
@@ -95,7 +153,8 @@ export default function SignIn() {
       callbackUrl: `${window.location.origin}` // redirect to this URL after sign in
     });
 
-    console.log('result', result);
+    console.log('result.url', result.url);
+    console.log('callbackUrl', `${window.location.origin}`);
 
     // Check if result.error exists and handle accordingly
     if (result.error) {
@@ -103,6 +162,7 @@ export default function SignIn() {
       // Handle error here, such as displaying a notification to the user
     } else {
       // Redirect the user to the callbackUrl if sign in was successful
+      console.log('Sign-in successful', result.url);
       window.location.href = result.url;
     }
   };
@@ -144,6 +204,8 @@ export default function App({ Component, pageProps: { session, ...pageProps }}) 
     </SessionProvider>
   )
 }File: ./pages/index.js
+'use client'
+
 import { getSession, signIn, signOut } from 'next-auth/react';
 import { useSession, useRouter } from 'next-auth/react';
 
@@ -151,7 +213,9 @@ export default function Home({ session }) {
   const router = useRouter();
 
   if(!session) {
+    console.log('before signIn');
     signIn();
+    console.log('after signIn');
     return <p>Loading...</p>;
   }
 
