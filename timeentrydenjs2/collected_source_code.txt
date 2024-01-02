@@ -1,9 +1,110 @@
-File: ./pages/api/auth/[...nextauth].js
-// Import providers
+File: ./components/Layout.js
+import * as React from 'react';
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+  Box,
+} from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { signOut } from 'next-auth/react';
+
+const drawerWidth = 240;
+
+function Layout({ children }) {
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
+  const drawer = (
+    <div>
+      <Toolbar />
+      <Divider />
+      <List>
+        {/* Add more drawer items here */}
+        <ListItem button onClick={() => signOut()}>
+          <ListItemIcon>
+            <LogoutIcon />
+          </ListItemIcon>
+          <ListItemText primary="Sign out" />
+        </ListItem>
+      </List>
+    </div>
+  );
+
+  return (
+    <Box sx={{ display: 'flex' }}>
+      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { sm: 'none' } }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+            App Title
+          </Typography>
+          {/* Moved the sign out button inside the drawer for mobile */}
+        </Toolbar>
+      </AppBar>
+      <Box
+        component="nav"
+        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+        aria-label="mailbox folders"
+      >
+        {/* Temporary drawer for small screens */}
+        <Drawer
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
+          sx={{
+            display: { xs: 'block', sm: 'none' },
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+          }}
+        >
+          {drawer}
+        </Drawer>
+        {/* Permanent drawer for larger screens */}
+        <Drawer
+          variant="permanent"
+          sx={{
+            display: { xs: 'none', sm: 'block' },
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+          }}
+          open
+        >
+          {drawer}
+        </Drawer>
+      </Box>
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <Toolbar />
+        {children}
+      </Box>
+    </Box>
+  );
+}
+
+export default Layout;File: ./pages/api/auth/[...nextauth].js
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-// Options
 const options = {
   providers: [
     CredentialsProvider({
@@ -13,109 +114,26 @@ const options = {
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        const user = { id: "1", name: "ali", password: "ali123" };
-        console.log('credentials', credentials);
-        if (credentials?.username == user.name && credentials.password == user.password) {
-          console.log('user login successful', user);
-          return user;
-        } else {
-          return null;
-
+        // Replace this with your user authentication logic
+        const user = { id: 1, name: "ali", password: "ali123" };
+        if (credentials && credentials.username === user.name && credentials.password === user.password) {
+          console.log('authorization successful', user)
+          return { id: user.id, name: user.name };
         }
-      }
-    })
-  ], secret: process.env.SECRET,
-  pages: {
-    signIn: "/"
-  },
-  session: {
-    strategy: "jwt",
-  },
-  jwt: {
-    secret: process.env.NEXTAUTH_SECRET,
-  },
-}
-
-export default NextAuth(options);
-
-
-
-
-/* import NextAuth from 'next-auth';
-import CredentialsProvider from 'next-auth/providers/credentials';
-
-
-export default NextAuth({
-  providers: [
-    CredentialsProvider({
-      name: 'Credentials',
-      credentials: {
-        username: { label: "Username", type: "text", placeholder: "jsmith" },
-        password: { label: "Password", type: "password" }
-      },
-
-      async authorize(credentials, req) {
-        // You need to provide your own logic here for user validation
-        console.log('credentials', credentials);
-        // console.log('req', req);
-
-        const user = { id: 1, name: 'J Smith' };
-        if (
-          credentials &&
-          credentials.username === 'jsmith' &&
-          credentials.password === 'password123'
-        ) {
-          console.log('user login successful', user);
-          return user;
-        } else {
-          return null;
-        }
+        // If you return null or false then the credentials will be rejected
+        return null;
+        // You can also throw an error to reject the credentials
+        // throw new Error('some error')
       },
     }),
   ],
+  // If you want to use database sessions instead of JWT, uncomment the following line
+  // session: { strategy: "database" },
+  // If you need a custom sign-in page, uncomment the following line
+  // pages: { signIn: '/auth/signin' },
+};
 
-  secret: process.env.SECRET,
-
-  callbacks: {
-    async redirect({ url, baseUrl }) {
-      // Allows relative callback URLs
-      if (url.startsWith("/")) return `${baseUrl}${url}`
-      // Allows callback URLs on the same origin
-      else if (new URL(url).origin === baseUrl) return url
-      return baseUrl
-    },
-
-    async session({ session, token }) {
-      // log timestamp
-      console.log('session', session);
-      // console.log('timestamp', new Date().toISOString());
-
-      // session.user.id = token.sub;
-      // return session as json
-      return session;
-    },
-
-
-    async jwt({ token, user }) {
-      console.log('jwt', token);
-      if (user) {
-        token.sub = user.id;
-      }
-      return token;
-    }
-  },
-  
-  pages: {
-    signIn: '/signin',
-  }
-
-}); */File: ./pages/api/hello.js
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-
-export default function handler(req, res) {
-  res.status(200).json({ name: 'John Doe' })
-}
-File: ./pages/_document.js
+export default NextAuth(options);File: ./pages/_document.js
 import { Html, Head, Main, NextScript } from 'next/document'
 
 export default function Document() {
@@ -129,125 +147,66 @@ export default function Document() {
     </Html>
   )
 }
-File: ./pages/signin.js
-// pages/signin.js
-'use client';
-
-import { useState } from 'react';
-import { signIn } from 'next-auth/react';
-
-export default function SignIn() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    console.log('handleSubmit');
-    console.log('username', username, 'password', password);
-
-    // Attempt to sign in
-    const result = await signIn('credentials', {
-      redirect: false, // Prevent NextAuth from redirecting automatically
-      username,
-      password,
-      callbackUrl: `${window.location.origin}` // redirect to this URL after sign in
-    });
-
-    console.log('result.url', result.url);
-    console.log('callbackUrl', `${window.location.origin}`);
-
-    // Check if result.error exists and handle accordingly
-    if (result.error) {
-      console.error('Sign-in error:', result.error);
-      // Handle error here, such as displaying a notification to the user
-    } else {
-      // Redirect the user to the callbackUrl if sign in was successful
-      console.log('Sign-in successful', result.url);
-      window.location.href = result.url;
-    }
-  };
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="username">Username</label>
-        <input
-          type="text"
-          id="username"
-          name="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-      <button type="submit">Sign in</button>
-    </form>
-  );
-}File: ./pages/_app.js
-import '@/styles/globals.css'
+File: ./pages/_app.js
+import Layout from '../components/Layout';
 
 import { SessionProvider } from 'next-auth/react'
 
-export default function App({ Component, pageProps: { session, ...pageProps }}) {
+export default function App({ Component, pageProps: { session, ...pageProps } }) {
   return (
     <SessionProvider session={session}>
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </SessionProvider>
   )
 }File: ./pages/index.js
-'use client'
+import React from 'react';
+import { useSession, signOut } from 'next-auth/react';
+import { Button, CircularProgress, Typography, Container, Link } from '@mui/material';
+import Layout from '../components/Layout';
+import NextLink from 'next/link';
 
-import { getSession, signIn, signOut } from 'next-auth/react';
-import { useSession, useRouter } from 'next-auth/react';
+export default function Home() {
+  const { data: session, status } = useSession();
 
-export default function Home({ session }) {
-  const router = useRouter();
+  if (status === 'loading') {
+    return (
+      <Layout>
+        <Container>
+          <CircularProgress />
+        </Container>
+      </Layout>
+    );
+  }
 
-  if(!session) {
-    console.log('before signIn');
-    signIn();
-    console.log('after signIn');
-    return <p>Loading...</p>;
+  if (!session) {
+    return (
+      <Layout>
+        <Container>
+          <Typography variant="body1" gutterBottom>
+            You are not signed in.{' '}
+            <NextLink href="/api/auth/signin" passHref>
+              <Link>Sign in</Link>
+            </NextLink>
+          </Typography>
+        </Container>
+      </Layout>
+    );
   }
 
   return (
-    <main>
-      <p>Welcome {session.user.name}!</p>
-
-      <button onClick={() => signOut()}>
-        Sign out  
-      </button>
-    </main>
+    <Layout>
+      <Container>
+        <Typography variant="h4" component="h1" gutterBottom>
+          Welcome {session.user.name}!
+        </Typography>
+        <Button variant="contained" color="primary" onClick={() => signOut()}>
+          Sign out
+        </Button>
+      </Container>
+    </Layout>
   );
-}
-
-export async function getServerSideProps(context) {
-  const session = await getSession(context);
-
-  if(!session) {
-    return {
-      redirect: {
-        destination: '/signin',
-        permanent: false
-      }
-    }
-  }
-
-  return {
-    props: {
-      session 
-    }
-  }
-
 }File: ./next.config.js
 
 /** @type {import('next').NextConfig} */
@@ -257,12 +216,7 @@ const nextConfig = {
     domains: ['source.unsplash.com'],
     domains: [],
   },
-  // ... any other existing configuration
-  env: {
-      CLIENTID: process.env.CLIENTID,
-      OKTASECRET: process.env.OKTASECRECRET,
-      YOUROKTADOMAIN: process.env.YOUROKTADOMAIN,
-    },
+
 }
 
 module.exports = nextConfig;
