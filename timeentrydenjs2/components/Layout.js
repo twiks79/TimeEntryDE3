@@ -2,18 +2,16 @@ import * as React from 'react';
 import {
     AppBar,
     Toolbar,
-    IconButton,
     Typography,
-    Drawer,
+    Box,
+    IconButton,
     List,
-    ListItem,
     ListItemButton,
     ListItemIcon,
     ListItemText,
     Divider,
-    Box,
 } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
+import Drawer from '@mui/material/Drawer';
 import TimerIcon from '@mui/icons-material/Timer';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { signOut } from 'next-auth/react';
@@ -22,61 +20,37 @@ import Link from 'next/link';
 const drawerWidth = 240;
 
 function Layout({ children }) {
-    const [mobileOpen, setMobileOpen] = React.useState(false);
-
-    const handleDrawerToggle = () => {
-        setMobileOpen(!mobileOpen);
-    };
-
     const drawer = (
         <div>
-            <Toolbar />
-            <Divider />
             <List>
                 <ListItemButton component={Link} href="/timeentry">
                     <ListItemIcon>
                         <TimerIcon />
                     </ListItemIcon>
-                    <ListItemText>
-                        <Typography variant="body1" noWrap>
-                            Time Entry
-                        </Typography>
-                    </ListItemText>
-                </ListItemButton>
-
-
-                <ListItemButton onClick={() => signOut()}>
-                    {/* add an icon and typography for logout */}
-                    <ListItemIcon>
-                        <LogoutIcon />
-                    </ListItemIcon>
-                    <ListItemText>
-                        <Typography variant="body1" noWrap>  
-                            Logout
-                        </Typography>
-                    </ListItemText>
+                    <ListItemText primary="Time Entry" />
                 </ListItemButton>
             </List>
-        </div >
+            <Divider />
+        </div>
     );
 
     return (
         <Box sx={{ display: 'flex' }}>
             <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
                 <Toolbar>
+                    <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+                        Time Entry App
+                    </Typography>
                     <IconButton
                         color="inherit"
-                        aria-label="open drawer"
-                        edge="start"
-                        onClick={handleDrawerToggle}
-                        sx={{ mr: 2, display: { sm: 'none' } }}
+                        edge="end"
+                        onClick={() => signOut()}
                     >
-                        <MenuIcon />
+                        <LogoutIcon />
+                        <Typography variant="body1" noWrap sx={{ ml: 1 }}>
+                            Logout
+                        </Typography>
                     </IconButton>
-                    <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-                        App Title
-                    </Typography>
-                    {/* Moved the sign out button inside the drawer for mobile */}
                 </Toolbar>
             </AppBar>
             <Box
@@ -84,26 +58,9 @@ function Layout({ children }) {
                 sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
                 aria-label="mailbox folders"
             >
-                {/* Temporary drawer for small screens */}
-                <Drawer
-                    variant="temporary"
-                    open={mobileOpen}
-                    onClose={handleDrawerToggle}
-                    ModalProps={{
-                        keepMounted: true, // Better open performance on mobile.
-                    }}
-                    sx={{
-                        display: { xs: 'block', sm: 'none' },
-                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-                    }}
-                >
-                    {drawer}
-                </Drawer>
-                {/* Permanent drawer for larger screens */}
                 <Drawer
                     variant="permanent"
                     sx={{
-                        display: { xs: 'none', sm: 'block' },
                         '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
                     }}
                     open
