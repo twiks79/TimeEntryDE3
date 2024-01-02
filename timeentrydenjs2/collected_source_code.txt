@@ -1,107 +1,131 @@
 File: ./components/Layout.js
 import * as React from 'react';
 import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  Typography,
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Divider,
-  Box,
+    AppBar,
+    Toolbar,
+    Typography,
+    Box,
+    IconButton,
+    List,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    Divider,
 } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
+import Drawer from '@mui/material/Drawer';
+import TimerIcon from '@mui/icons-material/Timer';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { signOut } from 'next-auth/react';
+import Link from 'next/link';
 
 const drawerWidth = 240;
 
 function Layout({ children }) {
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+    const drawer = (
+        <div>
+            <List>
+                <ListItemButton component={Link} href="/timeentry">
+                    <ListItemIcon>
+                        <TimerIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Time Entry" />
+                </ListItemButton>
+            </List>
+            <Divider />
+        </div>
+    );
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
+    return (
+        <Box sx={{ display: 'flex' }}>
+            <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+                <Toolbar>
+                    <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+                        Time Entry App
+                    </Typography>
+                    <IconButton
+                        color="inherit"
+                        edge="end"
+                        onClick={() => signOut()}
+                    >
+                        <LogoutIcon />
+                        <Typography variant="body1" noWrap sx={{ ml: 1 }}>
+                            Logout
+                        </Typography>
+                    </IconButton>
+                </Toolbar>
+            </AppBar>
+            <Box
+                component="nav"
+                sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+                aria-label="mailbox folders"
+            >
+                <Drawer
+                    variant="permanent"
+                    sx={{
+                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+                    }}
+                    open
+                >
+                    {drawer}
+                </Drawer>
+            </Box>
+            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+                <Toolbar />
+                {children}
+            </Box>
+        </Box>
+    );
+}
 
-  const drawer = (
-    <div>
-      <Toolbar />
-      <Divider />
-      <List>
-        {/* Add more drawer items here */}
-        <ListItem button onClick={() => signOut()}>
-          <ListItemIcon>
-            <LogoutIcon />
-          </ListItemIcon>
-          <ListItemText primary="Sign out" />
-        </ListItem>
-      </List>
-    </div>
-  );
+export default Layout;File: ./components/CategorySection.js
+// components/CategorySection.js
 
+import React from 'react';
+import { Grid, Typography } from '@mui/material';
+import InfoCard from './InfoCard';
+
+export default function CategorySection({ category, cards }) {
+    return (
+        <>
+            <Typography variant="h6" component="h2" gutterBottom style={{ marginBottom: '16px' }}>
+                {category}
+            </Typography>
+            <Grid container spacing={2} style={{ marginBottom: '16px' }}>
+                {cards.map((card, index) => (
+                    <Grid item key={index} xs={12} sm={6} md={4}>
+                        <InfoCard {...card} />
+                    </Grid>
+                ))}
+            </Grid>
+        </>
+    );
+}File: ./components/InfoCard.js
+// components/InfoCard.js
+
+import React from 'react';
+import { Card, CardActionArea, CardContent, Typography, Box } from '@mui/material';
+
+function InfoCard({ icon, title, additionalText, link }) {
   return (
-    <Box sx={{ display: 'flex' }}>
-      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            App Title
-          </Typography>
-          {/* Moved the sign out button inside the drawer for mobile */}
-        </Toolbar>
-      </AppBar>
-      <Box
-        component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-        aria-label="mailbox folders"
-      >
-        {/* Temporary drawer for small screens */}
-        <Drawer
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
-          sx={{
-            display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-          }}
-        >
-          {drawer}
-        </Drawer>
-        {/* Permanent drawer for larger screens */}
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-          }}
-          open
-        >
-          {drawer}
-        </Drawer>
-      </Box>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <Toolbar />
-        {children}
-      </Box>
-    </Box>
+    <Card sx={{ maxWidth: 345 }}>
+      <CardActionArea onClick={() => { window.location.href = link; }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 2 }}>
+          <Box sx={{ fontSize: 20, color: 'primary.main' }}>{icon}</Box>
+          <CardContent>
+            <Typography gutterBottom variant="h6" component="div">
+              {title}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {additionalText}
+            </Typography>
+          </CardContent>
+        </Box>
+      </CardActionArea>
+    </Card>
   );
 }
 
-export default Layout;File: ./pages/api/auth/[...nextauth].js
+export default InfoCard;File: ./pages/api/auth/[...nextauth].js
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
@@ -161,14 +185,77 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
     </SessionProvider>
   )
 }File: ./pages/index.js
+// pages/index.js
+
 import React from 'react';
 import { useSession, signOut } from 'next-auth/react';
-import { Button, CircularProgress, Typography, Container, Link } from '@mui/material';
+import { Button, CircularProgress, Typography, Container, Grid } from '@mui/material';
 import Layout from '../components/Layout';
 import NextLink from 'next/link';
+import CategorySection from '../components/CategorySection';
+import Link from '@mui/material/Link';
+
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
+import BeachAccessIcon from '@mui/icons-material/BeachAccess';
+import DescriptionIcon from '@mui/icons-material/Description';
+import BusinessIcon from '@mui/icons-material/Business';
+import OvertimeIcon from '@mui/icons-material/AccessAlarms'; 
+import VacationIcon from '@mui/icons-material/FlightTakeoff'; 
 
 export default function Home() {
   const { data: session, status } = useSession();
+
+  const cardData = {
+    timeEntry: [
+      {
+        title: 'Add Working Time',
+        icon: <AccessTimeIcon />,
+        additionalText: 'Log your working hours',
+        link: '#'
+      },
+      {
+        title: 'Add Sick Day',
+        icon: <LocalHospitalIcon />,
+        additionalText: 'Report a sick leave',
+        link: '#'
+      },
+      {
+        title: 'Add Vacation Day',
+        icon: <BeachAccessIcon />,
+        additionalText: 'Plan your vacation',
+        link: '#'
+      },
+    ],
+    configuration: [
+      {
+        title: 'Define Contract',
+        icon: <DescriptionIcon />,
+        additionalText: 'Set up your work contract details',
+        link: '#'
+      },
+      {
+        title: 'Assign Employer',
+        icon: <BusinessIcon />,
+        additionalText: 'Set your employer information',
+        link: '#'
+      },
+    ],
+    overview: [
+      {
+        title: 'Get Overtime Overview',
+        icon: <OvertimeIcon />,
+        additionalText: 'See overtime balances',
+        link: '#'
+      },
+      {
+        title: 'Get Vacation Overview',
+        icon: <VacationIcon />,
+        additionalText: 'Check your vacation status',
+        link: '#'
+      },
+    ],
+  };
 
   if (status === 'loading') {
     return (
@@ -197,13 +284,30 @@ export default function Home() {
 
   return (
     <Layout>
-      <Container>
+      <Container maxWidth="lg" sx={{ mt: 1 }}>
+        <CategorySection category="Category 1: Time Entry" cards={cardData.timeEntry} />
+        <CategorySection category="Category 2: Configuration" cards={cardData.configuration} />
+        <CategorySection category="Category 3: Overview" cards={cardData.overview} />
+      </Container>
+    </Layout>
+  );
+}File: ./pages/timeentry.js
+// file: ./pages/timeentry.js
+import React from 'react';
+import Layout from '../components/Layout';
+import { Container, Typography, TextField, Button } from '@mui/material';
+
+export default function TimeEntry() {
+  // Add your state and form handling logic here
+
+  return (
+    <Layout>
+      <Container maxWidth="sm">
         <Typography variant="h4" component="h1" gutterBottom>
-          Welcome {session.user.name}!
+          Time Entry
         </Typography>
-        <Button variant="contained" color="primary" onClick={() => signOut()}>
-          Sign out
-        </Button>
+        {/* Replace this with your actual form and inputs */}
+
       </Container>
     </Layout>
   );

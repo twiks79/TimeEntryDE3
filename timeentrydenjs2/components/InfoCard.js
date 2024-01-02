@@ -8,9 +8,9 @@ function InfoCard({ icon, title, additionalText, link }) {
     <Card sx={{ maxWidth: 345 }}>
       <CardActionArea onClick={() => { window.location.href = link; }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 2 }}>
-          <Box sx={{ fontSize: 60, color: 'primary.main' }}>{icon}</Box>
+          <Box sx={{ fontSize: 20, color: 'primary.main' }}>{icon}</Box>
           <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
+            <Typography gutterBottom variant="h6" component="div">
               {title}
             </Typography>
             <Typography variant="body2" color="text.secondary">

@@ -6,6 +6,7 @@ import { Button, CircularProgress, Typography, Container, Grid } from '@mui/mate
 import Layout from '../components/Layout';
 import NextLink from 'next/link';
 import CategorySection from '../components/CategorySection';
+import Link from '@mui/material/Link';
 
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
