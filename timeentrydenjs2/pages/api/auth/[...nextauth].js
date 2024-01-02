@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { loginUser } from "../../../utils/login/loginUser";
-import { ConstructionOutlined } from "@mui/icons-material";
+
 
 const options = {
   providers: [
@@ -17,12 +17,11 @@ const options = {
         if (credentials && credentials.username === user.name && credentials.password === user.password) {
           console.log('authorization successful', user)
           // call loginUser from loginUser.js
-          const user = await loginUser(credentials.username, credentials.password);
-          if (user) {
+          const user2 = await loginUser(credentials.username, credentials.password);
+          if (user2) {
             console.log('backend login successful');
           }
           
-
           return { id: user.id, name: user.name };
         }
         // If you return null or false then the credentials will be rejected
