@@ -1,79 +1,115 @@
 import * as React from 'react';
-import {
-    AppBar,
-    Toolbar,
-    Typography,
-    Box,
-    IconButton,
-    List,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
-    Divider,
-} from '@mui/material';
+import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import TimerIcon from '@mui/icons-material/Timer';
+import AppBar from '@mui/material/AppBar';
+import CssBaseline from '@mui/material/CssBaseline';
+import Toolbar from '@mui/material/Toolbar';
+import List from '@mui/material/List';
+import Typography from '@mui/material/Typography';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { signOut } from 'next-auth/react';
+import IconButton from '@mui/material/IconButton';
+import MailIcon from '@mui/icons-material/Mail';
+import HomeIcon from '@mui/icons-material/Home';
+import TimerIcon from '@mui/icons-material/Timer';
+import InfoIcon from '@mui/icons-material/Info';
 import Link from 'next/link';
+import { Icon } from '@mui/material';
+import { signOut } from 'next-auth/react';
 
 const drawerWidth = 240;
 
-function Layout({ children }) {
-    const drawer = (
-        <div>
-            <List>
-                <ListItemButton component={Link} href="/timeentry">
-                    <ListItemIcon>
-                        <TimerIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Time Entry" />
-                </ListItemButton>
-            </List>
-            <Divider />
-        </div>
-    );
+export default function Layout({ children }) {
+  const [open, setOpen] = React.useState(true);
 
-    return (
-        <Box sx={{ display: 'flex' }}>
-            <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-                <Toolbar>
-                    <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-                        Time Entry App
-                    </Typography>
-                    <IconButton
-                        color="inherit"
-                        edge="end"
-                        onClick={() => signOut()}
-                    >
-                        <LogoutIcon />
-                        <Typography variant="body1" noWrap sx={{ ml: 1 }}>
-                            Logout
-                        </Typography>
-                    </IconButton>
-                </Toolbar>
-            </AppBar>
-            <Box
-                component="nav"
-                sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-                aria-label="mailbox folders"
-            >
-                <Drawer
-                    variant="permanent"
-                    sx={{
-                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-                    }}
-                    open
-                >
-                    {drawer}
-                </Drawer>
-            </Box>
-            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-                <Toolbar />
-                {children}
-            </Box>
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
+
+  return (
+    <Box sx={{ display: 'flex' }}>
+      <CssBaseline />
+      <AppBar
+        position="fixed"
+        sx={{
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+        }}
+      >
+        <Toolbar>
+          <TimerIcon sx={{ mr: 2 }} />
+          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+            Time Entry App
+          </Typography>
+          {/* Logout button */}
+          <IconButton
+            edge="end"
+            color="inherit"
+            aria-label="logout"
+            onClick={() => signOut()}
+          >
+            <LogoutIcon />
+          </IconButton>
+
+        </Toolbar>
+      </AppBar>
+      <Drawer
+        variant="permanent"
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+          display: open ? 'block' : 'none', // Hide the drawer when closed
+        }}
+      >
+        <Toolbar />
+        <Box sx={{ overflow: 'auto' }}>
+          <List>
+            {/* Start Page Item */}
+            <ListItemButton component={Link} href="/">
+              <ListItemIcon>
+                <HomeIcon />
+              </ListItemIcon>
+              <ListItemText primary="Start Page" />
+            </ListItemButton>
+
+            {/* Time Entry Item */}
+            <ListItemButton component={Link} href="/timeentry">
+              <ListItemIcon>
+                <TimerIcon />
+              </ListItemIcon>
+              <ListItemText primary="Time Entry" />
+            </ListItemButton>
+
+            {/* About Us Item */}
+            <ListItemButton component={Link} href="/about">
+              <ListItemIcon>
+                <InfoIcon />
+              </ListItemIcon>
+              <ListItemText primary="About Us" />
+            </ListItemButton>
+          </List>
         </Box>
-    );
+      </Drawer>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          p: 3,
+          paddingTop: '0px', // Adjust top padding to move content more to the top
+          paddingLeft: '0px', // Adjust left padding to move content more to the left
+        }}
+      >
+        <Toolbar />
+        {children} {/* Render children without wrapping it in Typography */}
+      </Box>
+    </Box>
+  );
 }
-
-export default Layout;

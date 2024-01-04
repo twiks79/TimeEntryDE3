@@ -96,12 +96,12 @@ export default function Home() {
   }
 
   return (
-    <Layout>
+
       <Container maxWidth="lg" sx={{ mt: 1 }}>
         <CategorySection category="Category 1: Time Entry" cards={cardData.timeEntry} />
         <CategorySection category="Category 2: Configuration" cards={cardData.configuration} />
         <CategorySection category="Category 3: Overview" cards={cardData.overview} />
       </Container>
-    </Layout>
+
   );
 }
