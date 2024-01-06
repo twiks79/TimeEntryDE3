@@ -1,9 +1,15 @@
+/**
+ * loginUser.js
+ * 
+ */
+
 import { TableClient, AzureNamedKeyCredential } from "@azure/data-tables";
 import crypto from "crypto";
 
 const accountName = process.env.TIMEENTRYTABLES;
 const accountKey = process.env.TIMEENTRYTABLES_KEY;
 const connectionString = process.env.TIMEENTRYTABLES_CONNECTION;
+const aPartitionKey = 'partition1'
 
 export async function loginUser(username, password) {
   // Check for required environment variables
@@ -33,23 +39,29 @@ export async function loginUser(username, password) {
     return false;
   }
 
-  const aPartitionKey = process.env.PartitionKey;
+  const queryOptions = { filter: `PartitionKey eq '${aPartitionKey}' and RowKey eq '${username}' and password eq '${hashedPassword}'` };
   try {
     const entities = tableClient.listEntities({
-      queryOptions: { filter: `PartitionKey eq '${aPartitionKey}' and RowKey eq '${username}' and ${hashedPassword}` }
-    });
+      queryOptions: queryOptions  });
+    console.log('queryOptions', queryOptions);
     console.log('entities', entities);
     // log number of entities found
-    let count = 0;
+   let count = 0;
+    let authenticatedEntity = null; // Initialize the variable to store the authenticated entity
     for await (const entity of entities) {
+      authenticatedEntity = entity; // Assign the current entity to the variable
       count++;
     }
     console.log(`Found ${count} entities`);
-
     if (count == 1) {
       // User is authenticated
-      console.log('user authenticated', entity);
-      return true;
+      console.log('user authenticated', authenticatedEntity);
+      // create return object
+      const returnObj = {
+        name: authenticatedEntity.RowKey,
+        authenticated: true
+      }
+      return authenticatedEntity;
     }
 
 

@@ -41,14 +41,32 @@ const LoginC = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const endpoint = isSignUp ? '/api/auth/signin' : '/api/auth/callback/credentials';
+
+    if (isSignUp) {
+      console.log('signup');
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(credentials),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setError(json.error);
+      } else {
+        router.push('/');
+      }
+    }
+
+    // Sign in
     try {
       await signIn('credentials', {
         username: credentials.username,
         password: credentials.password,
         callbackUrl: '/', // Redirect URL after successful login
       });
-      router.push('/'); // Redirects to the dashboard page
+      router.push('/');
     } catch (error) {
       setError('Invalid credentials'); // You can customize this error message
     }

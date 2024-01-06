@@ -1,4 +1,9 @@
-// pages/index.js
+/**
+ * index.js
+ * This file contains the main page component for the Time Entry application.
+ * It imports necessary dependencies and components, defines card data for different categories,
+ * and renders the appropriate components based on the user's session status.
+ */
 
 import React from 'react';
 import { useSession, signOut } from 'next-auth/react';
@@ -82,16 +87,7 @@ export default function Home() {
 
   if (!session) {
     return (
-      <Layout>
-        <Container>
-          <Typography variant="body1" gutterBottom>
-            You are not signed in.{' '}
-            <NextLink href="/api/auth/signin" passHref>
-              <Link>Sign in</Link>
-            </NextLink>
-          </Typography>
-        </Container>
-      </Layout>
+      <LoginC />
     );
   }
 
