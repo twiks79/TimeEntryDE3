@@ -37,6 +37,7 @@ const TimeEntry = () => {
   }, [isMobile]);
 
   const [data, setData] = useState([]);
+  
   const [formData, setFormData] = useState({
     date: dayjs(),
     hours: "1",

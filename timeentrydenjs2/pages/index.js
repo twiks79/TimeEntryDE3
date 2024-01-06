@@ -87,7 +87,16 @@ export default function Home() {
 
   if (!session) {
     return (
-      <LoginC />
+        <Container>
+          <Typography variant="h4" sx={{ mt: 2 }}>Welcome to Time Entry</Typography>
+          <Typography variant="body1" sx={{ mt: 2 }}>Please sign in to continue.</Typography>
+          <NextLink href="/LoginC" passHref>
+            <Link>
+              <Button variant="contained">Sign In</Button>
+            </Link>
+          </NextLink>
+        </Container>
+
     );
   }
 

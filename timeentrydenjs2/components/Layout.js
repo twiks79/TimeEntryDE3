@@ -108,7 +108,10 @@ export default function Layout({ children }) {
         }}
       >
         <Toolbar />
-        {children} {/* Render children without wrapping it in Typography */}
+        {/* add margin around children */}
+        <Box sx={{ margin: '20px' }}>
+          {children}
+        </Box>
       </Box>
     </Box>
   );
