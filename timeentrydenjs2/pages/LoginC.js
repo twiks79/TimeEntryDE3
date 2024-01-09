@@ -59,18 +59,20 @@ const LoginC = () => {
       }
     }
 
-    // Sign in
-    try {
-      await signIn('credentials', {
-        username: credentials.username,
-        password: credentials.password,
-        callbackUrl: '/', // Redirect URL after successful login
-      });
-      router.push('/');
-    } catch (error) {
-      setError('Invalid credentials'); // You can customize this error message
-    }
-  };
+      // Sign in
+      // clear any error
+      setError('');
+      try {
+        await signIn('credentials', {
+          username: credentials.username,
+          password: credentials.password,
+          callbackUrl: '/', // Redirect URL after successful login
+        });
+        // router.push('/');
+      } catch (error) {
+        setError('Invalid credentials' + error); // You can customize this error message
+      }
+    };
 
   const toggleMode = () => {
     setIsSignUp(!isSignUp);

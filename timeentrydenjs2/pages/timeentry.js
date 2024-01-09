@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useMemo } from "react";
 
 import {
@@ -27,8 +28,27 @@ import { MaterialReactTable } from "material-react-table";
 
 import dayjs from "dayjs";
 import useMediaQuery from "@mui/material/useMediaQuery"; // Import useMediaQuery
+import { useSession } from "next-auth/react";
+import { auth } from "../auth";
 
-const TimeEntry = () => {
+
+const TimeEntry = async (props) => {
+
+  const session = await auth()
+
+  if (!session) {
+    return <div>Authenticating...</div>;
+  } else {
+    return (
+      <div>
+        <div> Authenticated </div>
+        <div> Session Info: {JSON.stringify(session, null, 2)}</div>
+      </div>
+    );
+  }
+
+
+
   const isMobile = useMediaQuery("(max-width:600px)"); // Check if the screen width is less than or equal to 600px
 
   // Add 'isMobile' as a dependency in the useMemo dependency array
@@ -37,7 +57,7 @@ const TimeEntry = () => {
   }, [isMobile]);
 
   const [data, setData] = useState([]);
-  
+
   const [formData, setFormData] = useState({
     date: dayjs(),
     hours: "1",
@@ -77,21 +97,36 @@ const TimeEntry = () => {
     setTotalHoursYear(sumHours);
   }, [data, selectedYear]);
 
-  // Fetch data from the server
+
   useEffect(() => {
     const fetchData = async () => {
+      console.log("Fetching DataTable data");
+      alert(user.name);
+      // const username = session.name;
       try {
-        const response = await fetch("/api/timeentry/get_data");
+        // Construct the query parameter string
+        const queryParams = new URLSearchParams({ username }).toString();
+        console.log('queryParams', queryParams);
+        // Use backticks for the fetch URL and properly embed queryParams
+        const response = await fetch(`/api/timeentry/get_data?${queryParams}`);
+        if (!response.ok) {
+          // If the response is not 2xx, throw an error
+          alert("Network response was not ok");
+          throw new Error('Network response was not ok');
+        }
         const data = await response.json();
-        
-        
-        setData(response.data);
+        // Do something with the data, e.g., setting it to state
+        console.log('response');
+        console.log(data);
+        setData(data);
       } catch (error) {
         console.error("Error fetching DataTable data", error);
       }
     };
-    fetchData();
-  }, []);
+
+    fetchData(session);
+  }, []); // Don't forget to call the fetchData function
+
 
   // Add row to the server and update the state
   const handleAddRow = async () => {
@@ -102,12 +137,13 @@ const TimeEntry = () => {
     };
 
     try {
-      
+
       // adding a row by calling /api/timeentry/add_row next.js api
       const response = await fetch("/api/timeentry/add_row", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Session": JSON.stringify(session),
         },
         body: JSON.stringify(payload),
       });
@@ -132,7 +168,7 @@ const TimeEntry = () => {
     };
 
     try {
-    
+
       // call the /api/timeentry/update_row next.js api
       const response = await fetch("/api/timeentry/update_row", {
         method: "POST",
@@ -142,8 +178,8 @@ const TimeEntry = () => {
         body: JSON.stringify(payload),
       });
 
-      
-      
+
+
       if (response.data && response.data.row) {
         // Update the data state with the changed row and match id
         setData((prevData) =>
@@ -160,7 +196,7 @@ const TimeEntry = () => {
   // Delete row on the server and update the state
   const handleDeleteRow = async (row) => {
     try {
-      
+
       const response = await fetch("/api/timeentry/delete_row", {
         method: "POST",
         headers: {

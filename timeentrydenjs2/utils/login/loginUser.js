@@ -42,11 +42,12 @@ export async function loginUser(username, password) {
   const queryOptions = { filter: `PartitionKey eq '${aPartitionKey}' and RowKey eq '${username}' and password eq '${hashedPassword}'` };
   try {
     const entities = tableClient.listEntities({
-      queryOptions: queryOptions  });
+      queryOptions: queryOptions
+    });
     console.log('queryOptions', queryOptions);
     console.log('entities', entities);
     // log number of entities found
-   let count = 0;
+    let count = 0;
     let authenticatedEntity = null; // Initialize the variable to store the authenticated entity
     for await (const entity of entities) {
       authenticatedEntity = entity; // Assign the current entity to the variable
@@ -56,11 +57,7 @@ export async function loginUser(username, password) {
     if (count == 1) {
       // User is authenticated
       console.log('user authenticated', authenticatedEntity);
-      // create return object
-      const returnObj = {
-        name: authenticatedEntity.RowKey,
-        authenticated: true
-      }
+
       return authenticatedEntity;
     }
 

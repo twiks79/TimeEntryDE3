@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth/azure-tables-adapter": "^0.1.13",
     "@azure/data-tables": "^13.2.2",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",

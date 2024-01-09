@@ -20,11 +20,14 @@ import InfoIcon from '@mui/icons-material/Info';
 import Link from 'next/link';
 import { Icon } from '@mui/material';
 import { signOut } from 'next-auth/react';
+import { useSession } from "next-auth/react"
 
 const drawerWidth = 240;
 
 export default function Layout({ children }) {
   const [open, setOpen] = React.useState(true);
+
+  const { data: session } = useSession();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -48,6 +51,14 @@ export default function Layout({ children }) {
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             Time Entry App
           </Typography>
+
+          {/* Show username */}
+          {session && (
+            <Typography variant="subtitle1" noWrap sx={{ mr: 2 }}>
+              {session.user.name}
+            </Typography>
+          )}
+          
           {/* Logout button */}
           <IconButton
             edge="end"

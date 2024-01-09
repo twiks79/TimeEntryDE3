@@ -2,7 +2,6 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { loginUser } from "../../../utils/login/loginUser";
 
-
 const options = {
   providers: [
     CredentialsProvider({
@@ -12,36 +11,50 @@ const options = {
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
+        const user = await loginUser(credentials.username, credentials.password);
 
-        const user2 = await loginUser(credentials.username, credentials.password);
-        console.log('user2', user2);
-        if (user2) {
-          console.log('backend login successful');
-          return { id: user2.name, name: user2.name };
+        if (user) {
+          console.log('successful login user', user)
+          return user;
         }
 
-        // Replace this with your user authentication logic
-      /*   const user = { id: 1, name: "ali", password: "ali123" };
-        if (credentials && credentials.username === user.name && credentials.password === user.password) {
-          console.log('authorization successful', user)
-          // call loginUser from loginUser.js
-          return { id: user.id, name: user.name };
-        } */
-        // If you return null or false then the credentials will be rejected
-        console.log('authorization failed')
         return null;
-        // You can also throw an error to reject the credentials
-        // throw new Error('some error')
-      },
-    }),
+      }
+    })
   ],
-  // If you want to use database sessions instead of JWT, uncomment the following line
-  // session: { strategy: "database" },
-  // If you need a custom sign-in page, uncomment the following line
-  // pages: { signIn: '/auth/signin' },
-  pages: {
-    signIn: '/LoginC', 
+
+  session: {
+    jwt: true,
   },
+
+  pages: {
+    signIn: '/LoginC'
+  },
+
+  callbacks: {
+    async signIn({ user, account, profile, email, credentials }) {
+
+      console.log('signIn', user, account, profile, email, credentials);
+      return true;
+    },
+    async redirect({ url, baseUrl }) {
+      console.log('redirect', url, baseUrl);
+      return baseUrl;
+    },
+    async session({ session, user, token }) {
+      console.log('session', session, token);
+      session.user.name = token.name; // Here you should access the name from the token, not from the user
+      return session;
+    },
+    async jwt({ token, user, account, profile, isNewUser }) {
+      console.log('jwt', token, user)
+      if (user) {
+        console.log('user', user);
+        token.name = user.rowKey; // Set the token name only if the user exists
+      }
+      return token;
+    }
+  }
 };
 
 export default NextAuth(options);
