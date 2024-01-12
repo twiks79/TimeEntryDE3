@@ -37,7 +37,5 @@ export default function useSession() {
     });
     const { trigger: logout } = useSWRMutation(sessionApiRoute, doLogout);
 
-    // log all session, logout, login, isloading in one call
-    console.log('session', session, 'logout', logout, 'login', login, 'isLoading', isLoading);
     return { session, logout, login, isLoading };
 }

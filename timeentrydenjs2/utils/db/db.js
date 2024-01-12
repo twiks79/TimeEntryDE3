@@ -13,6 +13,9 @@
 
 import { TableClient, AzureNamedKeyCredential } from "@azure/data-tables";
 import { v4 as uuidv4 } from 'uuid';
+import getironSession from 'next-iron-session';
+import logToServer from "../lib";
+
 
 
 // Helper function to create a URL from the account name
@@ -62,24 +65,33 @@ export async function getRows(tableName) {
 }
 
 
-// implement getRowsFromTable that returns rows for a given table with a given filter
-export async function getRowsFromTable(tableName, filter) {
+// implement getTimeEntryRowsForUsername that returns rows for a given table with a given filter
+export async function getTimeEntryRowsForUsername(username) {
+    const tableName = 'times';
+
     try {
+        
         const client = getTableClient(tableName);
-        const queryOptions = {
-            filter: filter
-        };
-        console.log('queryOptions', queryOptions);
+        
+        const filter = `PartitionKey eq 'partition1' and Username eq '${username}'`; // Make sure property names are correctly cased
+        
+        const queryOptions = { filter: filter };
+        console.log('Query Filter:', queryOptions.filter); // Log the actual filter string
+
         const iterator = client.listEntities(queryOptions);
+
         const rows = [];
+
         for await (const entity of iterator) {
-            console.log('entity', entity);
-            rows.push(entity);
+            // need to add a filter as i get all usernames
+            if (entity.username === username) rows.push(entity);
         }
-        console.log(`Retrieved ${rows.length} rows from table '${tableName}' with filter '${filter}'.`);
+
+        console.log(`Retrieved ${rows.length} rows from table '${tableName}' with filter '${queryOptions}'.`);
+        
         return rows;
     } catch (error) {
-        console.error(`Error retrieving rows from table '${tableName}' with filter '${filter}':`, error);
+        console.error(`Error retrieving rows from table '${tableName}' with filter '${queryOptions}':`, error);
         throw error; // rethrow the error after logging
     }
 }
@@ -124,5 +136,62 @@ export async function addRowToTable(tableName, row) {
     } catch (error) {
         console.error(`Error adding row to table '${tableName}':`, error);
         throw error; // rethrow the error after logging
+    }
+}
+
+// deleteTimeEntryRow
+// implement deleteTimeEntryRow that deletes a row from the times table
+export async function deleteTimeEntryRow(id) {
+    const tableName = 'times';
+    const aPartitionKey = 'partition1';
+
+    try {
+        
+        const client = getTableClient(tableName);
+        console.log(`Deleting row from table '${tableName}' with id '${id}'.`);
+        
+        const response = await client.deleteEntity(aPartitionKey, id);
+
+        console.log(`Deleted row from table '${tableName}'.`);
+        console.log(response);
+        return response;
+    } catch (error) {
+        console.error(`Error deleting row from table '${tableName}' with id '${id}':`, error);
+        throw error; // rethrow the error after logging
+    }
+}
+
+// deleteTimeEntryRow
+// implement deleteTimeEntryRow that deletes a row from the times table
+export async function updateTimesRow(delEntity) {
+    const tableName = 'times';
+    const aPartitionKey = 'partition1';
+    const updateEntity = {
+        partitionKey: aPartitionKey,
+        rowKey: delEntity.id,
+        date: delEntity.date,
+        hours: delEntity.hours,
+        comment: delEntity.comment,
+        type: delEntity.type,
+        username: delEntity.username,
+    };
+    const strObject = JSON.stringify(updateEntity);
+
+
+    try {
+        
+        const client = getTableClient(tableName);
+        console.log(`Updating row from table '${tableName}' with entity '${strObject}'.`);
+        
+
+        // update the entity in the table 'times' with replace
+        const response = await client.updateEntity(updateEntity, 'Replace');
+
+        console.log(`Updated row from table '${tableName}'.`);
+        console.log(response);
+        return response;
+    } catch (error) {
+        console.error(`Error updating row from table '${tableName}'`, error);
+        throw error; 
     }
 }

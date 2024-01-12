@@ -34,19 +34,19 @@ export default function Home() {
         title: 'Add Working Time',
         icon: <AccessTimeIcon />,
         additionalText: 'Log your working hours',
-        link: '#'
+        link: '/timeentry?action=addTime'
       },
       {
         title: 'Add Sick Day',
         icon: <LocalHospitalIcon />,
         additionalText: 'Report a sick leave',
-        link: '#'
+        link: '/timeentry?action=addSick'
       },
       {
         title: 'Add Vacation Day',
         icon: <BeachAccessIcon />,
         additionalText: 'Plan your vacation',
-        link: '#'
+        link: '/timeentry?action=addVacation'
       },
     ],
     configuration: [

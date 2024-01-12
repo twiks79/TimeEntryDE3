@@ -13,4 +13,19 @@ export const defaultSession = {
   
   export function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
-  }
+  };
+
+
+  export default async function logToServer(args) {
+  // msg are several arguments, transformed into a string
+  // only continue, if the first argument is equal to 'Client: '
+  
+  const msg = JSON.stringify(args);
+
+  try {
+    await fetch('/api/log', {
+      method: 'POST', 
+      body: msg
+    });
+  } catch(e) {}
+};

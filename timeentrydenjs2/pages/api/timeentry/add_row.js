@@ -19,7 +19,8 @@
 
 import { TableClient, AzureNamedKeyCredential } from "@azure/data-tables";
 import { addRowToTable } from '../../../utils/db/db';
-import { getSession } from 'next-auth/react';
+import { getIronSession } from "iron-session";
+
 
 
 /**
@@ -36,19 +37,22 @@ import { getSession } from 'next-auth/react';
  */
 
 export default async function handler(req, res) {
-
-
+    const session = await getIronSession(req, res, { password: process.env.SECRET_COOKIE_PASSWORD, cookieName: "timeentry" });
+    if (!session.isLoggedIn) {
+        return response.status(401).json({ error: 'Unauthorized' });
+    }
+    
     if (req.method === 'POST') {
         console.log('POST');
         console.log(req.body);
-        console.log(req.headers)
+        console.log(req.headers);
         const data = req.body;
-        // add the row to the table
-        // add username to data from session
-        const session = await getSession({req});
-        console.log('session', session);
+   
         data.username = session.username;
+        console.log('add_row: data: ', data);
+
         const result = await addRowToTable('times', data);
+
         console.log('result', result);
         res.status(200).json(result);
     }

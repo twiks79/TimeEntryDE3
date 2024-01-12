@@ -21,7 +21,7 @@
  */
 
 
-import { getRowsFromTable } from '../../../utils/db/db';
+import { getTimeEntryRowsForUsername } from '../../../utils/db/db';
 
 
 export default async function handler(req, res) {
@@ -40,14 +40,15 @@ export default async function handler(req, res) {
   const filter = `PartitionKey eq '${aPartitionKey}' and username eq '${username}'`;
   const regex = /^[a-zA-Z0-9]+ eq |\bg[te] /;
   console.log('test: ', regex.test(filter));
-  const rows = await getRowsFromTable('times', filter);
+  const rows = await getTimeEntryRowsForUsername(username);
 
   console.log('rows', rows);
   // map row to data object with id, date, hours, comment, username
   const data = rows.map(row => {
     return {
-      id: row.RowKey,
+      id: row.rowKey,
       date: row.date,
+      type: row.type,
       hours: row.hours,
       comment: row.comment,
       username: row.username
