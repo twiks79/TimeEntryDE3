@@ -61,33 +61,19 @@ export async function getRows(tableName) {
     }
 }
 
-// implement getRowsForUser that returns all rows for a given user from a given table
-export async function getRowsForUser(username) {
-    const tableName = 'users';
-    try {
-        const client = getTableClient(tableName);
-        const queryOptions = { filter: `PartitionKey eq '${username}'` }; // Use PartitionKey or RowKey as per your table design
-        const iterator = client.listEntities(queryOptions);
-        const rows = [];
-        for await (const entity of iterator) {
-            rows.push(entity);
-        }
-        console.log(`Retrieved rows for user '${username}' from table '${tableName}'.`);
-        return rows;
-    } catch (error) {
-        console.error(`Error retrieving rows for user '${username}' from table '${tableName}':`, error);
-        throw error; // rethrow the error after logging
-    }
-}
 
 // implement getRowsFromTable that returns rows for a given table with a given filter
 export async function getRowsFromTable(tableName, filter) {
     try {
         const client = getTableClient(tableName);
-        const queryOptions = { filter: filter };
+        const queryOptions = {
+            filter: filter
+        };
+        console.log('queryOptions', queryOptions);
         const iterator = client.listEntities(queryOptions);
         const rows = [];
         for await (const entity of iterator) {
+            console.log('entity', entity);
             rows.push(entity);
         }
         console.log(`Retrieved ${rows.length} rows from table '${tableName}' with filter '${filter}'.`);

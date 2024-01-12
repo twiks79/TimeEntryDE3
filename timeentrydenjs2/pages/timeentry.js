@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useMemo } from "react";
 
 import {
@@ -28,26 +27,13 @@ import { MaterialReactTable } from "material-react-table";
 
 import dayjs from "dayjs";
 import useMediaQuery from "@mui/material/useMediaQuery"; // Import useMediaQuery
-import { useSession } from "next-auth/react";
-import { auth } from "../auth";
+import useSession from "../utils/useSession";
+import { defaultSession } from "../utils/lib";
 
 
-const TimeEntry = async (props) => {
-
-  const session = await auth()
-
-  if (!session) {
-    return <div>Authenticating...</div>;
-  } else {
-    return (
-      <div>
-        <div> Authenticated </div>
-        <div> Session Info: {JSON.stringify(session, null, 2)}</div>
-      </div>
-    );
-  }
-
-
+const TimeEntry = () => {
+  const { session, isLoading } = useSession();
+  const { username } = session.username;
 
   const isMobile = useMediaQuery("(max-width:600px)"); // Check if the screen width is less than or equal to 600px
 
@@ -100,18 +86,17 @@ const TimeEntry = async (props) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log("Fetching DataTable data");
-      alert(user.name);
-      // const username = session.name;
+      console.log('++++++++++++ Fetching DataTable data');
+      const user2 = session.username;
+      
       try {
         // Construct the query parameter string
-        const queryParams = new URLSearchParams({ username }).toString();
+        const queryParams = new URLSearchParams({ user2 }).toString();
         console.log('queryParams', queryParams);
         // Use backticks for the fetch URL and properly embed queryParams
         const response = await fetch(`/api/timeentry/get_data?${queryParams}`);
         if (!response.ok) {
           // If the response is not 2xx, throw an error
-          alert("Network response was not ok");
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
@@ -352,7 +337,7 @@ const TimeEntry = async (props) => {
               date: formData.date.format("YYYY-MM-DD"),
             };
             if (isEditing) {
-              /* / handleEditRow(payload); // Pass the formatted payload */
+              // handleEditRow(payload); // Pass the formatted payload 
               handleEditRow();
             } else {
               handleAddRow(); // Pass the formatted payload
@@ -365,170 +350,173 @@ const TimeEntry = async (props) => {
       </DialogActions>
     </Dialog>
   );
-
-  return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Box width="100%">
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            mb: 2,
-            flexWrap: "wrap",
-          }}
-        >
-          <FormControl variant="standard" sx={{ minWidth: 120, mr: 2 }}>
-            <InputLabel id="select-month-label">Month</InputLabel>
-            <Select
-              labelId="select-month-label"
-              id="select-month"
-              value={selectedMonth}
-              onChange={(e) => setSelectedMonth(e.target.value)}
-            >
-              {Array.from({ length: 12 }, (_, index) => (
-                <MenuItem key={index} value={index}>
-                  {dayjs().month(index).format("MMMM")}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl variant="standard" sx={{ minWidth: 120, mr: 2 }}>
-            <InputLabel id="select-year-label">Year</InputLabel>
-            <Select
-              labelId="select-year-label"
-              id="select-year"
-              value={selectedYear}
-              onChange={(e) => setSelectedYear(e.target.value)}
-            >
-              {Array.from({ length: 5 }, (_, index) => (
-                <MenuItem key={index} value={dayjs().year() - index}>
-                  {dayjs().year() - index}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <Typography sx={{ mr: 2 }}>
-            Total hours that month: {totalHours}
-          </Typography>
-          <Typography sx={{ mr: 2 }}>
-            Total hours this year: {totalHoursYear}
-          </Typography>
-        </Box>
-        <MaterialReactTable
-          size={isMobile ? "small" : "medium"}
-          initialState={{
-            sorting: [{ id: "date", desc: true }],
-            columnVisibility: { id: false },
-            density: isMobile ? "compact" : "standard",
-          }}
-          columns={columns}
-          // make it downloadable
-          exportable
-          data={data
-            .slice(-31)
-            .sort((a, b) => dayjs(b.date).diff(dayjs(a.date)))} // Sort and limit to last 31 entries
-          // Additional styles for compact display and vertical scrolling
-          sx={{
-            ".MuiDataGrid-root .MuiDataGrid-row": {
-              minHeight: "32px", // Reduce row height for a more compact display
-              // adjust it to the width of the screen
-              width: isMobile ? "auto" : "100%",
-            },
-            ".MuiDataGrid-viewport": {
-              overflowY: "auto", // Enable vertical scrolling
-            },
-            ".MuiDataGrid-cell": {
-              padding: "4px", // Adjust padding as needed
-              width: "auto", // Make the columns smaller
-            },
-            // make the width of the columns smaller, not the font size
-            ".MuiDataGrid-colCellWrapper": {
-              width: "auto",
-            },
-            ".MuiDataGrid-columnHeaderTitleContainer": {
-              padding: "0px 4px",
-            },
-          }}
-          renderRowActions={({ row }) => (
-            <Box sx={{ display: "flex", gap: "1rem" }}>
-              <Tooltip title="Edit">
-                <IconButton
-                  sx={{ padding: "4px" }} // Smaller padding for icons
+  
+  if (session.isLoggedIn == false) {
+    return <div>Authenticating...</div>;
+  } else {
+    return (
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <Box width="100%">
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              mb: 2,
+              flexWrap: "wrap",
+            }}
+          >
+            <FormControl variant="standard" sx={{ minWidth: 120, mr: 2 }}>
+              <InputLabel id="select-month-label">Month</InputLabel>
+              <Select
+                labelId="select-month-label"
+                id="select-month"
+                value={selectedMonth}
+                onChange={(e) => setSelectedMonth(e.target.value)}
+              >
+                {Array.from({ length: 12 }, (_, index) => (
+                  <MenuItem key={index} value={index}>
+                    {dayjs().month(index).format("MMMM")}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl variant="standard" sx={{ minWidth: 120, mr: 2 }}>
+              <InputLabel id="select-year-label">Year</InputLabel>
+              <Select
+                labelId="select-year-label"
+                id="select-year"
+                value={selectedYear}
+                onChange={(e) => setSelectedYear(e.target.value)}
+              >
+                {Array.from({ length: 5 }, (_, index) => (
+                  <MenuItem key={index} value={dayjs().year() - index}>
+                    {dayjs().year() - index}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <Typography sx={{ mr: 2 }}>
+              Total hours that month: {totalHours}
+            </Typography>
+            <Typography sx={{ mr: 2 }}>
+              Total hours this year: {totalHoursYear}
+            </Typography>
+          </Box>
+          <MaterialReactTable
+            size={isMobile ? "small" : "medium"}
+            initialState={{
+              sorting: [{ id: "date", desc: true }],
+              columnVisibility: { id: false },
+              density: isMobile ? "compact" : "standard",
+            }}
+            columns={columns}
+            // make it downloadable
+            exportable
+            data={data
+              .slice(-31)
+              .sort((a, b) => dayjs(b.date).diff(dayjs(a.date)))} // Sort and limit to last 31 entries
+            // Additional styles for compact display and vertical scrolling
+            sx={{
+              ".MuiDataGrid-root .MuiDataGrid-row": {
+                minHeight: "32px", // Reduce row height for a more compact display
+                // adjust it to the width of the screen
+                width: isMobile ? "auto" : "100%",
+              },
+              ".MuiDataGrid-viewport": {
+                overflowY: "auto", // Enable vertical scrolling
+              },
+              ".MuiDataGrid-cell": {
+                padding: "4px", // Adjust padding as needed
+                width: "auto", // Make the columns smaller
+              },
+              // make the width of the columns smaller, not the font size
+              ".MuiDataGrid-colCellWrapper": {
+                width: "auto",
+              },
+              ".MuiDataGrid-columnHeaderTitleContainer": {
+                padding: "0px 4px",
+              },
+            }}
+            renderRowActions={({ row }) => (
+              <Box sx={{ display: "flex", gap: "1rem" }}>
+                <Tooltip title="Edit">
+                  <IconButton
+                    sx={{ padding: "4px" }} // Smaller padding for icons
+                    onClick={() => {
+                      setIsEditing(true);
+                      setCurrentRow(row.original);
+                      setFormData({
+                        ...row.original,
+                        date: dayjs(row.original.date),
+                      });
+                      setCreateModalOpen(true);
+                    }}
+                  >
+                    <Edit fontSize={isMobile ? "small" : "medium"} />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Delete">
+                  <IconButton
+                    sx={{ padding: "4px" }} // Smaller padding for icons
+                    color="error"
+                    onClick={() => handleDeleteRow(row.original)}
+                  >
+                    <Delete fontSize={isMobile ? "small" : "medium"} />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            )}
+            enableRowActions
+            enableEditing
+            renderTopToolbarCustomActions={() => (
+              <Box sx={{ display: "flex", gap: "1rem" }}>
+                <Button
+                  startIcon={<AccessTime />}
+                  color="primary"
+                  variant="contained"
                   onClick={() => {
-                    setIsEditing(true);
-                    setCurrentRow(row.original);
-                    setFormData({
-                      ...row.original,
-                      date: dayjs(row.original.date),
-                    });
+                    setIsEditing(false);
+                    setEntryType("Time Entry"); // Add this line
+                    setFormData({ date: dayjs(), hours: "1", comment: "" });
                     setCreateModalOpen(true);
                   }}
                 >
-                  <Edit fontSize={isMobile ? "small" : "medium"} />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Delete">
-                <IconButton
-                  sx={{ padding: "4px" }} // Smaller padding for icons
-                  color="error"
-                  onClick={() => handleDeleteRow(row.original)}
+                  Add Time Entry
+                </Button>
+                <Button
+                  startIcon={<Surfing />}
+                  color="primary"
+                  variant="contained"
+                  onClick={() => {
+                    setIsEditing(false);
+                    setEntryType("Vacation Day"); // Add this line
+                    setFormData({ date: dayjs(), hours: "1", comment: "" });
+                    setCreateModalOpen(true);
+                  }}
                 >
-                  <Delete fontSize={isMobile ? "small" : "medium"} />
-                </IconButton>
-              </Tooltip>
-            </Box>
-          )}
-          enableRowActions
-          enableEditing
-          renderTopToolbarCustomActions={() => (
-            <Box sx={{ display: "flex", gap: "1rem" }}>
-              <Button
-                startIcon={<AccessTime />}
-                color="primary"
-                variant="contained"
-                onClick={() => {
-                  setIsEditing(false);
-                  setEntryType("Time Entry"); // Add this line
-                  setFormData({ date: dayjs(), hours: "1", comment: "" });
-                  setCreateModalOpen(true);
-                }}
-              >
-                Add Time Entry
-              </Button>
-              <Button
-                startIcon={<Surfing />}
-                color="primary"
-                variant="contained"
-                onClick={() => {
-                  setIsEditing(false);
-                  setEntryType("Vacation Day"); // Add this line
-                  setFormData({ date: dayjs(), hours: "1", comment: "" });
-                  setCreateModalOpen(true);
-                }}
-              >
-                Add Vacation Day
-              </Button>
-              <Button
-                startIcon={<Sick />}
-                color="primary"
-                variant="contained"
-                onClick={() => {
-                  setIsEditing(false);
-                  setEntryType("Sick Leave"); // Add this line
-                  setFormData({ date: dayjs(), hours: "1", comment: "" });
-                  setCreateModalOpen(true);
-                }}
-              >
-                Add Sick Leave
-              </Button>
-              {/* Add more props and configurations as needed */}
-            </Box>
-          )}
-        />
-        {renderDialog()}
-      </Box>
-    </LocalizationProvider>
-  );
+                  Add Vacation Day
+                </Button>
+                <Button
+                  startIcon={<Sick />}
+                  color="primary"
+                  variant="contained"
+                  onClick={() => {
+                    setIsEditing(false);
+                    setEntryType("Sick Leave"); // Add this line
+                    setFormData({ date: dayjs(), hours: "1", comment: "" });
+                    setCreateModalOpen(true);
+                  }}
+                >
+                  Add Sick Leave
+                </Button>
+                {/* Add more props and configurations as needed*/}
+              </Box>
+            )}
+          />
+          {renderDialog()}
+        </Box>
+      </LocalizationProvider>
+    );
+  };
 };
-
 export default TimeEntry;

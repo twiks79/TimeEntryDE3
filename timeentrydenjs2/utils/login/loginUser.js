@@ -6,12 +6,18 @@
 import { TableClient, AzureNamedKeyCredential } from "@azure/data-tables";
 import crypto from "crypto";
 
-const accountName = process.env.TIMEENTRYTABLES;
-const accountKey = process.env.TIMEENTRYTABLES_KEY;
-const connectionString = process.env.TIMEENTRYTABLES_CONNECTION;
-const aPartitionKey = 'partition1'
 
 export async function loginUser(username, password) {
+
+
+  const accountName = process.env.TIMEENTRYTABLES;
+  const accountKey = process.env.TIMEENTRYTABLES_KEY;
+  const connectionString = process.env.TIMEENTRYTABLES_CONNECTION;
+  const aPartitionKey = 'partition1';
+
+  // log the above constants in one statement
+  console.log('accountName', accountName, 'accountKey', accountKey, 'connectionString', connectionString, 'aPartitionKey', aPartitionKey);
+ 
   // Check for required environment variables
   if (!accountName || !accountKey || !connectionString) {
     throw new Error("Environment variables for Azure Table Storage are not set");
@@ -20,7 +26,6 @@ export async function loginUser(username, password) {
   // Create a sha256 hash of the password
   const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
   // hashed_password = hashlib.sha256(password.encode()).hexdigest()
-
 
   console.log('username', username)
   console.log('hashedPassword', hashedPassword);

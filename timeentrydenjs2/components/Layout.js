@@ -19,15 +19,18 @@ import TimerIcon from '@mui/icons-material/Timer';
 import InfoIcon from '@mui/icons-material/Info';
 import Link from 'next/link';
 import { Icon } from '@mui/material';
-import { signOut } from 'next-auth/react';
-import { useSession } from "next-auth/react"
+import useSession from "../utils/useSession";
+import { defaultSession } from "../utils/lib";
+import LoginC from '../pages/LoginC';
 
 const drawerWidth = 240;
 
 export default function Layout({ children }) {
   const [open, setOpen] = React.useState(true);
+  const { session, isLoading } = useSession();
+  const { logout } = useSession();
 
-  const { data: session } = useSession();
+
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -53,18 +56,23 @@ export default function Layout({ children }) {
           </Typography>
 
           {/* Show username */}
-          {session && (
+          {session.isLoggedIn && (
             <Typography variant="subtitle1" noWrap sx={{ mr: 2 }}>
-              {session.user.name}
+              {session.username}
             </Typography>
           )}
-          
+
           {/* Logout button */}
           <IconButton
             edge="end"
             color="inherit"
             aria-label="logout"
-            onClick={() => signOut()}
+            onClick={(event) => {
+              event.preventDefault();
+              logout(null, {
+                optimisticData: defaultSession,
+              });
+            }}
           >
             <LogoutIcon />
           </IconButton>
@@ -121,7 +129,9 @@ export default function Layout({ children }) {
         <Toolbar />
         {/* add margin around children */}
         <Box sx={{ margin: '20px' }}>
-          {children}
+          {/* if logged in call children, if not call LoginC */}
+          {session.isLoggedIn ? children : <LoginC />}
+          
         </Box>
       </Box>
     </Box>

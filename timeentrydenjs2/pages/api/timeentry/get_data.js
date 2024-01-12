@@ -20,7 +20,7 @@
  *
  */
 
-import { TableClient, AzureNamedKeyCredential } from "@azure/data-tables";
+
 import { getRowsFromTable } from '../../../utils/db/db';
 
 
@@ -32,15 +32,16 @@ export default async function handler(req, res) {
 
   // get current user name from session
   // get username from query string
-  const username = req.query.username;
-  console.log('username', username);
+  const username = req.query.user2;
+  console.log('user2', username);
 
 
   // filter for Partition key and username
   const filter = `PartitionKey eq '${aPartitionKey}' and username eq '${username}'`;
-
+  const regex = /^[a-zA-Z0-9]+ eq |\bg[te] /;
+  console.log('test: ', regex.test(filter));
   const rows = await getRowsFromTable('times', filter);
-  
+
   console.log('rows', rows);
   // map row to data object with id, date, hours, comment, username
   const data = rows.map(row => {

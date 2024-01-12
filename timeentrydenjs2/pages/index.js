@@ -6,9 +6,8 @@
  */
 
 import React from 'react';
-import { useSession, signOut } from 'next-auth/react';
+
 import { Button, CircularProgress, Typography, Container, Grid } from '@mui/material';
-import Layout from '../components/Layout';
 import NextLink from 'next/link';
 import CategorySection from '../components/CategorySection';
 import Link from '@mui/material/Link';
@@ -18,11 +17,16 @@ import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import DescriptionIcon from '@mui/icons-material/Description';
 import BusinessIcon from '@mui/icons-material/Business';
-import OvertimeIcon from '@mui/icons-material/AccessAlarms'; 
-import VacationIcon from '@mui/icons-material/FlightTakeoff'; 
+import OvertimeIcon from '@mui/icons-material/AccessAlarms';
+import VacationIcon from '@mui/icons-material/FlightTakeoff';
+
+import useSession from "../utils/useSession";
+import { defaultSession } from "../utils/lib";
+import loginUser from '../utils/login/loginUser'
+
 
 export default function Home() {
-  const { data: session, status } = useSession();
+  const { session, isLoading } = useSession();
 
   const cardData = {
     timeEntry: [
@@ -75,38 +79,35 @@ export default function Home() {
     ],
   };
 
-  if (status === 'loading') {
+  if (isLoading) {
     return (
-      <Layout>
-        <Container>
-          <CircularProgress />
-        </Container>
-      </Layout>
+      <Container>
+        <CircularProgress />
+      </Container>
     );
   }
 
-  if (!session) {
+  if (session.isLoggedIn == false) {
     return (
-        <Container>
-          <Typography variant="h4" sx={{ mt: 2 }}>Welcome to Time Entry</Typography>
-          <Typography variant="body1" sx={{ mt: 2 }}>Please sign in to continue.</Typography>
-          <NextLink href="/LoginC" passHref>
-            <Link>
-              <Button variant="contained">Sign In</Button>
-            </Link>
-          </NextLink>
-        </Container>
+      <Container>
+        <Typography variant="h4" sx={{ mt: 2 }}>Welcome to Time Entry</Typography>
+        <Typography variant="body1" sx={{ mt: 2 }}>Please sign in to continue.</Typography>
+        <NextLink href="/LoginC" passHref>
+          <Link>
+            <Button variant="contained">Sign In</Button>
+          </Link>
+        </NextLink>
+      </Container>
 
     );
   }
 
   return (
-
-      <Container maxWidth="lg" sx={{ mt: 1 }}>
-        <CategorySection category="Category 1: Time Entry" cards={cardData.timeEntry} />
-        <CategorySection category="Category 2: Configuration" cards={cardData.configuration} />
-        <CategorySection category="Category 3: Overview" cards={cardData.overview} />
-      </Container>
+    <Container maxWidth="lg" sx={{ mt: 1 }}>
+      <CategorySection category="Category 1: Time Entry" cards={cardData.timeEntry} />
+      <CategorySection category="Category 2: Configuration" cards={cardData.configuration} />
+      <CategorySection category="Category 3: Overview" cards={cardData.overview} />
+    </Container>
 
   );
 }
