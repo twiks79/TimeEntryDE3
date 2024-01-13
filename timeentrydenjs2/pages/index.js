@@ -23,6 +23,7 @@ import VacationIcon from '@mui/icons-material/FlightTakeoff';
 import useSession from "../utils/useSession";
 import { defaultSession } from "../utils/lib";
 import loginUser from '../utils/login/loginUser'
+import LoginC from './LoginC';
 
 
 export default function Home() {
@@ -89,16 +90,7 @@ export default function Home() {
 
   if (session.isLoggedIn == false) {
     return (
-      <Container>
-        <Typography variant="h4" sx={{ mt: 2 }}>Welcome to Time Entry</Typography>
-        <Typography variant="body1" sx={{ mt: 2 }}>Please sign in to continue.</Typography>
-        <NextLink href="/LoginC" passHref>
-          <Link>
-            <Button variant="contained">Sign In</Button>
-          </Link>
-        </NextLink>
-      </Container>
-
+      <LoginC />
     );
   }
 

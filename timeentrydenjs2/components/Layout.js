@@ -17,6 +17,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import HomeIcon from '@mui/icons-material/Home';
 import TimerIcon from '@mui/icons-material/Timer';
 import InfoIcon from '@mui/icons-material/Info';
+import ConfigIcon from '@mui/icons-material/Settings';
 import Link from 'next/link';
 import { Icon } from '@mui/material';
 import useSession from "../utils/useSession";
@@ -105,6 +106,14 @@ export default function Layout({ children }) {
                 <TimerIcon />
               </ListItemIcon>
               <ListItemText primary="Time Entry" />
+            </ListItemButton>
+
+            {/* Configuration Item */}
+            <ListItemButton component={Link} href="/config">
+              <ListItemIcon>
+                <ConfigIcon />
+              </ListItemIcon>
+              <ListItemText primary="Configuration" />
             </ListItemButton>
 
             {/* About Us Item */}

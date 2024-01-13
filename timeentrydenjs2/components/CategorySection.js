@@ -10,10 +10,10 @@ export default function CategorySection({ category, cards }) {
             <Typography variant="h6" component="h2" gutterBottom style={{ marginBottom: '16px' }}>
                 {category}
             </Typography>
-            <Grid container spacing={2} style={{ marginBottom: '16px' }}>
+            <Grid container spacing={2} style={{ marginBottom: '16px', display: 'flex' }}>
                 {cards.map((card, index) => (
-                    <Grid item key={index} xs={12} sm={6} md={4}>
-                        <InfoCard {...card} />
+                    <Grid item key={index} xs={12} sm={6} md={4} style={{ display: 'flex' }}>
+                        <InfoCard {...card} style={{ flex: '1' }} />
                     </Grid>
                 ))}
             </Grid>

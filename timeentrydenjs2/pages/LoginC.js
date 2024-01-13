@@ -92,6 +92,7 @@ const LoginC = () => {
                     // Assuming the server responds with user data on successful login
                     console.log('User logged in', data.user);
                     // Call any method that sets the user session or any redirection if needed
+                    
                     router.push('/');
                 } else {
                     throw new Error(data.error || 'Login failed');
