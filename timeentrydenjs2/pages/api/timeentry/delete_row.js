@@ -1,5 +1,5 @@
 /**
- * get_row.js
+ * delete_row.js
  * 
  * This file is called from the front end and will add a row to the times table
  * 

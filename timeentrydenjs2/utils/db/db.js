@@ -64,6 +64,35 @@ export async function getRows(tableName) {
     }
 }
 
+export async function getEmployerForUsername(username) {
+    const tableName = 'employers';
+
+    try {
+        
+        const client = getTableClient(tableName);
+        
+        const filter = `PartitionKey eq 'partition1' and Username eq '${username}'`; // Make sure property names are correctly cased
+        
+        const queryOptions = { filter: filter };
+        console.log('Query Filter:', queryOptions.filter); // Log the actual filter string
+
+        const iterator = client.listEntities(queryOptions);
+
+        const rows = [];
+
+        for await (const entity of iterator) {
+            // need to add a filter as i get all usernames
+            if (entity.username === username) rows.push(entity);
+        }
+
+        console.log(`Retrieved ${rows.length} rows from table '${tableName}' with filter '${queryOptions}'.`);
+        
+        return rows;
+    } catch (error) {
+        console.error(`Error retrieving rows from table '${tableName}' with filter '${queryOptions}':`, error);
+        throw error; // rethrow the error after logging
+    }
+}
 
 // implement getTimeEntryRowsForUsername that returns rows for a given table with a given filter
 export async function getTimeEntryRowsForUsername(username) {

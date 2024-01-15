@@ -25,41 +25,113 @@ import { defaultSession } from "../utils/lib";
 import loginUser from '../utils/login/loginUser'
 import LoginC from './LoginC';
 
+const [data, setData] = useState([]);
 
-export default function Config() {
-  const { session, isLoading } = useSession();
+// Fetch data initially
+useEffect(() => {
+    fetchData();
+}, []);
 
-  if (isLoading) {
-    return (
-      <Container>
-        <CircularProgress />
-      </Container>
-    );
-  }
-
-  if (session.isLoggedIn == false) {
-    return (
-      <LoginC />
-    );
-  }
-
-
-
-
-  return (
-    <Container>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Configuration
-      </Typography>
-      <Typography variant="body1" gutterBottom>
-        This is the configuration page.
-      </Typography>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6} md={4}>
-          {/* */}
-        </Grid>
-      </Grid>
-    </Container>
-  );
-
+// Fetch table data
+const fetchData = async () => {
+    const response = await fetch('/api/employer/get_data');
+    const data = await response.json();
+    setData(data);
 }
+
+// Delete row
+const handleDelete = async (row) => {
+    await fetch('/api/employer/delete_row', {
+        method: 'POST',
+        body: JSON.stringify(row)
+    });
+    fetchData();
+}
+
+// Add row 
+const [open, setOpen] = useState(false);
+const [newData, setNewData] = useState({});
+
+const handleAdd = async () => {
+    await fetch('/api/employer/add_row', {
+        method: 'POST',
+        body: JSON.stringify(newData)
+    });
+    setOpen(false);
+    fetchData();
+}
+
+// Update row
+const [rowToUpdate, setRowToUpdate] = useState(null);
+
+const handleUpdate = async () => {
+    await fetch('/api/employer/update_row', {
+        method: 'PUT',
+        body: JSON.stringify({
+            ...rowToUpdate,
+            ...newData
+        })
+    });
+    setOpen(false);
+    fetchData();
+}
+
+// Table columns
+/** the following column ids: PartitionKey, RowKey, Timestamp, employer, contractName, startDate, endDate, hoursPerWeek, compensationPerHour
+  * */
+const columns = [
+    { Header: 'Partition Key', accessor: 'PartitionKey' },
+    { Header: 'Employee', accessor: 'RowKey' },
+    { Header: 'Timestamp', accessor: 'Timestamp' },
+    { Header: 'Employer', accessor: 'employer' },
+    { Header: 'Contract Name', accessor: 'contractName' },
+    { Header: 'Start Date', accessor: 'startDate' },
+    { Header: 'End Date', accessor: 'endDate' },
+    { Header: 'Hours Per Week', accessor: 'hoursPerWeek' },
+    { Header: 'Compensation Per Hour', accessor: 'compensationPerHour' },
+    { Header: 'Actions', accessor: 'actions' }
+];
+];
+
+return (
+    <>
+        <MaterialReactTable
+            columns={columns}
+            data={data}
+            renderRowActions={(row) => (
+                <Box>
+                    <Tooltip title="Edit">
+                        <IconButton
+                            onClick={() => {
+                                setOpen(true);
+                                setNewData(row.original);
+                                setRowToUpdate(row.original);
+                            }}
+                        >
+                            <Edit />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Delete">
+                        <IconButton onClick={() => handleDelete(row.original)}>
+                            <Delete />
+                        </IconButton>
+                    </Tooltip>
+                </Box>
+            )} /><Dialog open={open}>
+            <DialogTitle>
+                {rowToUpdate ? 'Edit Row' : 'Add Row'}
+            </DialogTitle>
+
+            {/* Form fields */}
+
+            <DialogActions>
+                <Button onClick={() => setOpen(false)}>Cancel</Button>
+                <Button onClick={rowToUpdate ? handleUpdate : handleAdd}>
+                    {rowToUpdate ? 'Save' : 'Add'}
+                </Button>
+            </DialogActions>
+        </Dialog>
+    </>
+)
+
+}}
