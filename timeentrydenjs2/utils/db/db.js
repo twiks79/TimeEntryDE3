@@ -65,16 +65,16 @@ export async function getRows(tableName) {
 }
 
 export async function getEmployerForUsername(username) {
-    const tableName = 'employers';
+
+    const tableName = 'employer';
+    const filter = `PartitionKey eq 'partition1'`// and RowKey eq '${username}'`;
+    const queryOptions = { filter: filter };
 
     try {
-        
+
         const client = getTableClient(tableName);
-        
-        const filter = `PartitionKey eq 'partition1' and Username eq '${username}'`; // Make sure property names are correctly cased
-        
-        const queryOptions = { filter: filter };
-        console.log('Query Filter:', queryOptions.filter); // Log the actual filter string
+
+        console.log('Query Filter:', queryOptions); // Log the actual filter string
 
         const iterator = client.listEntities(queryOptions);
 
@@ -82,11 +82,12 @@ export async function getEmployerForUsername(username) {
 
         for await (const entity of iterator) {
             // need to add a filter as i get all usernames
-            if (entity.username === username) rows.push(entity);
+            if (entity.rowKey === username) rows.push(entity);
+            console.log(entity);
         }
 
         console.log(`Retrieved ${rows.length} rows from table '${tableName}' with filter '${queryOptions}'.`);
-        
+
         return rows;
     } catch (error) {
         console.error(`Error retrieving rows from table '${tableName}' with filter '${queryOptions}':`, error);
@@ -99,11 +100,11 @@ export async function getTimeEntryRowsForUsername(username) {
     const tableName = 'times';
 
     try {
-        
+
         const client = getTableClient(tableName);
-        
+
         const filter = `PartitionKey eq 'partition1' and Username eq '${username}'`; // Make sure property names are correctly cased
-        
+
         const queryOptions = { filter: filter };
         console.log('Query Filter:', queryOptions.filter); // Log the actual filter string
 
@@ -117,7 +118,7 @@ export async function getTimeEntryRowsForUsername(username) {
         }
 
         console.log(`Retrieved ${rows.length} rows from table '${tableName}' with filter '${queryOptions}'.`);
-        
+
         return rows;
     } catch (error) {
         console.error(`Error retrieving rows from table '${tableName}' with filter '${queryOptions}':`, error);
@@ -175,10 +176,10 @@ export async function deleteTimeEntryRow(id) {
     const aPartitionKey = 'partition1';
 
     try {
-        
+
         const client = getTableClient(tableName);
         console.log(`Deleting row from table '${tableName}' with id '${id}'.`);
-        
+
         const response = await client.deleteEntity(aPartitionKey, id);
 
         console.log(`Deleted row from table '${tableName}'.`);
@@ -208,10 +209,10 @@ export async function updateTimesRow(delEntity) {
 
 
     try {
-        
+
         const client = getTableClient(tableName);
         console.log(`Updating row from table '${tableName}' with entity '${strObject}'.`);
-        
+
 
         // update the entity in the table 'times' with replace
         const response = await client.updateEntity(updateEntity, 'Replace');
@@ -221,6 +222,6 @@ export async function updateTimesRow(delEntity) {
         return response;
     } catch (error) {
         console.error(`Error updating row from table '${tableName}'`, error);
-        throw error; 
+        throw error;
     }
 }

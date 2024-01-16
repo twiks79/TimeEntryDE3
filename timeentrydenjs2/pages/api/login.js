@@ -19,7 +19,7 @@ export default async function handler(request, response) {
         console.log('result', result);
 
         // save session
-        const session = await getIronSessi on(request, response, { password: process.env.SECRET_COOKIE_PASSWORD, cookieName: "timeentry" });
+        const session = await getIronSession(request, response, { password: process.env.SECRET_COOKIE_PASSWORD, cookieName: "timeentry" });
         session.username = username;
         session.isLoggedIn = true;
         console.log('session', session);
