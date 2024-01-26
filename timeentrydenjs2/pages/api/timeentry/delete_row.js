@@ -51,7 +51,7 @@ export default async function handler(req, res) {
         data.username = session.username;
         console.log('delete_row: data: ', data);
         const id = data.id;
-        // const result = await deleteTimeEntryRow(id);
+        const result = await deleteTimeEntryRow(id);
 
         console.log('result', result);
         res.status(200).json(result);

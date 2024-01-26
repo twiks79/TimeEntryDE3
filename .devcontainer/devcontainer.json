@@ -1,0 +1,33 @@
+{
+	"name": "Node.js with Docker",
+	"image": "mcr.microsoft.com/devcontainers/javascript-node:1-20-bullseye",
+	"features": {
+		"ghcr.io/devcontainers/features/azure-cli:1": {},
+		"ghcr.io/devcontainers/features/github-cli:1": {},
+		"ghcr.io/stuartleeks/dev-container-features/azure-cli-persistence:0": {},
+		"ghcr.io/jlaundry/devcontainer-features/azure-functions-core-tools:1": {},
+		"ghcr.io/azure/azure-dev/azd:0": {},
+		"ghcr.io/devcontainers/features/docker-in-docker:1": {}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-vscode.azurecli",
+				"ms-azuretools.vscode-azurefunctions"
+			],
+			"settings": {
+				"azureFunctions.preDeployTask": "npm run build"
+			},
+			"env": {
+				"AZURE_CLIENT_ID": "${{ secrets.AZURE_CLIENT_ID }}",
+				"AZURE_CLIENT_SECRET": "${{ secrets.AZURE_CLIENT_SECRET }}",
+				"AZURE_TENANT_ID": "${{ secrets.AZURE_TENANT_ID }}",
+				"AZURE_SUBSCRIPTION_ID": "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+			}
+		}
+	}
+	// Uncomment the following lines as needed
+	// "forwardPorts": [],
+	// "postCreateCommand": "yarn install",
+	// "remoteUser": "root"
+}

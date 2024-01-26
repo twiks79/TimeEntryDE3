@@ -13,6 +13,8 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import LogoutIcon from '@mui/icons-material/Logout';
 import IconButton from '@mui/material/IconButton';
+import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
+
 import MailIcon from '@mui/icons-material/Mail';
 import HomeIcon from '@mui/icons-material/Home';
 import TimerIcon from '@mui/icons-material/Timer';
@@ -22,7 +24,9 @@ import Link from 'next/link';
 import { Icon } from '@mui/material';
 import useSession from "../utils/useSession";
 import { defaultSession } from "../utils/lib";
+import { useRouter } from 'next/router';
 import LoginC from '../pages/LoginC';
+import ConfigPage from '../pages/config';
 
 const drawerWidth = 240;
 
@@ -30,7 +34,7 @@ export default function Layout({ children }) {
   const [open, setOpen] = React.useState(true);
   const { session, isLoading } = useSession();
   const { logout } = useSession();
-
+  const router = useRouter();
 
 
   const handleDrawerOpen = () => {
@@ -73,6 +77,8 @@ export default function Layout({ children }) {
               logout(null, {
                 optimisticData: defaultSession,
               });
+              // reroute to login page
+              router.push('/LoginC');
             }}
           >
             <LogoutIcon />
@@ -115,7 +121,14 @@ export default function Layout({ children }) {
               </ListItemIcon>
               <ListItemText primary="Configuration" />
             </ListItemButton>
-
+          {/* For Employers Item */}
+          <ListItemButton component={Link} href="/employers">
+            <ListItemIcon>
+              <BusinessCenterIcon />
+            </ListItemIcon>
+            <ListItemText primary="For Employers" />
+          </ListItemButton>
+          
             {/* About Us Item */}
             <ListItemButton component={Link} href="/about">
               <ListItemIcon>

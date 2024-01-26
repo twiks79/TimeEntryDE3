@@ -16,16 +16,19 @@ export const defaultSession = {
   };
 
 
-  export default async function logToServer(args) {
-  // msg are several arguments, transformed into a string
-  // only continue, if the first argument is equal to 'Client: '
-  
-  const msg = JSON.stringify(args);
+export default async function logToServer(...args) {
+  // Join the arguments with a separator and convert them into a string
+  const msg = args.join(' - ');
 
   try {
     await fetch('/api/log', {
-      method: 'POST', 
-      body: msg
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ message: msg })
     });
-  } catch(e) {}
-};
+  } catch (e) {
+    console.error("Error logging to server:", e);
+  }
+}

@@ -66,33 +66,6 @@ export async function getRows(tableName) {
 
 export async function getEmployerForUsername(username) {
 
-    const tableName = 'employer';
-    const filter = `PartitionKey eq 'partition1'`// and RowKey eq '${username}'`;
-    const queryOptions = { filter: filter };
-
-    try {
-
-        const client = getTableClient(tableName);
-
-        console.log('Query Filter:', queryOptions); // Log the actual filter string
-
-        const iterator = client.listEntities(queryOptions);
-
-        const rows = [];
-
-        for await (const entity of iterator) {
-            // need to add a filter as i get all usernames
-            if (entity.rowKey === username) rows.push(entity);
-            console.log(entity);
-        }
-
-        console.log(`Retrieved ${rows.length} rows from table '${tableName}' with filter '${queryOptions}'.`);
-
-        return rows;
-    } catch (error) {
-        console.error(`Error retrieving rows from table '${tableName}' with filter '${queryOptions}':`, error);
-        throw error; // rethrow the error after logging
-    }
 }
 
 // implement getTimeEntryRowsForUsername that returns rows for a given table with a given filter

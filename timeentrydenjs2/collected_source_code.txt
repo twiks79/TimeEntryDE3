@@ -1,83 +1,154 @@
 File: ./components/Layout.js
 import * as React from 'react';
-import {
-    AppBar,
-    Toolbar,
-    Typography,
-    Box,
-    IconButton,
-    List,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
-    Divider,
-} from '@mui/material';
+import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import TimerIcon from '@mui/icons-material/Timer';
+import AppBar from '@mui/material/AppBar';
+import CssBaseline from '@mui/material/CssBaseline';
+import Toolbar from '@mui/material/Toolbar';
+import List from '@mui/material/List';
+import Typography from '@mui/material/Typography';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { signOut } from 'next-auth/react';
+import IconButton from '@mui/material/IconButton';
+import MailIcon from '@mui/icons-material/Mail';
+import HomeIcon from '@mui/icons-material/Home';
+import TimerIcon from '@mui/icons-material/Timer';
+import InfoIcon from '@mui/icons-material/Info';
+import ConfigIcon from '@mui/icons-material/Settings';
 import Link from 'next/link';
+import { Icon } from '@mui/material';
+import useSession from "../utils/useSession";
+import { defaultSession } from "../utils/lib";
+import LoginC from '../pages/LoginC';
+import ConfigPage from '../pages/config';
 
 const drawerWidth = 240;
 
-function Layout({ children }) {
-    const drawer = (
-        <div>
-            <List>
-                <ListItemButton component={Link} href="/timeentry">
-                    <ListItemIcon>
-                        <TimerIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Time Entry" />
-                </ListItemButton>
-            </List>
-            <Divider />
-        </div>
-    );
+export default function Layout({ children }) {
+  const [open, setOpen] = React.useState(true);
+  const { session, isLoading } = useSession();
+  const { logout } = useSession();
 
-    return (
-        <Box sx={{ display: 'flex' }}>
-            <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-                <Toolbar>
-                    <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-                        Time Entry App
-                    </Typography>
-                    <IconButton
-                        color="inherit"
-                        edge="end"
-                        onClick={() => signOut()}
-                    >
-                        <LogoutIcon />
-                        <Typography variant="body1" noWrap sx={{ ml: 1 }}>
-                            Logout
-                        </Typography>
-                    </IconButton>
-                </Toolbar>
-            </AppBar>
-            <Box
-                component="nav"
-                sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-                aria-label="mailbox folders"
-            >
-                <Drawer
-                    variant="permanent"
-                    sx={{
-                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-                    }}
-                    open
-                >
-                    {drawer}
-                </Drawer>
-            </Box>
-            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-                <Toolbar />
-                {children}
-            </Box>
+
+
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
+
+  return (
+    <Box sx={{ display: 'flex' }}>
+      <CssBaseline />
+      <AppBar
+        position="fixed"
+        sx={{
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+        }}
+      >
+        <Toolbar>
+          <TimerIcon sx={{ mr: 2 }} />
+          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+            Time Entry App
+          </Typography>
+
+          {/* Show username */}
+          {session.isLoggedIn && (
+            <Typography variant="subtitle1" noWrap sx={{ mr: 2 }}>
+              {session.username}
+            </Typography>
+          )}
+
+          {/* Logout button */}
+          <IconButton
+            edge="end"
+            color="inherit"
+            aria-label="logout"
+            onClick={(event) => {
+              event.preventDefault();
+              logout(null, {
+                optimisticData: defaultSession,
+              });
+            }}
+          >
+            <LogoutIcon />
+          </IconButton>
+
+        </Toolbar>
+      </AppBar>
+      <Drawer
+        variant="permanent"
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+          display: open ? 'block' : 'none', // Hide the drawer when closed
+        }}
+      >
+        <Toolbar />
+        <Box sx={{ overflow: 'auto' }}>
+          <List>
+            {/* Start Page Item */}
+            <ListItemButton component={Link} href="/">
+              <ListItemIcon>
+                <HomeIcon />
+              </ListItemIcon>
+              <ListItemText primary="Start Page" />
+            </ListItemButton>
+
+            {/* Time Entry Item */}
+            <ListItemButton component={Link} href="/timeentry">
+              <ListItemIcon>
+                <TimerIcon />
+              </ListItemIcon>
+              <ListItemText primary="Time Entry" />
+            </ListItemButton>
+
+            {/* Configuration Item */}
+            <ListItemButton component={Link} href="/config">
+              <ListItemIcon>
+                <ConfigIcon />
+              </ListItemIcon>
+              <ListItemText primary="Configuration" />
+            </ListItemButton>
+
+            {/* About Us Item */}
+            <ListItemButton component={Link} href="/about">
+              <ListItemIcon>
+                <InfoIcon />
+              </ListItemIcon>
+              <ListItemText primary="About Us" />
+            </ListItemButton>
+          </List>
         </Box>
-    );
+      </Drawer>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          p: 3,
+          paddingTop: '0px', // Adjust top padding to move content more to the top
+          paddingLeft: '0px', // Adjust left padding to move content more to the left
+        }}
+      >
+        <Toolbar />
+        {/* add margin around children */}
+        <Box sx={{ margin: '20px' }}>
+          {/* if logged in call children, if not call LoginC */}
+          {session.isLoggedIn ? children : <LoginC />}
+          
+        </Box>
+      </Box>
+    </Box>
+  );
 }
-
-export default Layout;File: ./components/CategorySection.js
+File: ./components/CategorySection.js
 // components/CategorySection.js
 
 import React from 'react';
@@ -90,10 +161,10 @@ export default function CategorySection({ category, cards }) {
             <Typography variant="h6" component="h2" gutterBottom style={{ marginBottom: '16px' }}>
                 {category}
             </Typography>
-            <Grid container spacing={2} style={{ marginBottom: '16px' }}>
+            <Grid container spacing={2} style={{ marginBottom: '16px', display: 'flex' }}>
                 {cards.map((card, index) => (
-                    <Grid item key={index} xs={12} sm={6} md={4}>
-                        <InfoCard {...card} />
+                    <Grid item key={index} xs={12} sm={6} md={4} style={{ display: 'flex' }}>
+                        <InfoCard {...card} style={{ flex: '1' }} />
                     </Grid>
                 ))}
             </Grid>
@@ -125,16 +196,332 @@ function InfoCard({ icon, title, additionalText, link }) {
   );
 }
 
-export default InfoCard;File: ./utils/login/loginUser.js
-// utils/authenticate.js
-import { TableServiceClient, AzureNamedKeyCredential } from "@azure/data-tables";
+export default InfoCard;File: ./utils/lib.js
+export const defaultSession = {
+    username: "",
+    isLoggedIn: false,
+  };
+  
+  export const sessionOptions = {
+    password: process.env.SECRET_COOKIE_PASSWORD,
+    cookieName: "timeentry",
+    cookieOptions: {
+      secure: true, // Note: secure should be set to `process.env.NODE_ENV === "production"` if you want it to work in non-HTTPS environments like localhost
+    },
+  };
+  
+  export function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  };
+
+
+export default async function logToServer(...args) {
+  // Join the arguments with a separator and convert them into a string
+  const msg = args.join(' - ');
+
+  try {
+    await fetch('/api/log', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ message: msg })
+    });
+  } catch (e) {
+    console.error("Error logging to server:", e);
+  }
+}
+File: ./utils/db/db.js
+/**
+ * db.js
+ * This file contains the functions to connect to Azure Table Storage
+ * It uses the following environment variables:
+ *  TIMEENTRYTABLES: the name of the Azure Table Storage account
+ *  TIMEENTRYTABLES_KEY: the key for the Azure Table Storage account
+ *  TIMEENTRYTABLES_CONNECTION: the connection string for the Azure Table Storage account
+ * 
+ * This file uses the following packages:
+ *  @azure/data-tables: to connect to Azure Table Storage
+ *
+ */
+
+import { TableClient, AzureNamedKeyCredential } from "@azure/data-tables";
+import { v4 as uuidv4 } from 'uuid';
+import getironSession from 'next-iron-session';
+import logToServer from "../lib";
+
+
+
+// Helper function to create a URL from the account name
+function createTableServiceClientUrl(accountName) {
+    return `https://${accountName}.table.core.windows.net`;
+}
+
+// implement getTableClient that returns a TableClient for a given table name
+export function getTableClient(tableName) {
+    try {
+        const accountName = process.env.TIMEENTRYTABLES;
+        const accountKey = process.env.TIMEENTRYTABLES_KEY;
+
+        if (!accountName || !accountKey) {
+            throw new Error('Environment variables for Azure Table Storage account name and key are not set properly.');
+        }
+
+        // Create a URL using the helper function
+        const url = createTableServiceClientUrl(accountName);
+        const credential = new AzureNamedKeyCredential(accountName, accountKey);
+
+        // Use the URL and credentials to create the TableClient
+        const client = new TableClient(url, tableName, credential);
+        console.log(`TableClient for table '${tableName}' has been created.`);
+        return client;
+    } catch (error) {
+        console.error('Error getting TableClient:', error);
+        throw error; // rethrow the error after logging
+    }
+}
+
+// implement getRows that returns all rows from a given table
+export async function getRows(tableName) {
+    try {
+        const client = getTableClient(tableName);
+        const iterator = client.listEntities();
+        const rows = [];
+        for await (const entity of iterator) {
+            rows.push(entity);
+        }
+        console.log(`Retrieved ${rows.length} rows from table '${tableName}'.`);
+        return rows;
+    } catch (error) {
+        console.error(`Error retrieving rows from table '${tableName}':`, error);
+        throw error; // rethrow the error after logging
+    }
+}
+
+export async function getEmployerForUsername(username) {
+
+}
+
+// implement getTimeEntryRowsForUsername that returns rows for a given table with a given filter
+export async function getTimeEntryRowsForUsername(username) {
+    const tableName = 'times';
+
+    try {
+
+        const client = getTableClient(tableName);
+
+        const filter = `PartitionKey eq 'partition1' and Username eq '${username}'`; // Make sure property names are correctly cased
+
+        const queryOptions = { filter: filter };
+        console.log('Query Filter:', queryOptions.filter); // Log the actual filter string
+
+        const iterator = client.listEntities(queryOptions);
+
+        const rows = [];
+
+        for await (const entity of iterator) {
+            // need to add a filter as i get all usernames
+            if (entity.username === username) rows.push(entity);
+        }
+
+        console.log(`Retrieved ${rows.length} rows from table '${tableName}' with filter '${queryOptions}'.`);
+
+        return rows;
+    } catch (error) {
+        console.error(`Error retrieving rows from table '${tableName}' with filter '${queryOptions}':`, error);
+        throw error; // rethrow the error after logging
+    }
+}
+
+/**
+ * 
+ * @param {*} tableName 
+ * @param {*} row
+ * The row should have the following properties:
+ * date: the date of the time entry
+ * hours: the number of hours for the time entry 
+ * comment: the comment for the time entry
+ * type: the type of the time entry: 'Time Entry', 'Sick Leave', 'Vaccation'
+ * @returns row
+ * The row will have the following properties:
+ * id: the RowKey from Azure Table Storage
+ * rest same as row
+ */
+export async function addRowToTable(tableName, row) {
+    try {
+
+
+        const client = getTableClient(tableName);
+        // create a row for the table and map the fields from the data
+        // and generate a UUID for the RowKey
+        // get username from session
+        const entity = {
+            PartitionKey: 'partition1',
+            RowKey: uuidv4(),
+            date: row.date,
+            hours: row.hours,
+            comment: row.comment,
+            type: row.type,
+            username: row.username,
+        };
+        console.log(`Adding row to table '${tableName}' with data:`, entity);
+        const response = await client.createEntity(entity);
+        console.log(`Added row to table '${tableName}'.`);
+        console.log(response);
+
+        return entity;
+    } catch (error) {
+        console.error(`Error adding row to table '${tableName}':`, error);
+        throw error; // rethrow the error after logging
+    }
+}
+
+// deleteTimeEntryRow
+// implement deleteTimeEntryRow that deletes a row from the times table
+export async function deleteTimeEntryRow(id) {
+    const tableName = 'times';
+    const aPartitionKey = 'partition1';
+
+    try {
+
+        const client = getTableClient(tableName);
+        console.log(`Deleting row from table '${tableName}' with id '${id}'.`);
+
+        const response = await client.deleteEntity(aPartitionKey, id);
+
+        console.log(`Deleted row from table '${tableName}'.`);
+        console.log(response);
+        return response;
+    } catch (error) {
+        console.error(`Error deleting row from table '${tableName}' with id '${id}':`, error);
+        throw error; // rethrow the error after logging
+    }
+}
+
+// deleteTimeEntryRow
+// implement deleteTimeEntryRow that deletes a row from the times table
+export async function updateTimesRow(delEntity) {
+    const tableName = 'times';
+    const aPartitionKey = 'partition1';
+    const updateEntity = {
+        partitionKey: aPartitionKey,
+        rowKey: delEntity.id,
+        date: delEntity.date,
+        hours: delEntity.hours,
+        comment: delEntity.comment,
+        type: delEntity.type,
+        username: delEntity.username,
+    };
+    const strObject = JSON.stringify(updateEntity);
+
+
+    try {
+
+        const client = getTableClient(tableName);
+        console.log(`Updating row from table '${tableName}' with entity '${strObject}'.`);
+
+
+        // update the entity in the table 'times' with replace
+        const response = await client.updateEntity(updateEntity, 'Replace');
+
+        console.log(`Updated row from table '${tableName}'.`);
+        console.log(response);
+        return response;
+    } catch (error) {
+        console.error(`Error updating row from table '${tableName}'`, error);
+        throw error;
+    }
+}
+File: ./utils/useSession.js
+import useSWR from 'swr';
+import { defaultSession } from './lib';
+import useSWRMutation from 'swr/mutation';
+
+const sessionApiRoute = '../api/session';
+
+async function fetchJson(input, init) {
+    return fetch(input, {
+        headers: {
+            accept: 'application/json',
+            'content-type': 'application/json',
+        },
+        ...init,
+    }).then((res) => res.json());
+}
+
+function doLogin(url, { arg }) {
+    return fetchJson(url, {
+        method: 'POST',
+        body: JSON.stringify({ username: arg }),
+    });
+}
+
+function doLogout(url) {
+    return fetchJson(url, {
+        method: 'DELETE',
+    });
+}
+
+export default function useSession() {
+    const { data: session, isLoading } = useSWR(sessionApiRoute, fetchJson, {
+        fallbackData: defaultSession,
+    });
+
+    const { trigger: login } = useSWRMutation(sessionApiRoute, doLogin, {
+        revalidate: false,
+    });
+    const { trigger: logout } = useSWRMutation(sessionApiRoute, doLogout);
+
+    return { session, logout, login, isLoading };
+}File: ./utils/useUser.js
+
+import { useEffect } from 'react';
+import Router from 'next/router';
+import useSWR from 'swr';
+
+export default function useUser({
+  redirectTo = false,
+  redirectIfFound = false,
+} = {}) {
+  const { data: user, mutate: mutateUser } = useSWR('/api/user');
+
+  useEffect(() => {
+    // if no redirect needed, just return (example: already on /dashboard)
+    // if user data not yet there (fetch in progress, logged in or not) then don't do anything yet
+    if (!redirectTo || !user) return;
+
+    if (
+      // If redirectTo is set, redirect if the user was not found.
+      (redirectTo && !redirectIfFound && !user?.isLoggedIn) ||
+      // If redirectIfFound is also set, redirect if the user was found
+      (redirectIfFound && user?.isLoggedIn)
+    ) {
+      Router.push(redirectTo);
+    }
+  }, [user, redirectIfFound, redirectTo]);
+
+  return { user, mutateUser };
+}File: ./utils/login/loginUser.js
+/**
+ * loginUser.js
+ * 
+ */
+
+import { TableClient, AzureNamedKeyCredential } from "@azure/data-tables";
 import crypto from "crypto";
 
-const accountName = process.env.TIMEENTRYTABLES;
-const accountKey = process.env.TIMEENTRYTABLES_KEY;
-const connectionString = process.env.TIMEENTRYTABLES_CONNECTION;
 
 export async function loginUser(username, password) {
+
+
+  const accountName = process.env.TIMEENTRYTABLES;
+  const accountKey = process.env.TIMEENTRYTABLES_KEY;
+  const connectionString = process.env.TIMEENTRYTABLES_CONNECTION;
+  const aPartitionKey = 'partition1';
+
+  // log the above constants in one statement
+  console.log('accountName', accountName, 'accountKey', accountKey, 'connectionString', connectionString, 'aPartitionKey', aPartitionKey);
+ 
   // Check for required environment variables
   if (!accountName || !accountKey || !connectionString) {
     throw new Error("Environment variables for Azure Table Storage are not set");
@@ -142,72 +529,1329 @@ export async function loginUser(username, password) {
 
   // Create a sha256 hash of the password
   const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
+  // hashed_password = hashlib.sha256(password.encode()).hexdigest()
+
   console.log('username', username)
   console.log('hashedPassword', hashedPassword);
 
   // Create the table service client
   const credential = new AzureNamedKeyCredential(accountName, accountKey);
-  const tableServiceClient = new TableServiceClient(connectionString, credential);
+  console.log('credential', credential);
 
-  // Check if user is available in Azure Tables
-  const tableClient = tableServiceClient.getTableClient('users');
-  const entities = tableClient.listEntities({
-    queryOptions: { filter: `RowKey eq '${username}'` }
-  });
-
-  for await (const entity of entities) {
-    if (entity.RowKey === username && entity.password === hashedPassword) {
-      // User is authenticated
-      console.log('user authenticated', entity);
-      return true;
-    }
+  let tableClient;
+  try {
+    // Create the table client for the 'users' table
+    tableClient = TableClient.fromConnectionString(connectionString, 'users');
+    console.log('tableClient', tableClient);
+  } catch (error) {
+    console.error('Error creating TableClient:', error);
+    return false;
   }
 
-  // User is not found or password does not match
+  const queryOptions = { filter: `PartitionKey eq '${aPartitionKey}' and RowKey eq '${username}' and password eq '${hashedPassword}'` };
+  try {
+    const entities = tableClient.listEntities({
+      queryOptions: queryOptions
+    });
+    console.log('queryOptions', queryOptions);
+    console.log('entities', entities);
+    // log number of entities found
+    let count = 0;
+    let authenticatedEntity = null; // Initialize the variable to store the authenticated entity
+    for await (const entity of entities) {
+      authenticatedEntity = entity; // Assign the current entity to the variable
+      count++;
+    }
+    console.log(`Found ${count} entities`);
+    if (count == 1) {
+      // User is authenticated
+      console.log('user authenticated', authenticatedEntity);
+
+      return authenticatedEntity;
+    }
+
+
+    // User is not found or password does not match
+    console.log('user not found or password does not match');
+  } catch (error) {
+    console.error('Error accessing:', error);
+
+  }
   return false;
-}File: ./pages/api/auth/[...nextauth].js
-import NextAuth from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-import { loginUser } from "../../../utils/login/loginUser";
-import { ConstructionOutlined } from "@mui/icons-material";
+}File: ./utils/login/signupUser.js
+/**
+ * loginUser.js
+ * 
+ */
 
-const options = {
-  providers: [
-    CredentialsProvider({
-      name: "Credentials",
-      credentials: {
-        username: { label: "Username", type: "text", placeholder: "jsmith" },
-        password: { label: "Password", type: "password" }
-      },
-      async authorize(credentials) {
-        // Replace this with your user authentication logic
-        const user = { id: 1, name: "ali", password: "ali123" };
-        if (credentials && credentials.username === user.name && credentials.password === user.password) {
-          console.log('authorization successful', user)
-          // call loginUser from loginUser.js
-          const user = await loginUser(credentials.username, credentials.password);
-          if (user) {
-            console.log('backend login successful');
-          }
-          
+import { TableClient, AzureNamedKeyCredential } from "@azure/data-tables";
+import crypto from "crypto";
 
-          return { id: user.id, name: user.name };
+
+export async function signupUser(username, password) {
+    console.log('signupUser');
+
+    const accountName = process.env.TIMEENTRYTABLES;
+    const accountKey = process.env.TIMEENTRYTABLES_KEY;
+    const connectionString = process.env.TIMEENTRYTABLES_CONNECTION;
+    const aPartitionKey = 'partition1';
+
+    // log the above constants in one statement
+    console.log('accountName', accountName, 'accountKey', accountKey, 'connectionString', connectionString, 'aPartitionKey', aPartitionKey);
+
+    // Check for required environment variables
+    if (!accountName || !accountKey || !connectionString) {
+        throw new Error("Environment variables for Azure Table Storage are not set");
+    }
+
+    // Create a sha256 hash of the password
+    const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
+    // hashed_password = hashlib.sha256(password.encode()).hexdigest()
+
+    console.log('username', username)
+    console.log('hashedPassword', hashedPassword);
+
+    // Create the table service client
+    const credential = new AzureNamedKeyCredential(accountName, accountKey);
+    console.log('credential', credential);
+
+    let tableClient;
+    try {
+        // Create the table client for the 'users' table
+        tableClient = TableClient.fromConnectionString(connectionString, 'users');
+        console.log('tableClient', tableClient);
+    } catch (error) {
+        console.error('Error creating TableClient:', error);
+        return false;
+    }
+
+    // Create the entity to insert
+    const entity = {
+        partitionKey: aPartitionKey,
+        rowKey: username,
+        password: hashedPassword,
+    };
+
+    try {
+        // Insert the entity into the table
+        const result = await tableClient.createEntity(entity);
+
+
+        console.log('entity', entity);
+
+        console.log('user signed up', entity);
+
+        return entity;
+    }
+
+    catch (error) {
+        console.error('Error accessing:', error);
+
+    }
+    // User is not found or password does not match
+    console.log('user not found or password does not match');
+
+    return false;
+}File: ./pages/api/logout.js
+import { getIronSession } from "iron-session";
+import {
+  defaultSession,
+  sessionOptions,
+  sleep,
+} from "../../utils/lib";
+import { loginUser } from '../../utils/login/loginUser';
+
+// logout
+export default async function handler(request, response) {
+// not sure if this is called
+  console.log('logout');
+  if (request.method === "POST") {
+
+    return response.status(200).json({ result });
+
+  } else {
+
+    return response.status(405).end(`Method ${request.method} Not Allowed`);
+  }
+
+}File: ./pages/api/log.js
+import { getIronSession } from "iron-session";
+import {
+    defaultSession,
+    sessionOptions,
+    sleep,
+} from "../../utils/lib";
+import { loginUser } from '../../utils/login/loginUser';
+
+// login
+export default async function handler(request, response) {
+    const session = await getIronSession(request, response, { password: process.env.SECRET_COOKIE_PASSWORD, cookieName: "timeentry" });
+    console.log('Client logging to server');
+    if (!session.isLoggedIn) {
+        return response.status(401).json({ error: 'Unauthorized' });
+    }
+    if (request.method === "POST") {
+        // log the body
+        console.log('Client Log: ', request.body);
+        // return a 200
+        return response.status(200).json({ result: 'ok' });
+
+    } else {
+
+        return response.status(405).end(`Method ${request.method} Not Allowed`);
+    }
+
+}File: ./pages/api/session.js
+import { getIronSession } from "iron-session";
+import {
+  defaultSession,
+  sessionOptions,
+  sleep,
+} from "../../utils/lib";
+
+// login
+export default async function handler(request, response) {
+  const session = await getIronSession(
+    request,
+    response,
+    sessionOptions,
+  );
+
+  if (request.method === "POST") {
+    const { username = "No username" } = request.body;
+
+    session.isLoggedIn = true;
+    session.username = username;
+    await session.save();
+
+    // simulate looking up the user in db
+    await sleep(250);
+
+    return response.json(session);
+  } else if (request.method === "GET") {
+    // simulate looking up the user in db
+    await sleep(250);
+
+    if (session.isLoggedIn !== true) {
+      return response.json(defaultSession);
+    }
+
+    return response.json(session);
+  } else if (request.method === "DELETE") {
+    session.destroy();
+
+    return response.json(defaultSession);
+  }
+
+  return response.status(405).end(`Method ${request.method} Not Allowed`);
+}File: ./pages/api/employer/get_data.js
+/**
+ * get_data.js
+ * 
+ *
+ */
+
+
+import { getTableClient } from '../../../utils/db/db';
+import dayjs from 'dayjs';
+
+export default async function handler(req, res) {
+    console.log('employer / get_data.js: handler()');
+
+    const aPartitionKey = 'partition1'
+
+    console.log(req.query);
+
+    const username = req.query.user;
+    console.log('username', username);
+
+    const tableName = 'employer';
+    const filter = `PartitionKey eq 'partition1' and employee eq '${username}'`;
+    const queryOptions = { filter: filter };
+
+    try {
+
+        const client = getTableClient(tableName);
+
+        console.log('Query Filter:', queryOptions); // Log the actual filter string
+
+        const iterator = client.listEntities(queryOptions);
+
+        const rows = [];
+
+        for await (const entity of iterator) {
+            // need to add a filter as i get all usernames
+            if (entity.employee === username) {
+                // convert startDate form dayjs to string
+                entity.startDate = dayjs(entity.startDate).format('YYYY-MM-DD');
+                entity.endDate = dayjs(entity.endDate).format('YYYY-MM-DD');
+                rows.push(entity);
+                console.log(entity);
+            }
         }
-        // If you return null or false then the credentials will be rejected
-        console.log('authorization failed')
-        return null;
-        // You can also throw an error to reject the credentials
-        // throw new Error('some error')
-      },
-    }),
-  ],
-  // If you want to use database sessions instead of JWT, uncomment the following line
-  // session: { strategy: "database" },
-  // If you need a custom sign-in page, uncomment the following line
-  // pages: { signIn: '/auth/signin' },
+
+        console.log(`Retrieved ${rows.length} rows from table '${tableName}' with filter '${queryOptions}'.`);
+
+        console.log('rows', rows);
+
+        const data = rows;
+
+        console.log('data', data);
+        res.status(200).json(data);
+    } catch (error) {
+        console.error(`Error retrieving rows from table '${tableName}' with filter '${queryOptions}':`, error);
+        throw error; // rethrow the error after logging
+    }
+
+}
+File: ./pages/api/employer/add_row.js
+/**
+ * add_row.js
+ * 
+ * This file is called from the front end and will add a row to the employer table
+ * 
+ * 
+ * This file uses the following packages:
+ *  @azure/data-tables: to connect to Azure Table Storage
+ *
+ */
+
+import { TableClient, AzureNamedKeyCredential } from "@azure/data-tables";
+import { addRowToTable } from '../../../utils/db/db';
+import { getTableClient } from '../../../utils/db/db';
+import { getIronSession } from "iron-session";
+import { unstable_useId } from "@mui/material";
+import { v4 as uuidv4 } from 'uuid';
+
+
+/**
+ * handler function
+ * 
+ * This function is the default export of the file and serves as the request handler for adding a row to the employer table.
+ * 
+ */
+
+export default async function handler(req, res) {
+    console.log('add_row.js: handler()');
+    console.log('add_row.js: req.body: ', req.body);
+
+    const session = await getIronSession(req, res, { password: process.env.SECRET_COOKIE_PASSWORD, cookieName: "timeentry" });
+    const tableName = 'employer';
+
+    if (!session.isLoggedIn) {
+        return response.status(401).json({ error: 'Unauthorized' });
+    }
+
+    if (req.method === 'POST') {
+
+        const data = req.body;
+        console.log('add_row: data: ', data);
+
+        const client = getTableClient(tableName);
+
+        const entities = client.listEntities();
+
+        for await (const tentity of entities) {
+            Object.keys(tentity).forEach(key => console.log(`${key}: ${tentity[key]}`));
+        }
+
+        // rowkey will be uuid
+        const entity = {
+            PartitionKey: 'partition1',
+            RowKey: uuidv4(),
+            employer: data.employer,
+            contractName:  data.contractName,
+            startDate: data.startDate.toString(),
+            endDate: data.endDate,
+            hoursPerWeek: data.hoursPerWeek,
+            compensationPerHour: data.compoensationPerHour,
+            employee: data.employee
+        };
+
+
+        console.log(`Adding row to table '${tableName}' with data:`, entity);
+        console.log('Property names:', Object.keys(entity), ' :' , Object.values(entity));
+        const response = await client.createEntity(entity, );
+
+        console.log(`Added row to table '${tableName}'.`);
+        console.log(response);
+
+        res.status(200).json(response);
+    }
+
+
+    res.status(405).json({ error: 'Method Not Allowed' });
+}
+File: ./pages/api/employer/delete_row.js
+/**
+ * delete_row.js
+ * 
+ *
+ */
+
+import { TableClient, AzureNamedKeyCredential } from "@azure/data-tables";
+import { deleteTimeEntryRow } from '../../../utils/db/db';
+import { getIronSession } from "iron-session";
+import { getTableClient } from '../../../utils/db/db';
+
+
+
+/**
+ * handler function
+*/
+
+export default async function handler(req, res) {
+    console.log('delete_row.js: handler()');
+
+    const session = await getIronSession(req, res, { password: process.env.SECRET_COOKIE_PASSWORD, cookieName: "timeentry" });
+    if (!session.isLoggedIn) {
+        return response.status(401).json({ error: 'Unauthorized' });
+    }
+
+    if (req.method === 'POST') {
+        const data = req.body;
+
+        console.log('delete_row: data: ', data);
+        const tableName = 'employer';
+        const aPartitionKey = 'partition1';
+
+        try {
+
+            const client = getTableClient(tableName);
+            console.log(`Deleting row from table '${tableName}' with rowKey '${data.rowKey}'.`);
+
+            const response = await client.deleteEntity(aPartitionKey, data.rowKey);
+
+            console.log(`Deleted row from table '${tableName}'.`);
+            console.log(response);
+            res.status(200).json(response);
+        } catch (error) {
+            console.error(`Error deleting row from table '${tableName}' with rowKey '${data.rowKey}':`, error);
+            throw error; // rethrow the error after logging
+        }
+    }
+    res.status(405).json({ error: 'Method Not Allowed' });
+};
+File: ./pages/api/employer/update_row.js
+/**
+ * update_row.js
+ * 
+ *
+ */
+
+import { TableClient, AzureNamedKeyCredential } from "@azure/data-tables";
+import { addRowToTable } from '../../../utils/db/db';
+import { updateTimesRow } from '../../../utils/db/db';
+import { getIronSession } from "iron-session";
+
+
+
+/**
+ * handler function
+ * 
+ * 
+ * */
+
+export default async function handler(req, res) {
+    console.log('update_row.js: handler()');
+    
+    const session = await getIronSession(req, res, { password: process.env.SECRET_COOKIE_PASSWORD, cookieName: "timeentry" });
+    if (!session.isLoggedIn) {
+        return response.status(401).json({ error: 'Unauthorized' });
+    }
+    
+    if (req.method === 'POST') {
+        console.log('Update Row POST');
+        console.log(req.body);
+        console.log(req.headers);
+        
+        const data = req.body;
+   
+        data.username = session.username;
+        console.log('add_row: data: ', data);
+
+        const result = await updateTimesRow(data);
+
+        console.log('result', result);
+        res.status(200).json(result);
+    }
+    res.status(405).json({ error: 'Method Not Allowed' });
+}
+File: ./pages/api/timeentry/get_data.js
+/**
+ * get_data.js
+ * 
+ * This file is called from the front end to get the data from the Azure Table Storage
+ * It should return only the rows for the current user
+ * 
+ * The username is passed in the query string
+ * 
+ * The data is returned as an array of objects with the following properties:
+ *  id: the RowKey from Azure Table Storage
+ *  date: the date of the time entry
+ *  hours: the number of hours for the time entry
+ *  comment: the comment for the time entry
+ *  username: the username for the user that created the time entry
+ * 
+ * The data is returned as a JSON object
+ * 
+ * This file uses the following packages:
+ *  @azure/data-tables: to connect to Azure Table Storage
+ *
+ */
+
+
+import { getTimeEntryRowsForUsername } from '../../../utils/db/db';
+
+
+export default async function handler(req, res) {
+
+  const aPartitionKey = 'partition1'
+
+  console.log('timeentry get_data: ' + req.query);
+
+  // get current user name from session
+  // get username from query string
+  const username = req.query.user2;
+  console.log('user2', username);
+
+
+  // filter for Partition key and username
+  const filter = `PartitionKey eq '${aPartitionKey}' and username eq '${username}'`;
+  const regex = /^[a-zA-Z0-9]+ eq |\bg[te] /;
+  console.log('test: ', regex.test(filter));
+  const rows = await getTimeEntryRowsForUsername(username);
+
+  console.log('rows', rows);
+  // map row to data object with id, date, hours, comment, username
+  const data = rows.map(row => {
+    return {
+      id: row.rowKey,
+      date: row.date,
+      type: row.type,
+      hours: row.hours,
+      comment: row.comment,
+      username: row.username
+    }
+  });
+
+  console.log('data', data);
+  res.status(200).json(data);
+
+}
+File: ./pages/api/timeentry/add_row.js
+/**
+ * add_row.js
+ * 
+ * This file is called from the front end and will add a row to the times table
+ * 
+ * The username is passed in the query string
+ * 
+ * The data provided has the following properties:
+ *  id: the RowKey from Azure Table Storage
+ *  date: the date of the time entry
+ *  hours: the number of hours for the time entry
+ *  comment: the comment for the time entry
+ *  username: the username for the user that created the time entry
+ * 
+ * This file uses the following packages:
+ *  @azure/data-tables: to connect to Azure Table Storage
+ *
+ */
+
+import { TableClient, AzureNamedKeyCredential } from "@azure/data-tables";
+import { addRowToTable } from '../../../utils/db/db';
+import { getIronSession } from "iron-session";
+
+
+
+/**
+ * handler function
+ * 
+ * This function is the default export of the file and serves as the request handler for adding a row to the times table.
+ * It handles POST requests and expects the following data in the request body:
+ *  - date: the date of the time entry
+ *  - hours: the number of hours for the time entry
+ *  - comment: the comment for the time entry
+ *  - type: the type of the time entry
+ * 
+ * The function adds the row to the table and returns the same data with the added id.
+ */
+
+export default async function handler(req, res) {
+    const session = await getIronSession(req, res, { password: process.env.SECRET_COOKIE_PASSWORD, cookieName: "timeentry" });
+    if (!session.isLoggedIn) {
+        return response.status(401).json({ error: 'Unauthorized' });
+    }
+    
+    if (req.method === 'POST') {
+        console.log('POST');
+        console.log(req.body);
+        console.log(req.headers);
+        const data = req.body;
+   
+        data.username = session.username;
+        console.log('add_row: data: ', data);
+
+        const result = await addRowToTable('times', data);
+
+        console.log('result', result);
+        res.status(200).json(result);
+    }
+    res.status(405).json({ error: 'Method Not Allowed' });
+}
+File: ./pages/api/timeentry/delete_row.js
+/**
+ * delete_row.js
+ * 
+ * This file is called from the front end and will add a row to the times table
+ * 
+ * The username is passed in the query string
+ * 
+ * The data provided has the following properties:
+ *  id: the RowKey from Azure Table Storage
+ *  date: the date of the time entry
+ *  hours: the number of hours for the time entry
+ *  comment: the comment for the time entry
+ *  username: the username for the user that created the time entry
+ * 
+ * This file uses the following packages:
+ *  @azure/data-tables: to connect to Azure Table Storage
+ *
+ */
+
+import { TableClient, AzureNamedKeyCredential } from "@azure/data-tables";
+import { deleteTimeEntryRow } from '../../../utils/db/db';
+import { getIronSession } from "iron-session";
+
+
+
+/**
+ * handler function
+ * 
+ * This function is the default export of the file and serves as the request handler for adding a row to the times table.
+ * It handles POST requests and expects the following data in the request body:
+ *  - date: the date of the time entry
+ *  - hours: the number of hours for the time entry
+ *  - comment: the comment for the time entry
+ *  - type: the type of the time entry
+ * 
+ * The function adds the row to the table and returns the same data with the added id.
+ */
+
+export default async function handler(req, res) {
+    const session = await getIronSession(req, res, { password: process.env.SECRET_COOKIE_PASSWORD, cookieName: "timeentry" });
+    if (!session.isLoggedIn) {
+        return response.status(401).json({ error: 'Unauthorized' });
+    }
+    
+    if (req.method === 'POST') {
+        console.log('POST');
+        console.log(req.body);
+        console.log(req.headers);
+        const data = req.body;
+   
+        data.username = session.username;
+        console.log('delete_row: data: ', data);
+        const id = data.id;
+        const result = await deleteTimeEntryRow(id);
+
+        console.log('result', result);
+        res.status(200).json(result);
+    }
+    res.status(405).json({ error: 'Method Not Allowed' });
+}
+File: ./pages/api/timeentry/update_row.js
+/**
+ * update_row.js
+ * 
+ * This file is called from the front end and will add a row to the times table
+ * 
+ * The username is passed in the query string
+ * 
+ * The data provided has the following properties:
+ *  id: the RowKey from Azure Table Storage
+ *  date: the date of the time entry
+ *  hours: the number of hours for the time entry
+ *  comment: the comment for the time entry
+ *  username: the username for the user that created the time entry
+ * 
+ * This file uses the following packages:
+ *  @azure/data-tables: to connect to Azure Table Storage
+ *
+ */
+
+import { TableClient, AzureNamedKeyCredential } from "@azure/data-tables";
+import { addRowToTable } from '../../../utils/db/db';
+import { updateTimesRow } from '../../../utils/db/db';
+import { getIronSession } from "iron-session";
+
+
+
+/**
+ * handler function
+ * 
+ * This function is the default export of the file and serves as the request handler for adding a row to the times table.
+ * It handles POST requests and expects the following data in the request body:
+ *  - date: the date of the time entry
+ *  - hours: the number of hours for the time entry
+ *  - comment: the comment for the time entry
+ *  - type: the type of the time entry
+ * 
+ * The function adds the row to the table and returns the same data with the added id.
+ */
+
+export default async function handler(req, res) {
+    const session = await getIronSession(req, res, { password: process.env.SECRET_COOKIE_PASSWORD, cookieName: "timeentry" });
+    if (!session.isLoggedIn) {
+        return response.status(401).json({ error: 'Unauthorized' });
+    }
+    
+    if (req.method === 'POST') {
+        console.log('Update Row POST');
+        console.log(req.body);
+        console.log(req.headers);
+        
+        const data = req.body;
+   
+        data.username = session.username;
+        console.log('add_row: data: ', data);
+
+        const result = await updateTimesRow(data);
+
+        console.log('result', result);
+        res.status(200).json(result);
+    }
+    res.status(405).json({ error: 'Method Not Allowed' });
+}
+File: ./pages/api/login.js
+import { getIronSession } from "iron-session";
+import {
+    defaultSession,
+    sessionOptions,
+    sleep,
+} from "../../utils/lib";
+import { loginUser } from '../../utils/login/loginUser';
+
+// login
+export default async function handler(request, response) {
+
+    if (request.method === "POST") {
+        // get username and password
+        const { username, password } = request.body;
+        console.log('username', username);
+
+        // call loginUser
+        const result = await loginUser(username, password);
+        console.log('result', result);
+
+        // save session
+        const session = await getIronSession(request, response, { password: process.env.SECRET_COOKIE_PASSWORD, cookieName: "timeentry" });
+        session.username = username;
+        session.isLoggedIn = true;
+        console.log('session', session);
+        await session.save();
+        console.log('session', session);
+        return response.status(200).json({ result });
+
+    } else {
+
+        return response.status(405).end(`Method ${request.method} Not Allowed`);
+    }
+
+}File: ./pages/api/signup.js
+import { getIronSession } from "iron-session";
+import {
+  defaultSession,
+  sessionOptions,
+  sleep,
+} from "../../utils/lib";
+import { loginUser } from '../../utils/login/loginUser';
+import { signupUser } from '../../utils/login/signupUser';
+
+// signup
+export default async function handler(request, response) {
+  console.log('signup');
+  if (request.method === "POST") {
+    // get username and password
+    const { username, password } = request.body;
+    console.log('username', username);
+
+    // call signupUser
+    const resultSignUp = await signupUser(username, password);
+    console.log('resultSignUp', resultSignUp);  
+
+    // call loginUser
+    const result = await loginUser(username, password);
+    console.log('result', result);
+   
+    // save session
+    const session = await getIronSession(request, response, { password: process.env.SECRET_COOKIE_PASSWORD, cookieName: "timeentry" });
+    session.username = username;
+    session.isLoggedIn = true;
+    console.log('session', session);
+    await session.save();
+    console.log('session', session);
+    return response.status(200).json({ result });
+
+  } else {
+
+    return response.status(405).end(`Method ${request.method} Not Allowed`);
+  }
+
+}File: ./pages/LoginC.js
+import React, { useState } from 'react';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/router';
+import {
+    Avatar,
+    Button,
+    CssBaseline,
+    TextField,
+    FormControlLabel,
+    Checkbox,
+    Link,
+    Grid,
+    Box,
+    Typography,
+    Container,
+    Alert,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+} from '@mui/material';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+import useSession from "../utils/useSession";
+import { defaultSession } from "../utils/lib";
+import { loginUser } from '../utils/login/loginUser';
+
+const theme = createTheme();
+
+const LoginC = () => {
+    const { session, isLoading } = useSession();
+    const { login } = useSession();
+
+
+    const router = useRouter();
+    const [isSignUp, setIsSignUp] = useState(false);
+    const [credentials, setCredentials] = useState({
+        username: '',
+        password: '',
+    });
+    const [error, setError] = useState('');
+    // State to control the opening of the dialog
+    const [open, setOpen] = useState(false);
+
+    const handleChange = (prop) => (event) => {
+        setCredentials({ ...credentials, [prop]: event.target.value });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (isSignUp) {
+            // Perform the sign-up via the server-side API
+            try {
+                const res = await fetch('/api/signup', { // Update the URL to your login endpoint
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(credentials),
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    // Assuming the server responds with user data on successful login
+                    console.log('User signed up', data.user);
+                    // Call any method that sets the user session or any redirection if needed
+                    router.push('/');
+                } else {
+                    throw new Error(data.error || 'Login failed');
+                }
+            } catch (error) {
+                setError(error.message); // Update the error state with the message from server or fallback error
+            }
+        } else {
+
+            // Perform the login via the server-side API
+            try {
+                const res = await fetch('/api/login', { // Update the URL to your login endpoint
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(credentials),
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    // Assuming the server responds with user data on successful login
+                    console.log('User logged in', data.user);
+                    // Call any method that sets the user session or any redirection if needed
+                    
+                    router.push('/');
+                } else {
+                    throw new Error(data.error || 'Login failed');
+                }
+            } catch (error) {
+                setError(error.message); // Update the error state with the message from server or fallback error
+            }
+        }
+    };
+
+
+    const toggleMode = () => {
+        setIsSignUp(!isSignUp);
+        setError(''); // Clear any existing errors
+    };
+
+    // Functions to handle dialog open/close
+    const handleDialogOpen = () => {
+        setOpen(true);
+    };
+
+    const handleDialogClose = () => {
+        setOpen(false);
+    };
+
+    return (
+        <ThemeProvider theme={theme}>
+            <Container component="main" maxWidth="xs">
+                <CssBaseline />
+                {error && <Alert severity="error">{error}</Alert>}
+                <Box
+                    sx={{
+                        marginTop: 8,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                        <LockOutlinedIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        {isSignUp ? 'Sign Up' : 'Login'}
+                    </Typography>
+                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="username"
+                            label="Username"
+                            name="username"
+                            autoComplete="username"
+                            autoFocus
+                            value={credentials.username}
+                            onChange={handleChange('username')}
+                        />
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="password"
+                            label="Password"
+                            type="password"
+                            id="password"
+                            autoComplete="current-password"
+                            value={credentials.password}
+                            onChange={handleChange('password')}
+                        />
+                        {/* <FormControlLabel
+                            control={<Checkbox value="remember" color="primary" />}
+                            label="Remember me"
+                        />
+                        */}
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}
+                        >
+                            {isSignUp ? 'Sign Up' : 'Login'}
+                        </Button>
+                        <Grid container>
+                            <Grid item xs>
+                                {!isSignUp && (
+                                    <Link href="#" variant="body2" onClick={handleDialogOpen}>
+                                        Forgot password?
+                                    </Link>
+                                )}
+                            </Grid>
+                            <Grid item>
+                                <Link href="#" variant="body2" onClick={toggleMode}>
+                                    {isSignUp ? 'Back to Login' : "Don't have an account? Sign Up"}
+                                </Link>
+                            </Grid>
+                        </Grid>
+                    </Box>
+                </Box>
+
+                {/* Dialog component for 'Forgot password?' */}
+                <Dialog open={open} onClose={handleDialogClose}>
+                    <DialogContent>
+                        <DialogContentText>
+                            Please contact the support team.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleDialogClose} color="primary">
+                            OK
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </Container>
+        </ThemeProvider>
+    );
 };
 
-export default NextAuth(options);File: ./pages/_document.js
+export default LoginC;
+File: ./pages/config.js
+
+import React, { useEffect, useState } from 'react';
+import { Box, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, TextField, Tooltip, Typography, useMediaQuery } from '@mui/material';
+import { AccessTime, Delete, Description as DescriptionIcon, Edit, Surfing } from '@mui/icons-material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { MaterialReactTable } from 'material-react-table';
+import dayjs from 'dayjs';
+import useSession from '../utils/useSession';
+import logToServer from '../utils/lib';
+
+const ConfigPage = () => {
+    logToServer("config.js: ConfigPage");
+
+    const { session, isLoading } = useSession();
+    const { username } = session.username;
+
+    const [data, setData] = useState([]);
+    logToServer("config.js: data", data);
+
+
+    const [createModalOpen, setCreateModalOpen] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [currentRow, setCurrentRow] = useState(null);
+    const [tableRenderKey, setTableRenderKey] = useState(0);
+
+
+    const [open, setOpen] = useState(false);
+    const [newData, setNewData] = useState({});
+
+    const handleNoEndDate = () => {
+        setFormData({ ...formData, endDate: dayjs("9999-12-31") });
+    };
+
+    const [rowToUpdate, setRowToUpdate] = useState(null);
+    const [employers, setEmployers] = useState([]);
+
+
+    // rowKey should be invisible
+    const columns = [
+        {
+            id: 'actions',
+            header: 'Actions',
+            Cell: ({ row }) => renderRowActions(row),
+            accessorKey: 'actions'
+        },
+        { header: 'Partition Key', accessorKey: 'partitionKey', isVisible: false },
+        { header: 'Row Key', accessorKey: 'rowKey', isVisible: false },
+        { header: 'Employee', accessorKey: 'employee' },
+        { header: 'Employer', accessorKey: 'employer' },
+        { header: 'Contract Name', accessorKey: 'contractName' },
+        { header: 'Start Date', accessorKey: 'startDate' },
+        { header: 'End Date', accessorKey: 'endDate' },
+        { header: 'Hours Per Week', accessorKey: 'hoursPerWeek' },
+        { header: 'Compensation Per Hour', accessorKey: 'compensationPerHour' },
+    ];
+    logToServer("config.js: columns" + columns);
+
+    const fetchData = async () => {
+        try {
+            const user2 = session ? session.username : null;
+            if (!user2) {
+                console.error("Session username is not available");
+                return;
+            }
+
+            logToServer("config.js: fetching data");
+            const queryParams = `user=${encodeURIComponent(user2)}`;
+            const response = await fetch(`/api/employer/get_data?${queryParams}`);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            setData(data);
+            // Extract unique employers from the data
+            const uniqueEmployers = Array.from(new Set(data.map(item => item.employer)));
+            setEmployers(uniqueEmployers);
+            logToServer("config.js: uniqueEmployers: " + employers);
+
+        } catch (err) {
+            logToServer("config.js: error fetching data " + err);
+            console.error("Error in fetchData: ", err);
+        }
+    }
+
+
+
+    useEffect(() => {
+        const fetchInitialData = async () => {
+            await fetchData();
+        };
+
+        fetchInitialData();
+    }, []); // Empty dependency array to ensure it runs only once on mount
+
+
+
+    const [formData, setFormData] = useState({
+        employee: session ? session.username : null,
+        employer: "test",
+        contractName: "test",
+        startDate: dayjs("2024-01-02"),
+        endDate: dayjs("2024-12-31"),
+        hoursPerWeek: "4",
+        compensationPerHour: "20",
+    });
+
+
+    const handleDelete = async (row) => {
+        logToServer("config.js: handleDelete");
+        try {
+            const response = await fetch('/api/employer/delete_row', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // This line is essential
+                },
+                body: JSON.stringify(row)
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            await fetchData();
+        } catch (err) {
+            console.error("Error in handleDelete: ", err);
+        }
+    }
+
+    const handleAdd = async () => {
+        try {
+            const response = await fetch('/api/employer/add_row', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // This line is essential
+                },
+                body: JSON.stringify({ ...formData, ...newData })
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            setOpen(false);
+            setNewData({});
+            await fetchData();
+        } catch (err) {
+            console.error("Error in handleAdd: ", err);
+        }
+    }
+
+    const handleUpdate = async () => {
+        try {
+            const response = await fetch('/api/employer/update_row', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json', // This line is essential
+                },
+                body: JSON.stringify({
+                    ...rowToUpdate,
+                    ...newData
+                })
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            setOpen(false);
+            setRowToUpdate(null);
+            setNewData({});
+            await fetchData();
+        } catch (err) {
+            console.error("Error in handleUpdate: ", err);
+        }
+    }
+
+
+    const renderRowActions = (row) => {
+        return (
+            <Box>
+                <Tooltip title="Edit">
+                    <IconButton
+                        onClick={() => {
+                            setIsEditing(true);
+                            setOpen(true);
+                            // setCurrentRow(row.original);
+                            setFormData({
+                                ...row.original,
+                                startDate: dayjs(row.original.startDate),
+                                endDate: dayjs(row.original.endDate)
+                            });
+                            // setCreateModalOpen(true);
+                        }}
+                    >
+                        <Edit />
+                    </IconButton>
+                </Tooltip>
+
+                <Tooltip title="Delete">
+                    <IconButton onClick={() => {
+                        logToServer('Delete onClick');
+                        handleDelete(row.original)
+                    }}>
+                        <Delete color="error" />
+                    </IconButton>
+                </Tooltip>
+            </Box>
+        );
+    }
+
+    return (
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <div style={{ mt: '20px' }}>
+                <MaterialReactTable
+                    columns={columns}
+                    initialState={{
+                        sorting: [{ id: "startDate", desc: true }],
+                        columnVisibility: { partitionKey: false, rowKey: false },
+                        density: "compact",
+                    }}
+                    margin="normal"
+                    padding="normal"
+                    data={data}
+                    dense={true}
+                    small={true}
+                    renderRowActions={renderRowActions}
+
+
+                    renderTopToolbarCustomActions={() => (
+                        <Box sx={{ display: "flex", gap: "1rem" }}>
+                            <Button
+                                startIcon={<DescriptionIcon />}
+                                color="primary"
+                                variant="contained"
+                                onClick={() => {
+                                    setOpen(true);
+                                    setRowToUpdate(null);
+                                }}
+                            >
+                                Add Contract
+                            </Button>
+                        </Box>
+                    )}
+                />
+            </div>
+            <Dialog open={open}>
+                <DialogTitle>
+                    {rowToUpdate ? 'Edit Row' : 'Add Row'}
+                </DialogTitle>
+                <DialogContent>
+                    <Grid container spacing={2} sx={{ mt: 1 }}>
+                        <Grid item xs={12} sm={6} md={4}>
+                            <TextField
+                                fullWidth
+                                label="Employee"
+                                value={formData.employee}
+                                onChange={(e) => setFormData({ ...formData, employee: e.target.value })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={4}>
+                            <FormControl fullWidth>
+                                <InputLabel>Employer</InputLabel>
+                                <Select
+                                    label="Employer"
+                                    value={formData.employer}
+                                    onChange={(e) => setFormData({ ...formData, employer: e.target.value })}
+                                >
+                                    {employers.map((employer, index) => (
+                                        <MenuItem key={index} value={employer}>
+                                            {employer}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={4}>
+                            <TextField
+                                fullWidth
+                                label="Contract Name"
+                                value={formData.contractName}
+                                onChange={(e) => setFormData({ ...formData, contractName: e.target.value })}
+                            />
+                        </Grid>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <Grid item xs={12} sm={6} md={4}>
+                                <DatePicker
+                                    fullWidth
+                                    label="Start Date"
+                                    value={formData.startDate}
+                                    onChange={(newValue) => setFormData({ ...formData, startDate: newValue })}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6} md={4}>
+                                <DatePicker
+                                    fullWidth
+                                    label="End Date"
+                                    value={formData.endDate}
+                                    onChange={(newValue) => setFormData({ ...formData, endDate: newValue })}
+                                />
+                                <Button
+                                    startIcon={<DescriptionIcon />}
+                                    color="primary"
+                                    variant="contained"
+                                    sx={{ mt: 1 }}
+                                    onClick={handleNoEndDate}>
+                                    No End Date
+                                </Button>
+                            </Grid>
+                        </LocalizationProvider>
+                        <Grid item xs={12} sm={6} md={4}>
+                            <TextField
+                                fullWidth
+                                label="Hours Per Week"
+                                value={formData.hoursPerWeek}
+                                onChange={(e) => setFormData({ ...formData, hoursPerWeek: e.target.value })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={4}>
+                            <TextField
+                                fullWidth
+                                label="Compensation Per Hour"
+                                value={formData.compensationPerHour}
+                                onChange={(e) => setFormData({ ...formData, compensationPerHour: e.target.value })}
+                            />
+                        </Grid>
+                    </Grid>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpen(false)}>Cancel</Button>
+                    <Button onClick={rowToUpdate ? handleUpdate : handleAdd}>
+                        {rowToUpdate ? 'Save' : 'Add'}
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+        </LocalizationProvider>
+    );
+}
+
+export default ConfigPage;File: ./pages/_document.js
 import { Html, Head, Main, NextScript } from 'next/document'
 
 export default function Document() {
@@ -223,24 +1867,35 @@ export default function Document() {
 }
 File: ./pages/_app.js
 import Layout from '../components/Layout';
-
+import { useEffect } from 'react';
+import logToServer from '../utils/lib';
 import { SessionProvider } from 'next-auth/react'
 
 export default function App({ Component, pageProps: { session, ...pageProps } }) {
+  useEffect(() => {
+    logToServer('pages/_app.js', 'useEffect', 'start');
+  }, []);
+
   return (
     <SessionProvider session={session}>
       <Layout>
-        <Component {...pageProps} />
+
+          <Component {...pageProps} />
+
       </Layout>
     </SessionProvider>
   )
 }File: ./pages/index.js
-// pages/index.js
+/**
+ * index.js
+ * This file contains the main page component for the Time Entry application.
+ * It imports necessary dependencies and components, defines card data for different categories,
+ * and renders the appropriate components based on the user's session status.
+ */
 
 import React from 'react';
-import { useSession, signOut } from 'next-auth/react';
+
 import { Button, CircularProgress, Typography, Container, Grid } from '@mui/material';
-import Layout from '../components/Layout';
 import NextLink from 'next/link';
 import CategorySection from '../components/CategorySection';
 import Link from '@mui/material/Link';
@@ -250,11 +1905,17 @@ import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import DescriptionIcon from '@mui/icons-material/Description';
 import BusinessIcon from '@mui/icons-material/Business';
-import OvertimeIcon from '@mui/icons-material/AccessAlarms'; 
-import VacationIcon from '@mui/icons-material/FlightTakeoff'; 
+import OvertimeIcon from '@mui/icons-material/AccessAlarms';
+import VacationIcon from '@mui/icons-material/FlightTakeoff';
+
+import useSession from "../utils/useSession";
+import { defaultSession } from "../utils/lib";
+import loginUser from '../utils/login/loginUser'
+import LoginC from './LoginC';
+
 
 export default function Home() {
-  const { data: session, status } = useSession();
+  const { session, isLoading } = useSession();
 
   const cardData = {
     timeEntry: [
@@ -262,19 +1923,19 @@ export default function Home() {
         title: 'Add Working Time',
         icon: <AccessTimeIcon />,
         additionalText: 'Log your working hours',
-        link: '#'
+        link: '/timeentry?action=addTime'
       },
       {
         title: 'Add Sick Day',
         icon: <LocalHospitalIcon />,
         additionalText: 'Report a sick leave',
-        link: '#'
+        link: '/timeentry?action=addSick'
       },
       {
         title: 'Add Vacation Day',
         icon: <BeachAccessIcon />,
         additionalText: 'Plan your vacation',
-        link: '#'
+        link: '/timeentry?action=addVacation'
       },
     ],
     configuration: [
@@ -307,61 +1968,597 @@ export default function Home() {
     ],
   };
 
-  if (status === 'loading') {
+  if (isLoading) {
     return (
-      <Layout>
-        <Container>
-          <CircularProgress />
-        </Container>
-      </Layout>
+      <Container>
+        <CircularProgress />
+      </Container>
     );
   }
 
-  if (!session) {
+  if (session.isLoggedIn == false) {
     return (
-      <Layout>
-        <Container>
-          <Typography variant="body1" gutterBottom>
-            You are not signed in.{' '}
-            <NextLink href="/api/auth/signin" passHref>
-              <Link>Sign in</Link>
-            </NextLink>
-          </Typography>
-        </Container>
-      </Layout>
+      <LoginC />
     );
   }
 
   return (
-    <Layout>
-      <Container maxWidth="lg" sx={{ mt: 1 }}>
-        <CategorySection category="Category 1: Time Entry" cards={cardData.timeEntry} />
-        <CategorySection category="Category 2: Configuration" cards={cardData.configuration} />
-        <CategorySection category="Category 3: Overview" cards={cardData.overview} />
-      </Container>
-    </Layout>
+    <Container maxWidth="lg" sx={{ mt: 1 }}>
+      <CategorySection category="Category 1: Time Entry" cards={cardData.timeEntry} />
+      <CategorySection category="Category 2: Configuration" cards={cardData.configuration} />
+      <CategorySection category="Category 3: Overview" cards={cardData.overview} />
+    </Container>
+
   );
 }File: ./pages/timeentry.js
-// file: ./pages/timeentry.js
-import React from 'react';
-import Layout from '../components/Layout';
-import { Container, Typography, TextField, Button } from '@mui/material';
+import React, { useEffect, useState, useMemo } from "react";
 
-export default function TimeEntry() {
-  // Add your state and form handling logic here
+import {
+    Box,
+    Button,
+    Dialog,
+    Container,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    TextField,
+    Tooltip,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    Typography,
+} from "@mui/material";
 
-  return (
-    <Layout>
-      <Container maxWidth="sm">
-        <Typography variant="h4" component="h1" gutterBottom>
-          Time Entry
-        </Typography>
-        {/* Replace this with your actual form and inputs */}
+import { Delete, Edit, AccessTime, Surfing } from "@mui/icons-material";
+import Sick from "@mui/icons-material/Sick";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { MaterialReactTable } from "material-react-table";
 
-      </Container>
-    </Layout>
-  );
-}File: ./next.config.js
+import dayjs from "dayjs";
+import useMediaQuery from "@mui/material/useMediaQuery"; // Import useMediaQuery
+import useSession from "../utils/useSession";
+import logToServer, { defaultSession } from "../utils/lib";
+
+
+const TimeEntry = () => {
+    const { session, isLoading } = useSession();
+    const { username } = session.username;
+
+    const isMobile = useMediaQuery("(max-width:600px)"); // Check if the screen width is less than or equal to 600px
+
+    // Add 'isMobile' as a dependency in the useMemo dependency array
+    const memoizedValue = useMemo(() => {
+        // Your memoized value calculation here
+    }, [isMobile]);
+
+    const [data, setData] = useState([]);
+
+    const [formData, setFormData] = useState({
+        date: dayjs(),
+        hours: "1",
+        comment: "",
+    });
+    const [createModalOpen, setCreateModalOpen] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [currentRow, setCurrentRow] = useState(null);
+    const [tableRenderKey, setTableRenderKey] = useState(0);
+
+    const [selectedMonth, setSelectedMonth] = useState(dayjs().month());
+    const [selectedYear, setSelectedYear] = useState(dayjs().year());
+    const [totalHours, setTotalHours] = useState(0);
+    const [totalHoursYear, setTotalHoursYear] = useState(0);
+    const [entryType, setEntryType] = useState("Time Entry");
+
+    // Calculate the sum of hours for the selected month
+    useEffect(() => {
+        const sumHours = data
+            .filter((row) => {
+                const rowDate = dayjs(row.date);
+                return (
+                    rowDate.month() === selectedMonth && rowDate.year() === selectedYear
+                );
+            })
+            .reduce((sum, current) => sum + Number(current.hours), 0);
+        setTotalHours(sumHours);
+    }, [data, selectedMonth, selectedYear]);
+
+    // Calculate the sum of hours for the selected year
+    useEffect(() => {
+        const sumHours = data
+            .filter((row) => {
+                const rowDate = dayjs(row.date);
+                return rowDate.year() === selectedYear;
+            })
+            .reduce((sum, current) => sum + Number(current.hours), 0);
+        setTotalHoursYear(sumHours);
+    }, [data, selectedYear]);
+
+    const fetchTableData = async () => {
+        logToServer('Client: ', '++++++++++++ Fetching DataTable data');
+
+        const user2 = session.username;
+
+        try {
+            // Construct the query parameter string
+            const queryParams = new URLSearchParams({ user2 }).toString();
+            console.log('queryParams', queryParams);
+            // Use backticks for the fetch URL and properly embed queryParams
+            const response = await fetch(`/api/timeentry/get_data?${queryParams}`);
+            if (!response.ok) {
+                // If the response is not 2xx, throw an error
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            // Do something with the data, e.g., setting it to state
+            console.log('response');
+            console.log(data);
+            setData(data);
+            logToServer('fetchData: ', data)
+        } catch (error) {
+            console.error("Error fetching DataTable data", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchTableData();
+
+    }, []);
+
+
+    // Add row to the server and update the state
+    const handleAddRow = async () => {
+        const payload = {
+            ...formData,
+            type: entryType, // Add this line
+            date: formData.date.format("YYYY-MM-DD"),
+        };
+
+        try {
+
+            // adding a row by calling /api/timeentry/add_row next.js api
+            const response = await fetch("/api/timeentry/add_row", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Session": JSON.stringify(session),
+                },
+                body: JSON.stringify(payload),
+            });
+
+
+            if (response.data && response.data.row) {
+                // Update the data state with the new row
+                setData((prevData) => [...prevData, response.data.row]);
+            }
+        } catch (error) {
+            console.error("Error adding new row:", error);
+        }
+        // refresh data by refreshing the DataTable element
+        setTableRenderKey(prev => prev + 1);
+        await fetchTableData();
+        setCreateModalOpen(false);
+
+    };
+
+
+
+    // implement an alternative to the handleEditRow below and implement it exactly like handleAddRow
+    const handleEditRow = async () => {
+        const payload = {
+            id: currentRow.id,
+            date: formData.date.format("YYYY-MM-DD"),
+            hours: formData.hours,
+            type: entryType, // Add this line
+            comment: formData.comment,
+        };
+
+        try {
+            logToServer('handleEditRow: ', payload);
+            // call the /api/timeentry/update_row next.js api
+            const response = await fetch("/api/timeentry/update_row", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (response.data && response.data.row) {
+                // Update the data state with the changed row and match id
+                setData((prevData) =>
+                    prevData.map((row) =>
+                        row.id === currentRow.id ? { ...row, ...payload } : row
+                    )
+                );
+            }
+        } catch (error) {
+            console.error("Error updating:", error);
+        }
+        setTableRenderKey(prev => prev + 1);
+        await fetchTableData();
+    };
+
+    // Delete row on the server and update the state
+    const handleDeleteRow = async (row) => {
+        try {
+
+            logToServer('handleDeleteRow: ', row.id);
+            const response = await fetch("/api/timeentry/delete_row", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ id: row.id }),
+            });
+
+            if (response.data.success) {
+                setData((prevData) => prevData.filter((r) => r.id !== row.id));
+            }
+        } catch (error) {
+            console.error("Error deleting row:", error);
+            // Handle the error appropriately
+        }
+        setTableRenderKey(prev => prev + 1);
+        await fetchTableData();
+    };
+
+    // define columns
+    const columns = useMemo(
+        () => [
+            {
+                accessorKey: "id",
+                header: "ID",
+            },
+            {
+                accessorKey: "date",
+                header: "Date",
+            },
+            // add a column to indicate whether it is a time entry, sick entry, or vacation entry
+            {
+                accessorKey: "type",
+                header: "Type",
+            },
+            {
+                accessorKey: "hours",
+                header: "Hours",
+            },
+            {
+                accessorKey: "comment",
+                header: "Comment",
+                Cell: ({ cell }) => (
+                    <div style={{ whiteSpace: "normal", wordWrap: "break-word" }}>
+                        {cell.getValue()}
+                    </div>
+                ),
+                width: isMobile ? "auto" : 150, // Use 'auto' width for mobile
+            },
+            // Add more columns as needed
+        ],
+        []
+    );
+
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+
+        // is action parameter available
+        if (params.get('action')) {
+            setIsEditing(false);   
+            setFormData({ date: dayjs(), hours: "1", comment: "" });
+            
+        }
+        if (params.get('action') === 'addTime') {
+            setEntryType("Vacation Day"); // Add this line
+        }
+        if (params.get('action') === 'addVacation') {
+            setEntryType("Vacation Day"); // Add this line
+        }
+        if (params.get('action') === 'addSick') {
+            setEntryType("Sick Leave"); // Add this line
+        }
+        if (params.get('action')) {
+            setCreateModalOpen(true);
+        }
+        
+
+    }, []);
+
+    // Dialog content for adding/editing rows
+    const renderDialog = () => (
+        <Dialog open={createModalOpen} onClose={() => setCreateModalOpen(false)}>
+            <DialogTitle>{isEditing ? "Edit Row" : "Add New Row"}</DialogTitle>
+            <DialogContent>
+                <Container component="main" sx={{ padding: "4px" }}>
+                    <Box
+                        sx={{
+                            marginTop: 2,
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                        }}
+                    >
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <Box
+                                width="100%"
+                                margin="normal"
+                                sx={{ padding: "4px", marginBottom: "1em" }}
+                            >
+                                <DatePicker
+                                    label="Date"
+                                    value={formData.date}
+                                    onChange={(newValue) => {
+                                        // Ensure the date is being set as a dayjs object
+                                        setFormData({ ...formData, date: newValue });
+                                    }}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            fullWidth
+                                            margin="normal"
+                                            InputLabelProps={{ shrink: true }}
+                                        />
+                                    )}
+                                />
+                            </Box>
+                        </LocalizationProvider>
+                        <Box width="100%" margin="normal" sx={{ padding: "4px" }}>
+                            <FormControl fullWidth>
+                                <InputLabel id="entry-type-label">Type</InputLabel>
+                                <Select
+                                    labelId="entry-type-label"
+                                    id="entry-type"
+                                    value={entryType}
+                                    onChange={(e) => setEntryType(e.target.value)}
+                                >
+                                    <MenuItem value={"Time Entry"}>Time Entry</MenuItem>
+                                    <MenuItem value={"Vacation Day"}>Vacation Day</MenuItem>
+                                    <MenuItem value={"Sick Leave"}>Sick Leave</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Box>
+                        <Box width="100%" margin="normal" sx={{ padding: "4px" }}>
+                            <TextField
+                                fullWidth
+                                margin="normal"
+                                required
+                                id="hours"
+                                label="Hours"
+                                name="hours"
+                                type="number"
+                                value={formData.hours}
+                                onChange={(e) =>
+                                    setFormData({ ...formData, hours: e.target.value })
+                                }
+                                InputLabelProps={{ shrink: true }}
+                            />
+                        </Box>
+                        <Box width="100%" margin="normal" sx={{ padding: "4px" }}>
+                            <TextField
+                                fullWidth
+                                margin="normal"
+                                required
+                                id="comment"
+                                label="Comment"
+                                name="comment"
+                                multiline
+                                rows={3}
+                                value={formData.comment}
+                                onChange={(e) =>
+                                    setFormData({ ...formData, comment: e.target.value })
+                                }
+                                InputLabelProps={{ shrink: true }}
+                            />
+                        </Box>
+                    </Box>
+                </Container>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={() => setCreateModalOpen(false)}>Cancel</Button>
+                <Button
+                    onClick={() => {
+                        // Convert dayjs object to string when sending to the backend
+                        const formattedDate = formData.date
+                            ? formData.date.format("YYYY-MM-DD")
+                            : "";
+                        const payload = {
+                            ...formData,
+                            type: entryType, // Add this line
+                            date: formData.date.format("YYYY-MM-DD"),
+                        };
+                        if (isEditing) {
+                            // handleEditRow(payload); // Pass the formatted payload 
+                            handleEditRow();
+                        } else {
+                            handleAddRow(); // Pass the formatted payload
+
+                        }
+                        setCreateModalOpen(false);
+                    }}
+                >
+                    {isEditing ? "Save Changes" : "Add Row"}
+                </Button>
+            </DialogActions>
+        </Dialog>
+    );
+
+    if (session.isLoggedIn == false) {
+        return <div>Authenticating...</div>;
+    } else {
+        return (
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <Box width="100%">
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            mb: 2,
+                            flexWrap: "wrap",
+                        }}
+                    >
+                        <FormControl variant="standard" sx={{ minWidth: 120, mr: 2 }}>
+                            <InputLabel id="select-month-label">Month</InputLabel>
+                            <Select
+                                labelId="select-month-label"
+                                id="select-month"
+                                value={selectedMonth}
+                                onChange={(e) => setSelectedMonth(e.target.value)}
+                            >
+                                {Array.from({ length: 12 }, (_, index) => (
+                                    <MenuItem key={index} value={index}>
+                                        {dayjs().month(index).format("MMMM")}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <FormControl variant="standard" sx={{ minWidth: 120, mr: 2 }}>
+                            <InputLabel id="select-year-label">Year</InputLabel>
+                            <Select
+                                labelId="select-year-label"
+                                id="select-year"
+                                value={selectedYear}
+                                onChange={(e) => setSelectedYear(e.target.value)}
+                            >
+                                {Array.from({ length: 5 }, (_, index) => (
+                                    <MenuItem key={index} value={dayjs().year() - index}>
+                                        {dayjs().year() - index}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <Typography sx={{ mr: 2 }}>
+                            Total hours that month: {totalHours}
+                        </Typography>
+                        <Typography sx={{ mr: 2 }}>
+                            Total hours this year: {totalHoursYear}
+                        </Typography>
+                    </Box>
+                    <MaterialReactTable
+                        size={isMobile ? "small" : "medium"}
+                        key={tableRenderKey}
+                        initialState={{
+                            sorting: [{ id: "date", desc: true }],
+                            columnVisibility: { id: false },
+                            density: isMobile ? "compact" : "standard",
+                        }}
+                        columns={columns}
+                        // make it downloadable
+                        exportable
+                        data={data
+                            .slice(-31)
+                            .sort((a, b) => dayjs(b.date).diff(dayjs(a.date)))} // Sort and limit to last 31 entries
+                        // Additional styles for compact display and vertical scrolling
+                        sx={{
+                            ".MuiDataGrid-root .MuiDataGrid-row": {
+                                minHeight: "32px", // Reduce row height for a more compact display
+                                // adjust it to the width of the screen
+                                width: isMobile ? "auto" : "100%",
+                            },
+                            ".MuiDataGrid-viewport": {
+                                overflowY: "auto", // Enable vertical scrolling
+                            },
+                            ".MuiDataGrid-cell": {
+                                padding: "4px", // Adjust padding as needed
+                                width: "auto", // Make the columns smaller
+                            },
+                            // make the width of the columns smaller, not the font size
+                            ".MuiDataGrid-colCellWrapper": {
+                                width: "auto",
+                            },
+                            ".MuiDataGrid-columnHeaderTitleContainer": {
+                                padding: "0px 4px",
+                            },
+                        }}
+                        renderRowActions={({ row }) => (
+                            <Box sx={{ display: "flex", gap: "1rem" }}>
+                                <Tooltip title="Edit">
+                                    <IconButton
+                                        sx={{ padding: "4px" }} // Smaller padding for icons
+                                        onClick={() => {
+                                            setIsEditing(true);
+                                            setCurrentRow(row.original);
+                                            setFormData({
+                                                ...row.original,
+                                                date: dayjs(row.original.date),
+                                            });
+                                            setCreateModalOpen(true);
+                                        }}
+                                    >
+                                        <Edit fontSize={isMobile ? "small" : "medium"} />
+                                    </IconButton>
+                                </Tooltip>
+                                <Tooltip title="Delete">
+                                    <IconButton
+                                        sx={{ padding: "4px" }} // Smaller padding for icons
+                                        color="error"
+                                        onClick={() => {
+                                            handleDeleteRow(row.original);
+                                            setCreateModalOpen(false);
+                                        }}
+                                    >
+                                        <Delete fontSize={isMobile ? "small" : "medium"} />
+                                    </IconButton>
+                                </Tooltip>
+                            </Box>
+                        )}
+                        enableRowActions
+                        enableEditing
+                        renderTopToolbarCustomActions={() => (
+                            <Box sx={{ display: "flex", gap: "1rem" }}>
+                                <Button
+                                    startIcon={<AccessTime />}
+                                    color="primary"
+                                    variant="contained"
+
+                                    onClick={() => {
+                                        setIsEditing(false);
+                                        setEntryType("Time Entry"); // Add this line
+                                        setFormData({ date: dayjs(), hours: "1", comment: "" });
+                                        setCreateModalOpen(true);
+
+                                    }}
+                                >
+                                    Add Time Entry
+                                </Button>
+                                <Button
+                                    startIcon={<Surfing />}
+                                    color="primary"
+                                    variant="contained"
+                                    onClick={() => {
+                                        setIsEditing(false);
+                                        setEntryType("Vacation Day"); // Add this line
+                                        setFormData({ date: dayjs(), hours: "1", comment: "" });
+                                        setCreateModalOpen(true);
+                                    }}
+                                >
+                                    Add Vacation Day
+                                </Button>
+                                <Button
+                                    startIcon={<Sick />}
+                                    color="primary"
+                                    variant="contained"
+                                    onClick={() => {
+                                        setIsEditing(false);
+                                        setEntryType("Sick Leave"); // Add this line
+                                        setFormData({ date: dayjs(), hours: "1", comment: "" });
+                                        setCreateModalOpen(true);
+                                    }}
+                                >
+                                    Add Sick Leave
+                                </Button>
+                                {/* Add more props and configurations as needed*/}
+                            </Box>
+                        )}
+                    />
+                    {renderDialog()}
+                </Box>
+            </LocalizationProvider >
+        );
+    };
+};
+export default TimeEntry;File: ./next.config.js
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -374,10 +2571,3 @@ const nextConfig = {
 }
 
 module.exports = nextConfig;
-File: ./postcss.config.js
-module.exports = {
-  plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
-  },
-}

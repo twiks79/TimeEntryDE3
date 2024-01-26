@@ -26,6 +26,7 @@ import useSession from "../utils/useSession";
 import { defaultSession } from "../utils/lib";
 import { loginUser } from '../utils/login/loginUser';
 
+
 const theme = createTheme();
 
 const LoginC = () => {
@@ -67,7 +68,7 @@ const LoginC = () => {
                     // Assuming the server responds with user data on successful login
                     console.log('User signed up', data.user);
                     // Call any method that sets the user session or any redirection if needed
-                    router.push('/');
+                    router.push('/index');
                 } else {
                     throw new Error(data.error || 'Login failed');
                 }
@@ -93,7 +94,7 @@ const LoginC = () => {
                     console.log('User logged in', data.user);
                     // Call any method that sets the user session or any redirection if needed
                     
-                    router.push('/');
+                    router.push('/index');
                 } else {
                     throw new Error(data.error || 'Login failed');
                 }

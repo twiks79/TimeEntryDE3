@@ -5,27 +5,55 @@
  */
 
 
-import { getEmployerForUsername } from '../../../utils/db/db';
+import { getTableClient } from '../../../utils/db/db';
+import dayjs from 'dayjs';
 
 export default async function handler(req, res) {
-  console.log('get_data.js: handler()');
+    console.log('employer / get_data.js: handler()');
 
-  const aPartitionKey = 'partition1'
+    const aPartitionKey = 'partition1'
 
-  console.log(req.query);
+    console.log(req.query);
 
-  // get current user name from session
-  // get username from query string
-  const username = req.query.user2;
-  console.log('user2', username);
+    const username = req.query.user;
+    console.log('username', username);
 
-  const rows = await getEmployerForUsername(username);
+    const tableName = 'employer';
+    const filter = `PartitionKey eq 'partition1' and employee eq '${username}'`;
+    const queryOptions = { filter: filter };
 
-  console.log('rows', rows);
-  // map row to data object with id, date, hours, comment, username
-  const data = rows;
+    try {
 
-  console.log('data', data);
-  res.status(200).json(data);
+        const client = getTableClient(tableName);
+
+        console.log('Query Filter:', queryOptions); // Log the actual filter string
+
+        const iterator = client.listEntities(queryOptions);
+
+        const rows = [];
+
+        for await (const entity of iterator) {
+            // need to add a filter as i get all usernames
+            if (entity.employee === username) {
+                // convert startDate form dayjs to string
+                entity.startDate = dayjs(entity.startDate).format('YYYY-MM-DD');
+                entity.endDate = dayjs(entity.endDate).format('YYYY-MM-DD');
+                rows.push(entity);
+                console.log(entity);
+            }
+        }
+
+        console.log(`Retrieved ${rows.length} rows from table '${tableName}' with filter '${queryOptions}'.`);
+
+        console.log('rows', rows);
+
+        const data = rows;
+
+        console.log('data', data);
+        res.status(200).json(data);
+    } catch (error) {
+        console.error(`Error retrieving rows from table '${tableName}' with filter '${queryOptions}':`, error);
+        throw error; // rethrow the error after logging
+    }
 
 }

@@ -28,7 +28,7 @@ export default async function handler(req, res) {
 
   const aPartitionKey = 'partition1'
 
-  console.log(req.query);
+  console.log('timeentry get_data: ' + req.query);
 
   // get current user name from session
   // get username from query string

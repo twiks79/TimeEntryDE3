@@ -1,0 +1,2421 @@
+Searching for existing resource groups starting with timeentrydenext...
+Deleting resource group timeentrydenext53161...
+Creating resource group timeentrydenext33783...
+{
+  "id": "/subscriptions/66283e96-2d6d-40bf-9c5b-e368a7ab7f7f/resourceGroups/timeentrydenext33783",
+  "location": "westeurope",
+  "managedBy": null,
+  "name": "timeentrydenext33783",
+  "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "tags": null,
+  "type": "Microsoft.Resources/resourceGroups"
+}
+Creating Azure Container Registry...
+{
+  "adminUserEnabled": true,
+  "anonymousPullEnabled": false,
+  "creationDate": "2024-01-26T12:29:20.533750+00:00",
+  "dataEndpointEnabled": false,
+  "dataEndpointHostNames": [],
+  "encryption": {
+    "keyVaultProperties": null,
+    "status": "disabled"
+  },
+  "id": "/subscriptions/66283e96-2d6d-40bf-9c5b-e368a7ab7f7f/resourceGroups/timeentrydenext33783/providers/Microsoft.ContainerRegistry/registries/timeentrydenextacr33783",
+  "identity": null,
+  "location": "westeurope",
+  "loginServer": "timeentrydenextacr33783.azurecr.io",
+  "name": "timeentrydenextacr33783",
+  "networkRuleBypassOptions": "AzureServices",
+  "networkRuleSet": null,
+  "policies": {
+    "azureAdAuthenticationAsArmPolicy": {
+      "status": "enabled"
+    },
+    "exportPolicy": {
+      "status": "enabled"
+    },
+    "quarantinePolicy": {
+      "status": "disabled"
+    },
+    "retentionPolicy": {
+      "days": 7,
+      "lastUpdatedTime": "2024-01-26T12:29:36.855575+00:00",
+      "status": "disabled"
+    },
+    "softDeletePolicy": {
+      "lastUpdatedTime": "2024-01-26T12:29:36.857038+00:00",
+      "retentionDays": 7,
+      "status": "disabled"
+    },
+    "trustPolicy": {
+      "status": "disabled",
+      "type": "Notary"
+    }
+  },
+  "privateEndpointConnections": [],
+  "provisioningState": "Succeeded",
+  "publicNetworkAccess": "Enabled",
+  "resourceGroup": "timeentrydenext33783",
+  "sku": {
+    "name": "Basic",
+    "tier": "Basic"
+  },
+  "status": null,
+  "systemData": {
+    "createdAt": "2024-01-26T12:29:20.533750+00:00",
+    "createdBy": "juergenrichert@gmx.de",
+    "createdByType": "User",
+    "lastModifiedAt": "2024-01-26T12:29:20.533750+00:00",
+    "lastModifiedBy": "juergenrichert@gmx.de",
+    "lastModifiedByType": "User"
+  },
+  "tags": {},
+  "type": "Microsoft.ContainerRegistry/registries",
+  "zoneRedundancy": "Disabled"
+}
+ACR Login Server: timeentrydenextacr33783.azurecr.io
+Retrieving Azure Container Registry credentials...
+ACR Login Server: timeentrydenextacr33783.azurecr.io
+Logging into Azure Container Registry...
+Login Succeeded
+Current Directory: /workspaces/TimeEntryDE3
+Directory for Docker Build: /workspaces/TimeEntryDE3/timeentrydenjs2
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 2B done
+#1 DONE 0.1s
+
+#2 [internal] load .dockerignore
+#2 transferring context: 2B done
+#2 DONE 0.1s
+ERROR: failed to solve: failed to read dockerfile: open /var/lib/docker/tmp/buildkit-mount943568385/Dockerfile: no such file or directory
+Error response from daemon: No such image: timeentrydenextdockerimage-33783:latest
+Local Docker Images:
+REPOSITORY   TAG       IMAGE ID   CREATED   SIZE
+Logging into Docker registry...
+WARNING! Using --password via the CLI is insecure. Use --password-stdin.
+WARNING! Your password will be stored unencrypted in /home/node/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+Pushing Docker Image to ACR...
+The push refers to repository [timeentrydenextacr33783.azurecr.io/timeentrydenextdockerimage-33783]
+An image does not exist locally with the tag: timeentrydenextacr33783.azurecr.io/timeentrydenextdockerimage-33783
+Creating App Service plan...
+WARNING: Readonly attribute name will be ignored in class <class 'azure.mgmt.web.v2023_01_01.models._models_py3.AppServicePlan'>
+{
+  "elasticScaleEnabled": false,
+  "extendedLocation": null,
+  "freeOfferExpirationTime": "2024-02-25T12:29:44.593333",
+  "geoRegion": "West Europe",
+  "hostingEnvironmentProfile": null,
+  "hyperV": false,
+  "id": "/subscriptions/66283e96-2d6d-40bf-9c5b-e368a7ab7f7f/resourceGroups/timeentrydenext33783/providers/Microsoft.Web/serverfarms/timeentrydenextAppService-33783",
+  "isSpot": false,
+  "isXenon": false,
+  "kind": "linux",
+  "kubeEnvironmentProfile": null,
+  "location": "westeurope",
+  "maximumElasticWorkerCount": 1,
+  "maximumNumberOfWorkers": 0,
+  "name": "timeentrydenextAppService-33783",
+  "numberOfSites": 0,
+  "numberOfWorkers": 1,
+  "perSiteScaling": false,
+  "provisioningState": "Succeeded",
+  "reserved": true,
+  "resourceGroup": "timeentrydenext33783",
+  "sku": {
+    "capabilities": null,
+    "capacity": 1,
+    "family": "B",
+    "locations": null,
+    "name": "B1",
+    "size": "B1",
+    "skuCapacity": null,
+    "tier": "Basic"
+  },
+  "spotExpirationTime": null,
+  "status": "Ready",
+  "subscription": "66283e96-2d6d-40bf-9c5b-e368a7ab7f7f",
+  "tags": null,
+  "targetWorkerCount": 0,
+  "targetWorkerSizeId": 0,
+  "type": "Microsoft.Web/serverfarms",
+  "workerTierName": null,
+  "zoneRedundant": false
+}
+Creating Web App...
+WARNING: No credential was provided to access Azure Container Registry. Trying to look up...
+WARNING: App settings have been redacted. Use `az webapp/logicapp/functionapp config appsettings list` to view.
+WARNING: App settings have been redacted. Use `az webapp/logicapp/functionapp config appsettings list` to view.
+{
+  "availabilityState": "Normal",
+  "clientAffinityEnabled": true,
+  "clientCertEnabled": false,
+  "clientCertExclusionPaths": null,
+  "clientCertMode": "Required",
+  "cloningInfo": null,
+  "containerSize": 0,
+  "customDomainVerificationId": "0CEF4E8CFBAAC8F7716BF22E3B9CFC7338207D03377C619DB8AACB0D8A98394A",
+  "dailyMemoryTimeQuota": 0,
+  "daprConfig": null,
+  "defaultHostName": "timeentrydenextwebapp-33783.azurewebsites.net",
+  "enabled": true,
+  "enabledHostNames": [
+    "timeentrydenextwebapp-33783.azurewebsites.net",
+    "timeentrydenextwebapp-33783.scm.azurewebsites.net"
+  ],
+  "extendedLocation": null,
+  "ftpPublishingUrl": "ftps://waws-prod-am2-633.ftp.azurewebsites.windows.net/site/wwwroot",
+  "hostNameSslStates": [
+    {
+      "certificateResourceId": null,
+      "hostType": "Standard",
+      "ipBasedSslResult": null,
+      "ipBasedSslState": "NotConfigured",
+      "name": "timeentrydenextwebapp-33783.azurewebsites.net",
+      "sslState": "Disabled",
+      "thumbprint": null,
+      "toUpdate": null,
+      "toUpdateIpBasedSsl": null,
+      "virtualIPv6": null,
+      "virtualIp": null
+    },
+    {
+      "certificateResourceId": null,
+      "hostType": "Repository",
+      "ipBasedSslResult": null,
+      "ipBasedSslState": "NotConfigured",
+      "name": "timeentrydenextwebapp-33783.scm.azurewebsites.net",
+      "sslState": "Disabled",
+      "thumbprint": null,
+      "toUpdate": null,
+      "toUpdateIpBasedSsl": null,
+      "virtualIPv6": null,
+      "virtualIp": null
+    }
+  ],
+  "hostNames": [
+    "timeentrydenextwebapp-33783.azurewebsites.net"
+  ],
+  "hostNamesDisabled": false,
+  "hostingEnvironmentProfile": null,
+  "httpsOnly": false,
+  "hyperV": false,
+  "id": "/subscriptions/66283e96-2d6d-40bf-9c5b-e368a7ab7f7f/resourceGroups/timeentrydenext33783/providers/Microsoft.Web/sites/timeentrydenextWebApp-33783",
+  "identity": null,
+  "inProgressOperationId": null,
+  "isDefaultContainer": null,
+  "isXenon": false,
+  "keyVaultReferenceIdentity": "SystemAssigned",
+  "kind": "app,linux,container",
+  "lastModifiedTimeUtc": "2024-01-26T12:29:53.540000",
+  "location": "West Europe",
+  "managedEnvironmentId": null,
+  "maxNumberOfWorkers": null,
+  "name": "timeentrydenextWebApp-33783",
+  "outboundIpAddresses": "20.23.177.38,20.23.177.44,20.23.177.79,20.23.177.92,20.23.177.96,20.76.165.228,20.105.216.23",
+  "possibleOutboundIpAddresses": "20.23.177.38,20.23.177.44,20.23.177.79,20.23.177.92,20.23.177.96,20.76.165.228,20.23.177.137,20.23.177.169,20.76.160.97,20.23.177.218,20.23.177.235,20.23.177.248,20.23.178.12,20.23.178.26,20.23.178.29,20.23.178.34,20.23.178.39,20.23.178.77,20.23.178.94,20.23.178.107,20.23.178.140,20.23.178.170,20.23.178.174,20.23.178.176,20.105.216.23",
+  "publicNetworkAccess": null,
+  "redundancyMode": "None",
+  "repositorySiteName": "timeentrydenextWebApp-33783",
+  "reserved": true,
+  "resourceConfig": null,
+  "resourceGroup": "timeentrydenext33783",
+  "scmSiteAlsoStopped": false,
+  "serverFarmId": "/subscriptions/66283e96-2d6d-40bf-9c5b-e368a7ab7f7f/resourceGroups/timeentrydenext33783/providers/Microsoft.Web/serverfarms/timeentrydenextAppService-33783",
+  "siteConfig": {
+    "acrUseManagedIdentityCreds": false,
+    "acrUserManagedIdentityId": null,
+    "alwaysOn": false,
+    "antivirusScanEnabled": null,
+    "apiDefinition": null,
+    "apiManagementConfig": null,
+    "appCommandLine": null,
+    "appSettings": null,
+    "autoHealEnabled": null,
+    "autoHealRules": null,
+    "autoSwapSlotName": null,
+    "azureMonitorLogCategories": null,
+    "azureStorageAccounts": null,
+    "connectionStrings": null,
+    "cors": null,
+    "customAppPoolIdentityAdminState": null,
+    "customAppPoolIdentityTenantState": null,
+    "defaultDocuments": null,
+    "detailedErrorLoggingEnabled": null,
+    "documentRoot": null,
+    "elasticWebAppScaleLimit": 0,
+    "experiments": null,
+    "fileChangeAuditEnabled": null,
+    "ftpsState": null,
+    "functionAppScaleLimit": null,
+    "functionsRuntimeScaleMonitoringEnabled": null,
+    "handlerMappings": null,
+    "healthCheckPath": null,
+    "http20Enabled": false,
+    "http20ProxyFlag": null,
+    "httpLoggingEnabled": null,
+    "ipSecurityRestrictions": [
+      {
+        "action": "Allow",
+        "description": "Allow all access",
+        "headers": null,
+        "ipAddress": "Any",
+        "name": "Allow all",
+        "priority": 2147483647,
+        "subnetMask": null,
+        "subnetTrafficTag": null,
+        "tag": null,
+        "vnetSubnetResourceId": null,
+        "vnetTrafficTag": null
+      }
+    ],
+    "ipSecurityRestrictionsDefaultAction": null,
+    "javaContainer": null,
+    "javaContainerVersion": null,
+    "javaVersion": null,
+    "keyVaultReferenceIdentity": null,
+    "limits": null,
+    "linuxFxVersion": "",
+    "loadBalancing": null,
+    "localMySqlEnabled": null,
+    "logsDirectorySizeLimit": null,
+    "machineKey": null,
+    "managedPipelineMode": null,
+    "managedServiceIdentityId": null,
+    "metadata": null,
+    "minTlsCipherSuite": null,
+    "minTlsVersion": null,
+    "minimumElasticInstanceCount": 0,
+    "netFrameworkVersion": null,
+    "nodeVersion": null,
+    "numberOfWorkers": 1,
+    "phpVersion": null,
+    "powerShellVersion": null,
+    "preWarmedInstanceCount": null,
+    "publicNetworkAccess": null,
+    "publishingPassword": null,
+    "publishingUsername": null,
+    "push": null,
+    "pythonVersion": null,
+    "remoteDebuggingEnabled": null,
+    "remoteDebuggingVersion": null,
+    "requestTracingEnabled": null,
+    "requestTracingExpirationTime": null,
+    "routingRules": null,
+    "runtimeADUser": null,
+    "runtimeADUserPassword": null,
+    "scmIpSecurityRestrictions": [
+      {
+        "action": "Allow",
+        "description": "Allow all access",
+        "headers": null,
+        "ipAddress": "Any",
+        "name": "Allow all",
+        "priority": 2147483647,
+        "subnetMask": null,
+        "subnetTrafficTag": null,
+        "tag": null,
+        "vnetSubnetResourceId": null,
+        "vnetTrafficTag": null
+      }
+    ],
+    "scmIpSecurityRestrictionsDefaultAction": null,
+    "scmIpSecurityRestrictionsUseMain": null,
+    "scmMinTlsVersion": null,
+    "scmType": null,
+    "sitePort": null,
+    "sitePrivateLinkHostEnabled": null,
+    "storageType": null,
+    "supportedTlsCipherSuites": null,
+    "tracingOptions": null,
+    "use32BitWorkerProcess": null,
+    "virtualApplications": null,
+    "vnetName": null,
+    "vnetPrivatePortsCount": null,
+    "vnetRouteAllEnabled": null,
+    "webSocketsEnabled": null,
+    "websiteTimeZone": null,
+    "winAuthAdminState": null,
+    "winAuthTenantState": null,
+    "windowsConfiguredStacks": null,
+    "windowsFxVersion": null,
+    "xManagedServiceIdentityId": null
+  },
+  "slotSwapStatus": null,
+  "state": "Running",
+  "storageAccountRequired": false,
+  "suspendedTill": null,
+  "tags": null,
+  "targetSwapSlot": null,
+  "trafficManagerHostNames": null,
+  "type": "Microsoft.Web/sites",
+  "usageState": "Normal",
+  "virtualNetworkSubnetId": null,
+  "vnetContentShareEnabled": false,
+  "vnetImagePullEnabled": false,
+  "vnetRouteAllEnabled": false,
+  "workloadProfileName": null
+}
+Checking Web App Configuration...
+{
+  "acrUseManagedIdentityCreds": false,
+  "acrUserManagedIdentityId": null,
+  "alwaysOn": false,
+  "apiDefinition": null,
+  "apiManagementConfig": null,
+  "appCommandLine": "",
+  "appSettings": null,
+  "autoHealEnabled": false,
+  "autoHealRules": null,
+  "autoSwapSlotName": null,
+  "azureStorageAccounts": {},
+  "connectionStrings": null,
+  "cors": null,
+  "defaultDocuments": [
+    "Default.htm",
+    "Default.html",
+    "Default.asp",
+    "index.htm",
+    "index.html",
+    "iisstart.htm",
+    "default.aspx",
+    "index.php",
+    "hostingstart.html"
+  ],
+  "detailedErrorLoggingEnabled": false,
+  "documentRoot": null,
+  "elasticWebAppScaleLimit": 0,
+  "experiments": {
+    "rampUpRules": []
+  },
+  "ftpsState": "FtpsOnly",
+  "functionAppScaleLimit": null,
+  "functionsRuntimeScaleMonitoringEnabled": false,
+  "handlerMappings": null,
+  "healthCheckPath": null,
+  "http20Enabled": true,
+  "httpLoggingEnabled": false,
+  "id": "/subscriptions/66283e96-2d6d-40bf-9c5b-e368a7ab7f7f/resourceGroups/timeentrydenext33783/providers/Microsoft.Web/sites/timeentrydenextWebApp-33783/config/web",
+  "ipSecurityRestrictions": [
+    {
+      "action": "Allow",
+      "description": "Allow all access",
+      "headers": null,
+      "ipAddress": "Any",
+      "name": "Allow all",
+      "priority": 2147483647,
+      "subnetMask": null,
+      "subnetTrafficTag": null,
+      "tag": null,
+      "vnetSubnetResourceId": null,
+      "vnetTrafficTag": null
+    }
+  ],
+  "ipSecurityRestrictionsDefaultAction": null,
+  "javaContainer": null,
+  "javaContainerVersion": null,
+  "javaVersion": null,
+  "keyVaultReferenceIdentity": null,
+  "kind": null,
+  "limits": null,
+  "linuxFxVersion": "DOCKER|timeentrydenextacr33783.azurecr.io/timeentrydenextdockerimage-33783:latest",
+  "loadBalancing": "LeastRequests",
+  "localMySqlEnabled": false,
+  "location": "West Europe",
+  "logsDirectorySizeLimit": 35,
+  "machineKey": null,
+  "managedPipelineMode": "Integrated",
+  "managedServiceIdentityId": null,
+  "metadata": null,
+  "minTlsCipherSuite": null,
+  "minTlsVersion": "1.2",
+  "minimumElasticInstanceCount": 0,
+  "name": "timeentrydenextWebApp-33783",
+  "netFrameworkVersion": "v4.0",
+  "nodeVersion": "",
+  "numberOfWorkers": 1,
+  "phpVersion": "",
+  "powerShellVersion": "",
+  "preWarmedInstanceCount": 0,
+  "publicNetworkAccess": null,
+  "publishingUsername": "$timeentrydenextWebApp-33783",
+  "push": null,
+  "pythonVersion": "",
+  "remoteDebuggingEnabled": false,
+  "remoteDebuggingVersion": "VS2019",
+  "requestTracingEnabled": false,
+  "requestTracingExpirationTime": null,
+  "resourceGroup": "timeentrydenext33783",
+  "scmIpSecurityRestrictions": [
+    {
+      "action": "Allow",
+      "description": "Allow all access",
+      "headers": null,
+      "ipAddress": "Any",
+      "name": "Allow all",
+      "priority": 2147483647,
+      "subnetMask": null,
+      "subnetTrafficTag": null,
+      "tag": null,
+      "vnetSubnetResourceId": null,
+      "vnetTrafficTag": null
+    }
+  ],
+  "scmIpSecurityRestrictionsDefaultAction": null,
+  "scmIpSecurityRestrictionsUseMain": false,
+  "scmMinTlsVersion": "1.2",
+  "scmType": "None",
+  "tracingOptions": null,
+  "type": "Microsoft.Web/sites/config",
+  "use32BitWorkerProcess": true,
+  "virtualApplications": [
+    {
+      "physicalPath": "site\\wwwroot",
+      "preloadEnabled": false,
+      "virtualDirectories": null,
+      "virtualPath": "/"
+    }
+  ],
+  "vnetName": "",
+  "vnetPrivatePortsCount": 0,
+  "vnetRouteAllEnabled": false,
+  "webSocketsEnabled": false,
+  "websiteTimeZone": null,
+  "windowsFxVersion": null,
+  "xManagedServiceIdentityId": null
+}
+Deployment complete. Visit your app at http://timeentrydenextWebApp-33783.azurewebsites.net
+Searching for existing resource groups starting with timeentrydenext...
+Deleting resource group timeentrydenext33783...
+Creating resource group timeentrydenext61461...
+{
+  "id": "/subscriptions/66283e96-2d6d-40bf-9c5b-e368a7ab7f7f/resourceGroups/timeentrydenext61461",
+  "location": "westeurope",
+  "managedBy": null,
+  "name": "timeentrydenext61461",
+  "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "tags": null,
+  "type": "Microsoft.Resources/resourceGroups"
+}
+Creating Azure Container Registry...
+{
+  "adminUserEnabled": true,
+  "anonymousPullEnabled": false,
+  "creationDate": "2024-01-26T12:35:48.022541+00:00",
+  "dataEndpointEnabled": false,
+  "dataEndpointHostNames": [],
+  "encryption": {
+    "keyVaultProperties": null,
+    "status": "disabled"
+  },
+  "id": "/subscriptions/66283e96-2d6d-40bf-9c5b-e368a7ab7f7f/resourceGroups/timeentrydenext61461/providers/Microsoft.ContainerRegistry/registries/timeentrydenextacr61461",
+  "identity": null,
+  "location": "westeurope",
+  "loginServer": "timeentrydenextacr61461.azurecr.io",
+  "name": "timeentrydenextacr61461",
+  "networkRuleBypassOptions": "AzureServices",
+  "networkRuleSet": null,
+  "policies": {
+    "azureAdAuthenticationAsArmPolicy": {
+      "status": "enabled"
+    },
+    "exportPolicy": {
+      "status": "enabled"
+    },
+    "quarantinePolicy": {
+      "status": "disabled"
+    },
+    "retentionPolicy": {
+      "days": 7,
+      "lastUpdatedTime": "2024-01-26T12:35:54.465931+00:00",
+      "status": "disabled"
+    },
+    "softDeletePolicy": {
+      "lastUpdatedTime": "2024-01-26T12:35:54.465972+00:00",
+      "retentionDays": 7,
+      "status": "disabled"
+    },
+    "trustPolicy": {
+      "status": "disabled",
+      "type": "Notary"
+    }
+  },
+  "privateEndpointConnections": [],
+  "provisioningState": "Succeeded",
+  "publicNetworkAccess": "Enabled",
+  "resourceGroup": "timeentrydenext61461",
+  "sku": {
+    "name": "Basic",
+    "tier": "Basic"
+  },
+  "status": null,
+  "systemData": {
+    "createdAt": "2024-01-26T12:35:48.022541+00:00",
+    "createdBy": "juergenrichert@gmx.de",
+    "createdByType": "User",
+    "lastModifiedAt": "2024-01-26T12:35:48.022541+00:00",
+    "lastModifiedBy": "juergenrichert@gmx.de",
+    "lastModifiedByType": "User"
+  },
+  "tags": {},
+  "type": "Microsoft.ContainerRegistry/registries",
+  "zoneRedundancy": "Disabled"
+}
+ACR Login Server: timeentrydenextacr61461.azurecr.io
+Retrieving Azure Container Registry credentials...
+ACR Login Server: timeentrydenextacr61461.azurecr.io
+Logging into Azure Container Registry...
+Login Succeeded
+Logging into Azure Container Registry...
+Login Succeeded
+Retrieving Azure Container Registry credentials...
+Logging into Docker registry...
+WARNING! Using --password via the CLI is insecure. Use --password-stdin.
+WARNING! Your password will be stored unencrypted in /home/node/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+Current Directory: /workspaces/TimeEntryDE3
+Directory for Docker Build: /workspaces/TimeEntryDE3/timeentrydenjs2
+#0 building with "default" instance using docker driver
+
+#1 [internal] load .dockerignore
+#1 transferring context: 2B done
+#1 DONE 0.1s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 2B done
+#2 DONE 0.1s
+ERROR: failed to solve: failed to read dockerfile: open /var/lib/docker/tmp/buildkit-mount620674455/Dockerfile: no such file or directory
+Error response from daemon: No such image: timeentrydenextdockerimage-61461:latest
+Local Docker Images:
+REPOSITORY   TAG       IMAGE ID   CREATED   SIZE
+Pushing Docker Image to ACR...
+The push refers to repository [timeentrydenextacr61461.azurecr.io/timeentrydenextdockerimage-61461]
+An image does not exist locally with the tag: timeentrydenextacr61461.azurecr.io/timeentrydenextdockerimage-61461
+Creating App Service plan...
+WARNING: Readonly attribute name will be ignored in class <class 'azure.mgmt.web.v2023_01_01.models._models_py3.AppServicePlan'>
+{
+  "elasticScaleEnabled": false,
+  "extendedLocation": null,
+  "freeOfferExpirationTime": "2024-02-25T12:36:12.710000",
+  "geoRegion": "West Europe",
+  "hostingEnvironmentProfile": null,
+  "hyperV": false,
+  "id": "/subscriptions/66283e96-2d6d-40bf-9c5b-e368a7ab7f7f/resourceGroups/timeentrydenext61461/providers/Microsoft.Web/serverfarms/timeentrydenextAppService-61461",
+  "isSpot": false,
+  "isXenon": false,
+  "kind": "linux",
+  "kubeEnvironmentProfile": null,
+  "location": "westeurope",
+  "maximumElasticWorkerCount": 1,
+  "maximumNumberOfWorkers": 0,
+  "name": "timeentrydenextAppService-61461",
+  "numberOfSites": 0,
+  "numberOfWorkers": 1,
+  "perSiteScaling": false,
+  "provisioningState": "Succeeded",
+  "reserved": true,
+  "resourceGroup": "timeentrydenext61461",
+  "sku": {
+    "capabilities": null,
+    "capacity": 1,
+    "family": "B",
+    "locations": null,
+    "name": "B1",
+    "size": "B1",
+    "skuCapacity": null,
+    "tier": "Basic"
+  },
+  "spotExpirationTime": null,
+  "status": "Ready",
+  "subscription": "66283e96-2d6d-40bf-9c5b-e368a7ab7f7f",
+  "tags": null,
+  "targetWorkerCount": 0,
+  "targetWorkerSizeId": 0,
+  "type": "Microsoft.Web/serverfarms",
+  "workerTierName": null,
+  "zoneRedundant": false
+}
+Creating Web App...
+WARNING: No credential was provided to access Azure Container Registry. Trying to look up...
+WARNING: App settings have been redacted. Use `az webapp/logicapp/functionapp config appsettings list` to view.
+WARNING: App settings have been redacted. Use `az webapp/logicapp/functionapp config appsettings list` to view.
+{
+  "availabilityState": "Normal",
+  "clientAffinityEnabled": true,
+  "clientCertEnabled": false,
+  "clientCertExclusionPaths": null,
+  "clientCertMode": "Required",
+  "cloningInfo": null,
+  "containerSize": 0,
+  "customDomainVerificationId": "0CEF4E8CFBAAC8F7716BF22E3B9CFC7338207D03377C619DB8AACB0D8A98394A",
+  "dailyMemoryTimeQuota": 0,
+  "daprConfig": null,
+  "defaultHostName": "timeentrydenextwebapp-61461.azurewebsites.net",
+  "enabled": true,
+  "enabledHostNames": [
+    "timeentrydenextwebapp-61461.azurewebsites.net",
+    "timeentrydenextwebapp-61461.scm.azurewebsites.net"
+  ],
+  "extendedLocation": null,
+  "ftpPublishingUrl": "ftps://waws-prod-am2-789.ftp.azurewebsites.windows.net/site/wwwroot",
+  "hostNameSslStates": [
+    {
+      "certificateResourceId": null,
+      "hostType": "Standard",
+      "ipBasedSslResult": null,
+      "ipBasedSslState": "NotConfigured",
+      "name": "timeentrydenextwebapp-61461.azurewebsites.net",
+      "sslState": "Disabled",
+      "thumbprint": null,
+      "toUpdate": null,
+      "toUpdateIpBasedSsl": null,
+      "virtualIPv6": null,
+      "virtualIp": null
+    },
+    {
+      "certificateResourceId": null,
+      "hostType": "Repository",
+      "ipBasedSslResult": null,
+      "ipBasedSslState": "NotConfigured",
+      "name": "timeentrydenextwebapp-61461.scm.azurewebsites.net",
+      "sslState": "Disabled",
+      "thumbprint": null,
+      "toUpdate": null,
+      "toUpdateIpBasedSsl": null,
+      "virtualIPv6": null,
+      "virtualIp": null
+    }
+  ],
+  "hostNames": [
+    "timeentrydenextwebapp-61461.azurewebsites.net"
+  ],
+  "hostNamesDisabled": false,
+  "hostingEnvironmentProfile": null,
+  "httpsOnly": false,
+  "hyperV": false,
+  "id": "/subscriptions/66283e96-2d6d-40bf-9c5b-e368a7ab7f7f/resourceGroups/timeentrydenext61461/providers/Microsoft.Web/sites/timeentrydenextWebApp-61461",
+  "identity": null,
+  "inProgressOperationId": null,
+  "isDefaultContainer": null,
+  "isXenon": false,
+  "keyVaultReferenceIdentity": "SystemAssigned",
+  "kind": "app,linux,container",
+  "lastModifiedTimeUtc": "2024-01-26T12:36:22.716666",
+  "location": "West Europe",
+  "managedEnvironmentId": null,
+  "maxNumberOfWorkers": null,
+  "name": "timeentrydenextWebApp-61461",
+  "outboundIpAddresses": "20.31.95.211,20.238.136.106,20.238.136.237,20.8.50.219,20.8.51.116,20.8.52.70,20.76.185.156,20.76.187.228,20.93.208.207,20.93.210.67,20.93.211.114,20.93.211.249,20.105.216.39",
+  "possibleOutboundIpAddresses": "20.31.95.211,20.238.136.106,20.238.136.237,20.8.50.219,20.8.51.116,20.8.52.70,20.76.185.156,20.76.187.228,20.93.208.207,20.93.210.67,20.93.211.114,20.93.211.249,20.103.161.67,20.103.162.190,20.103.163.117,20.103.165.22,20.103.166.176,20.126.168.96,20.126.170.52,20.126.171.1,20.126.171.9,20.126.173.78,20.31.88.101,20.31.92.162,20.31.95.211,20.238.136.106,20.238.136.237,20.8.50.219,20.8.51.116,20.8.52.70,20.8.54.18,4.175.160.191,4.175.161.56,4.175.161.185,4.175.161.204,4.175.161.220,20.105.216.39",
+  "publicNetworkAccess": null,
+  "redundancyMode": "None",
+  "repositorySiteName": "timeentrydenextWebApp-61461",
+  "reserved": true,
+  "resourceConfig": null,
+  "resourceGroup": "timeentrydenext61461",
+  "scmSiteAlsoStopped": false,
+  "serverFarmId": "/subscriptions/66283e96-2d6d-40bf-9c5b-e368a7ab7f7f/resourceGroups/timeentrydenext61461/providers/Microsoft.Web/serverfarms/timeentrydenextAppService-61461",
+  "siteConfig": {
+    "acrUseManagedIdentityCreds": false,
+    "acrUserManagedIdentityId": null,
+    "alwaysOn": false,
+    "antivirusScanEnabled": null,
+    "apiDefinition": null,
+    "apiManagementConfig": null,
+    "appCommandLine": null,
+    "appSettings": null,
+    "autoHealEnabled": null,
+    "autoHealRules": null,
+    "autoSwapSlotName": null,
+    "azureMonitorLogCategories": null,
+    "azureStorageAccounts": null,
+    "connectionStrings": null,
+    "cors": null,
+    "customAppPoolIdentityAdminState": null,
+    "customAppPoolIdentityTenantState": null,
+    "defaultDocuments": null,
+    "detailedErrorLoggingEnabled": null,
+    "documentRoot": null,
+    "elasticWebAppScaleLimit": 0,
+    "experiments": null,
+    "fileChangeAuditEnabled": null,
+    "ftpsState": null,
+    "functionAppScaleLimit": null,
+    "functionsRuntimeScaleMonitoringEnabled": null,
+    "handlerMappings": null,
+    "healthCheckPath": null,
+    "http20Enabled": false,
+    "http20ProxyFlag": null,
+    "httpLoggingEnabled": null,
+    "ipSecurityRestrictions": [
+      {
+        "action": "Allow",
+        "description": "Allow all access",
+        "headers": null,
+        "ipAddress": "Any",
+        "name": "Allow all",
+        "priority": 2147483647,
+        "subnetMask": null,
+        "subnetTrafficTag": null,
+        "tag": null,
+        "vnetSubnetResourceId": null,
+        "vnetTrafficTag": null
+      }
+    ],
+    "ipSecurityRestrictionsDefaultAction": null,
+    "javaContainer": null,
+    "javaContainerVersion": null,
+    "javaVersion": null,
+    "keyVaultReferenceIdentity": null,
+    "limits": null,
+    "linuxFxVersion": "",
+    "loadBalancing": null,
+    "localMySqlEnabled": null,
+    "logsDirectorySizeLimit": null,
+    "machineKey": null,
+    "managedPipelineMode": null,
+    "managedServiceIdentityId": null,
+    "metadata": null,
+    "minTlsCipherSuite": null,
+    "minTlsVersion": null,
+    "minimumElasticInstanceCount": 0,
+    "netFrameworkVersion": null,
+    "nodeVersion": null,
+    "numberOfWorkers": 1,
+    "phpVersion": null,
+    "powerShellVersion": null,
+    "preWarmedInstanceCount": null,
+    "publicNetworkAccess": null,
+    "publishingPassword": null,
+    "publishingUsername": null,
+    "push": null,
+    "pythonVersion": null,
+    "remoteDebuggingEnabled": null,
+    "remoteDebuggingVersion": null,
+    "requestTracingEnabled": null,
+    "requestTracingExpirationTime": null,
+    "routingRules": null,
+    "runtimeADUser": null,
+    "runtimeADUserPassword": null,
+    "scmIpSecurityRestrictions": [
+      {
+        "action": "Allow",
+        "description": "Allow all access",
+        "headers": null,
+        "ipAddress": "Any",
+        "name": "Allow all",
+        "priority": 2147483647,
+        "subnetMask": null,
+        "subnetTrafficTag": null,
+        "tag": null,
+        "vnetSubnetResourceId": null,
+        "vnetTrafficTag": null
+      }
+    ],
+    "scmIpSecurityRestrictionsDefaultAction": null,
+    "scmIpSecurityRestrictionsUseMain": null,
+    "scmMinTlsVersion": null,
+    "scmType": null,
+    "sitePort": null,
+    "sitePrivateLinkHostEnabled": null,
+    "storageType": null,
+    "supportedTlsCipherSuites": null,
+    "tracingOptions": null,
+    "use32BitWorkerProcess": null,
+    "virtualApplications": null,
+    "vnetName": null,
+    "vnetPrivatePortsCount": null,
+    "vnetRouteAllEnabled": null,
+    "webSocketsEnabled": null,
+    "websiteTimeZone": null,
+    "winAuthAdminState": null,
+    "winAuthTenantState": null,
+    "windowsConfiguredStacks": null,
+    "windowsFxVersion": null,
+    "xManagedServiceIdentityId": null
+  },
+  "slotSwapStatus": null,
+  "state": "Running",
+  "storageAccountRequired": false,
+  "suspendedTill": null,
+  "tags": null,
+  "targetSwapSlot": null,
+  "trafficManagerHostNames": null,
+  "type": "Microsoft.Web/sites",
+  "usageState": "Normal",
+  "virtualNetworkSubnetId": null,
+  "vnetContentShareEnabled": false,
+  "vnetImagePullEnabled": false,
+  "vnetRouteAllEnabled": false,
+  "workloadProfileName": null
+}
+Checking Web App Configuration...
+{
+  "acrUseManagedIdentityCreds": false,
+  "acrUserManagedIdentityId": null,
+  "alwaysOn": false,
+  "apiDefinition": null,
+  "apiManagementConfig": null,
+  "appCommandLine": "",
+  "appSettings": null,
+  "autoHealEnabled": false,
+  "autoHealRules": null,
+  "autoSwapSlotName": null,
+  "azureStorageAccounts": {},
+  "connectionStrings": null,
+  "cors": null,
+  "defaultDocuments": [
+    "Default.htm",
+    "Default.html",
+    "Default.asp",
+    "index.htm",
+    "index.html",
+    "iisstart.htm",
+    "default.aspx",
+    "index.php",
+    "hostingstart.html"
+  ],
+  "detailedErrorLoggingEnabled": false,
+  "documentRoot": null,
+  "elasticWebAppScaleLimit": 0,
+  "experiments": {
+    "rampUpRules": []
+  },
+  "ftpsState": "FtpsOnly",
+  "functionAppScaleLimit": null,
+  "functionsRuntimeScaleMonitoringEnabled": false,
+  "handlerMappings": null,
+  "healthCheckPath": null,
+  "http20Enabled": true,
+  "httpLoggingEnabled": false,
+  "id": "/subscriptions/66283e96-2d6d-40bf-9c5b-e368a7ab7f7f/resourceGroups/timeentrydenext61461/providers/Microsoft.Web/sites/timeentrydenextWebApp-61461/config/web",
+  "ipSecurityRestrictions": [
+    {
+      "action": "Allow",
+      "description": "Allow all access",
+      "headers": null,
+      "ipAddress": "Any",
+      "name": "Allow all",
+      "priority": 2147483647,
+      "subnetMask": null,
+      "subnetTrafficTag": null,
+      "tag": null,
+      "vnetSubnetResourceId": null,
+      "vnetTrafficTag": null
+    }
+  ],
+  "ipSecurityRestrictionsDefaultAction": null,
+  "javaContainer": null,
+  "javaContainerVersion": null,
+  "javaVersion": null,
+  "keyVaultReferenceIdentity": null,
+  "kind": null,
+  "limits": null,
+  "linuxFxVersion": "DOCKER|timeentrydenextacr61461.azurecr.io/timeentrydenextdockerimage-61461:latest",
+  "loadBalancing": "LeastRequests",
+  "localMySqlEnabled": false,
+  "location": "West Europe",
+  "logsDirectorySizeLimit": 35,
+  "machineKey": null,
+  "managedPipelineMode": "Integrated",
+  "managedServiceIdentityId": null,
+  "metadata": null,
+  "minTlsCipherSuite": null,
+  "minTlsVersion": "1.2",
+  "minimumElasticInstanceCount": 0,
+  "name": "timeentrydenextWebApp-61461",
+  "netFrameworkVersion": "v4.0",
+  "nodeVersion": "",
+  "numberOfWorkers": 1,
+  "phpVersion": "",
+  "powerShellVersion": "",
+  "preWarmedInstanceCount": 0,
+  "publicNetworkAccess": null,
+  "publishingUsername": "$timeentrydenextWebApp-61461",
+  "push": null,
+  "pythonVersion": "",
+  "remoteDebuggingEnabled": false,
+  "remoteDebuggingVersion": "VS2019",
+  "requestTracingEnabled": false,
+  "requestTracingExpirationTime": null,
+  "resourceGroup": "timeentrydenext61461",
+  "scmIpSecurityRestrictions": [
+    {
+      "action": "Allow",
+      "description": "Allow all access",
+      "headers": null,
+      "ipAddress": "Any",
+      "name": "Allow all",
+      "priority": 2147483647,
+      "subnetMask": null,
+      "subnetTrafficTag": null,
+      "tag": null,
+      "vnetSubnetResourceId": null,
+      "vnetTrafficTag": null
+    }
+  ],
+  "scmIpSecurityRestrictionsDefaultAction": null,
+  "scmIpSecurityRestrictionsUseMain": false,
+  "scmMinTlsVersion": "1.2",
+  "scmType": "None",
+  "tracingOptions": null,
+  "type": "Microsoft.Web/sites/config",
+  "use32BitWorkerProcess": true,
+  "virtualApplications": [
+    {
+      "physicalPath": "site\\wwwroot",
+      "preloadEnabled": false,
+      "virtualDirectories": null,
+      "virtualPath": "/"
+    }
+  ],
+  "vnetName": "",
+  "vnetPrivatePortsCount": 0,
+  "vnetRouteAllEnabled": false,
+  "webSocketsEnabled": false,
+  "websiteTimeZone": null,
+  "windowsFxVersion": null,
+  "xManagedServiceIdentityId": null
+}
+Deployment complete. Visit your app at http://timeentrydenextWebApp-61461.azurewebsites.net
+Searching for existing resource groups starting with timeentrydenext...
+Deleting resource group timeentrydenext61461...
+Creating resource group timeentrydenext31030...
+{
+  "id": "/subscriptions/66283e96-2d6d-40bf-9c5b-e368a7ab7f7f/resourceGroups/timeentrydenext31030",
+  "location": "westeurope",
+  "managedBy": null,
+  "name": "timeentrydenext31030",
+  "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "tags": null,
+  "type": "Microsoft.Resources/resourceGroups"
+}
+Creating Azure Container Registry...
+{
+  "adminUserEnabled": true,
+  "anonymousPullEnabled": false,
+  "creationDate": "2024-01-26T12:43:28.946571+00:00",
+  "dataEndpointEnabled": false,
+  "dataEndpointHostNames": [],
+  "encryption": {
+    "keyVaultProperties": null,
+    "status": "disabled"
+  },
+  "id": "/subscriptions/66283e96-2d6d-40bf-9c5b-e368a7ab7f7f/resourceGroups/timeentrydenext31030/providers/Microsoft.ContainerRegistry/registries/timeentrydenextacr31030",
+  "identity": null,
+  "location": "westeurope",
+  "loginServer": "timeentrydenextacr31030.azurecr.io",
+  "name": "timeentrydenextacr31030",
+  "networkRuleBypassOptions": "AzureServices",
+  "networkRuleSet": null,
+  "policies": {
+    "azureAdAuthenticationAsArmPolicy": {
+      "status": "enabled"
+    },
+    "exportPolicy": {
+      "status": "enabled"
+    },
+    "quarantinePolicy": {
+      "status": "disabled"
+    },
+    "retentionPolicy": {
+      "days": 7,
+      "lastUpdatedTime": "2024-01-26T12:43:35.728639+00:00",
+      "status": "disabled"
+    },
+    "softDeletePolicy": {
+      "lastUpdatedTime": "2024-01-26T12:43:35.728679+00:00",
+      "retentionDays": 7,
+      "status": "disabled"
+    },
+    "trustPolicy": {
+      "status": "disabled",
+      "type": "Notary"
+    }
+  },
+  "privateEndpointConnections": [],
+  "provisioningState": "Succeeded",
+  "publicNetworkAccess": "Enabled",
+  "resourceGroup": "timeentrydenext31030",
+  "sku": {
+    "name": "Basic",
+    "tier": "Basic"
+  },
+  "status": null,
+  "systemData": {
+    "createdAt": "2024-01-26T12:43:28.946571+00:00",
+    "createdBy": "juergenrichert@gmx.de",
+    "createdByType": "User",
+    "lastModifiedAt": "2024-01-26T12:43:28.946571+00:00",
+    "lastModifiedBy": "juergenrichert@gmx.de",
+    "lastModifiedByType": "User"
+  },
+  "tags": {},
+  "type": "Microsoft.ContainerRegistry/registries",
+  "zoneRedundancy": "Disabled"
+}
+ACR Login Server: timeentrydenextacr31030.azurecr.io
+Retrieving Azure Container Registry credentials...
+ACR Login Server: timeentrydenextacr31030.azurecr.io
+Logging into Azure Container Registry...
+Login Succeeded
+Logging into Azure Container Registry...
+Login Succeeded
+Retrieving Azure Container Registry credentials...
+Logging into Docker registry...
+WARNING! Using --password via the CLI is insecure. Use --password-stdin.
+WARNING! Your password will be stored unencrypted in /home/node/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+Current Directory: /workspaces/TimeEntryDE3
+Directory for Docker Build: /workspaces/TimeEntryDE3/timeentrydenjs2
+#0 building with "default" instance using docker driver
+
+#1 [internal] load .dockerignore
+#1 transferring context: 2B done
+#1 DONE 0.1s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 848B done
+#2 DONE 0.1s
+
+#3 [internal] load metadata for docker.io/library/node:14
+#3 DONE 0.4s
+
+#4 [stage-1 1/8] FROM docker.io/library/node:14@sha256:a158d3b9b4e3fa813fa6c8c590b8f0a860e015ad4e59bbce5744d2f6fd8461aa
+#4 resolve docker.io/library/node:14@sha256:a158d3b9b4e3fa813fa6c8c590b8f0a860e015ad4e59bbce5744d2f6fd8461aa 0.1s done
+#4 sha256:2cafa3fbb0b6529ee4726b4f599ec27ee557ea3dea7019182323b3779959927f 2.21kB / 2.21kB done
+#4 sha256:1d12470fa662a2a5cb50378dcdc8ea228c1735747db410bbefb8e2d9144b5452 7.51kB / 7.51kB done
+#4 sha256:a158d3b9b4e3fa813fa6c8c590b8f0a860e015ad4e59bbce5744d2f6fd8461aa 776B / 776B done
+#4 sha256:3d2201bd995cccf12851a50820de03d34a17011dcbb9ac9fdf3a50c952cbb131 0B / 10.00MB 0.1s
+#4 sha256:2ff1d7c41c74a25258bfa6f0b8adb0a727f84518f55f65ca845ebc747976c408 0B / 50.45MB 0.1s
+#4 sha256:2ff1d7c41c74a25258bfa6f0b8adb0a727f84518f55f65ca845ebc747976c408 5.24MB / 50.45MB 0.2s
+#4 sha256:b253aeafeaa7e0671bb60008df01de101a38a045ff7bc656e3b0fbfc7c05cca5 0B / 7.86MB 0.2s
+#4 sha256:2ff1d7c41c74a25258bfa6f0b8adb0a727f84518f55f65ca845ebc747976c408 16.78MB / 50.45MB 0.4s
+#4 sha256:3d2201bd995cccf12851a50820de03d34a17011dcbb9ac9fdf3a50c952cbb131 2.10MB / 10.00MB 0.5s
+#4 sha256:2ff1d7c41c74a25258bfa6f0b8adb0a727f84518f55f65ca845ebc747976c408 26.21MB / 50.45MB 0.5s
+#4 sha256:3d2201bd995cccf12851a50820de03d34a17011dcbb9ac9fdf3a50c952cbb131 10.00MB / 10.00MB 0.7s
+#4 sha256:2ff1d7c41c74a25258bfa6f0b8adb0a727f84518f55f65ca845ebc747976c408 39.52MB / 50.45MB 0.7s
+#4 sha256:b253aeafeaa7e0671bb60008df01de101a38a045ff7bc656e3b0fbfc7c05cca5 2.10MB / 7.86MB 0.7s
+#4 sha256:2ff1d7c41c74a25258bfa6f0b8adb0a727f84518f55f65ca845ebc747976c408 43.09MB / 50.45MB 0.7s
+#4 sha256:b253aeafeaa7e0671bb60008df01de101a38a045ff7bc656e3b0fbfc7c05cca5 6.29MB / 7.86MB 0.7s
+#4 sha256:3d2201bd995cccf12851a50820de03d34a17011dcbb9ac9fdf3a50c952cbb131 10.00MB / 10.00MB 0.7s done
+#4 sha256:2ff1d7c41c74a25258bfa6f0b8adb0a727f84518f55f65ca845ebc747976c408 50.45MB / 50.45MB 0.9s
+#4 sha256:b253aeafeaa7e0671bb60008df01de101a38a045ff7bc656e3b0fbfc7c05cca5 7.86MB / 7.86MB 0.9s done
+#4 sha256:1de76e268b103d05fa8960e0f77951ff54b912b63429c34f5d6adfd09f5f9ee2 0B / 51.88MB 0.9s
+#4 sha256:1de76e268b103d05fa8960e0f77951ff54b912b63429c34f5d6adfd09f5f9ee2 10.49MB / 51.88MB 1.1s
+#4 sha256:1de76e268b103d05fa8960e0f77951ff54b912b63429c34f5d6adfd09f5f9ee2 13.63MB / 51.88MB 1.1s
+#4 sha256:1de76e268b103d05fa8960e0f77951ff54b912b63429c34f5d6adfd09f5f9ee2 18.87MB / 51.88MB 1.2s
+#4 sha256:1de76e268b103d05fa8960e0f77951ff54b912b63429c34f5d6adfd09f5f9ee2 21.79MB / 51.88MB 1.3s
+#4 sha256:2ff1d7c41c74a25258bfa6f0b8adb0a727f84518f55f65ca845ebc747976c408 50.45MB / 50.45MB 1.3s done
+#4 sha256:1de76e268b103d05fa8960e0f77951ff54b912b63429c34f5d6adfd09f5f9ee2 31.74MB / 51.88MB 1.5s
+#4 extracting sha256:2ff1d7c41c74a25258bfa6f0b8adb0a727f84518f55f65ca845ebc747976c408
+#4 sha256:d9a8df5894511ce28a05e2925a75e8a4acbd0634c39ad734fdfba8e23d1b1569 0B / 191.85MB 1.5s
+#4 sha256:6f51ee005deac0d99898e41b8ce60ebf250ebe1a31a0b03f613aec6bbc9b83d8 0B / 4.19kB 1.5s
+#4 sha256:1de76e268b103d05fa8960e0f77951ff54b912b63429c34f5d6adfd09f5f9ee2 38.80MB / 51.88MB 1.6s
+#4 sha256:6f51ee005deac0d99898e41b8ce60ebf250ebe1a31a0b03f613aec6bbc9b83d8 4.19kB / 4.19kB 1.6s done
+#4 sha256:1de76e268b103d05fa8960e0f77951ff54b912b63429c34f5d6adfd09f5f9ee2 47.08MB / 51.88MB 1.7s
+#4 sha256:d9a8df5894511ce28a05e2925a75e8a4acbd0634c39ad734fdfba8e23d1b1569 17.03MB / 191.85MB 1.7s
+#4 sha256:5f32ed3c3f278edda4fc571c880b5277355a29ae8f52b52cdf865f058378a590 0B / 35.24MB 1.7s
+#4 sha256:1de76e268b103d05fa8960e0f77951ff54b912b63429c34f5d6adfd09f5f9ee2 51.88MB / 51.88MB 1.9s
+#4 sha256:5f32ed3c3f278edda4fc571c880b5277355a29ae8f52b52cdf865f058378a590 3.15MB / 35.24MB 1.9s
+#4 sha256:d9a8df5894511ce28a05e2925a75e8a4acbd0634c39ad734fdfba8e23d1b1569 28.31MB / 191.85MB 2.0s
+#4 sha256:5f32ed3c3f278edda4fc571c880b5277355a29ae8f52b52cdf865f058378a590 6.29MB / 35.24MB 2.0s
+#4 sha256:5f32ed3c3f278edda4fc571c880b5277355a29ae8f52b52cdf865f058378a590 11.53MB / 35.24MB 2.1s
+#4 sha256:1de76e268b103d05fa8960e0f77951ff54b912b63429c34f5d6adfd09f5f9ee2 51.88MB / 51.88MB 2.2s done
+#4 sha256:d9a8df5894511ce28a05e2925a75e8a4acbd0634c39ad734fdfba8e23d1b1569 38.80MB / 191.85MB 2.3s
+#4 sha256:5f32ed3c3f278edda4fc571c880b5277355a29ae8f52b52cdf865f058378a590 17.83MB / 35.24MB 2.3s
+#4 sha256:5f32ed3c3f278edda4fc571c880b5277355a29ae8f52b52cdf865f058378a590 21.45MB / 35.24MB 2.3s
+#4 sha256:0c8cc2f24a4dcb64e602e086fc9446b0a541e8acd9ad72d2e90df3ba22f158b3 0B / 2.29MB 2.3s
+#4 sha256:d9a8df5894511ce28a05e2925a75e8a4acbd0634c39ad734fdfba8e23d1b1569 49.28MB / 191.85MB 2.5s
+#4 sha256:5f32ed3c3f278edda4fc571c880b5277355a29ae8f52b52cdf865f058378a590 30.41MB / 35.24MB 2.5s
+#4 sha256:d9a8df5894511ce28a05e2925a75e8a4acbd0634c39ad734fdfba8e23d1b1569 68.16MB / 191.85MB 2.7s
+#4 sha256:5f32ed3c3f278edda4fc571c880b5277355a29ae8f52b52cdf865f058378a590 35.24MB / 35.24MB 2.7s
+#4 sha256:0c8cc2f24a4dcb64e602e086fc9446b0a541e8acd9ad72d2e90df3ba22f158b3 2.29MB / 2.29MB 2.5s done
+#4 sha256:0d27a8e861329007574c6766fba946d48e20d2c8e964e873de352603f22c4ceb 0B / 450B 2.7s
+#4 sha256:0d27a8e861329007574c6766fba946d48e20d2c8e964e873de352603f22c4ceb 450B / 450B 2.8s
+#4 sha256:d9a8df5894511ce28a05e2925a75e8a4acbd0634c39ad734fdfba8e23d1b1569 78.64MB / 191.85MB 2.9s
+#4 sha256:d9a8df5894511ce28a05e2925a75e8a4acbd0634c39ad734fdfba8e23d1b1569 91.23MB / 191.85MB 3.0s
+#4 sha256:5f32ed3c3f278edda4fc571c880b5277355a29ae8f52b52cdf865f058378a590 35.24MB / 35.24MB 2.9s done
+#4 sha256:0d27a8e861329007574c6766fba946d48e20d2c8e964e873de352603f22c4ceb 450B / 450B 3.0s done
+#4 sha256:d9a8df5894511ce28a05e2925a75e8a4acbd0634c39ad734fdfba8e23d1b1569 111.15MB / 191.85MB 3.2s
+#4 sha256:d9a8df5894511ce28a05e2925a75e8a4acbd0634c39ad734fdfba8e23d1b1569 130.02MB / 191.85MB 3.4s
+#4 sha256:d9a8df5894511ce28a05e2925a75e8a4acbd0634c39ad734fdfba8e23d1b1569 140.51MB / 191.85MB 3.5s
+#4 sha256:d9a8df5894511ce28a05e2925a75e8a4acbd0634c39ad734fdfba8e23d1b1569 157.29MB / 191.85MB 3.7s
+#4 sha256:d9a8df5894511ce28a05e2925a75e8a4acbd0634c39ad734fdfba8e23d1b1569 182.45MB / 191.85MB 4.1s
+#4 sha256:d9a8df5894511ce28a05e2925a75e8a4acbd0634c39ad734fdfba8e23d1b1569 191.85MB / 191.85MB 5.6s done
+#4 extracting sha256:2ff1d7c41c74a25258bfa6f0b8adb0a727f84518f55f65ca845ebc747976c408 5.1s
+#4 extracting sha256:2ff1d7c41c74a25258bfa6f0b8adb0a727f84518f55f65ca845ebc747976c408 7.5s done
+#4 extracting sha256:b253aeafeaa7e0671bb60008df01de101a38a045ff7bc656e3b0fbfc7c05cca5
+#4 ...
+
+#5 [internal] load build context
+#5 transferring context: 258.45MB 9.9s
+#5 ...
+
+#4 [stage-1 1/8] FROM docker.io/library/node:14@sha256:a158d3b9b4e3fa813fa6c8c590b8f0a860e015ad4e59bbce5744d2f6fd8461aa
+#4 extracting sha256:b253aeafeaa7e0671bb60008df01de101a38a045ff7bc656e3b0fbfc7c05cca5 1.2s done
+#4 extracting sha256:3d2201bd995cccf12851a50820de03d34a17011dcbb9ac9fdf3a50c952cbb131
+#4 extracting sha256:3d2201bd995cccf12851a50820de03d34a17011dcbb9ac9fdf3a50c952cbb131 1.0s done
+#4 extracting sha256:1de76e268b103d05fa8960e0f77951ff54b912b63429c34f5d6adfd09f5f9ee2
+#4 extracting sha256:1de76e268b103d05fa8960e0f77951ff54b912b63429c34f5d6adfd09f5f9ee2 5.1s
+#4 ...
+
+#5 [internal] load build context
+#5 transferring context: 266.68MB 18.1s
+#5 transferring context: 274.42MB 23.2s
+#5 transferring context: 333.51MB 28.2s
+#5 ...
+
+#4 [stage-1 1/8] FROM docker.io/library/node:14@sha256:a158d3b9b4e3fa813fa6c8c590b8f0a860e015ad4e59bbce5744d2f6fd8461aa
+#4 extracting sha256:1de76e268b103d05fa8960e0f77951ff54b912b63429c34f5d6adfd09f5f9ee2 10.8s done
+#4 extracting sha256:d9a8df5894511ce28a05e2925a75e8a4acbd0634c39ad734fdfba8e23d1b1569 3.0s
+#4 ...
+
+#5 [internal] load build context
+#5 transferring context: 496.19MB 33.3s
+#5 transferring context: 605.79MB 38.3s
+#5 ...
+
+#4 [stage-1 1/8] FROM docker.io/library/node:14@sha256:a158d3b9b4e3fa813fa6c8c590b8f0a860e015ad4e59bbce5744d2f6fd8461aa
+#4 extracting sha256:d9a8df5894511ce28a05e2925a75e8a4acbd0634c39ad734fdfba8e23d1b1569 13.5s
+#4 ...
+
+#5 [internal] load build context
+#5 transferring context: 651.03MB 43.4s
+#5 transferring context: 738.20MB 48.5s
+#5 ...
+
+#4 [stage-1 1/8] FROM docker.io/library/node:14@sha256:a158d3b9b4e3fa813fa6c8c590b8f0a860e015ad4e59bbce5744d2f6fd8461aa
+#4 extracting sha256:d9a8df5894511ce28a05e2925a75e8a4acbd0634c39ad734fdfba8e23d1b1569 22.1s done
+#4 ...
+
+#5 [internal] load build context
+#5 transferring context: 743.53MB 51.7s done
+#5 DONE 52.5s
+
+#4 [stage-1 1/8] FROM docker.io/library/node:14@sha256:a158d3b9b4e3fa813fa6c8c590b8f0a860e015ad4e59bbce5744d2f6fd8461aa
+#4 extracting sha256:6f51ee005deac0d99898e41b8ce60ebf250ebe1a31a0b03f613aec6bbc9b83d8 done
+#4 extracting sha256:5f32ed3c3f278edda4fc571c880b5277355a29ae8f52b52cdf865f058378a590 1.0s
+#4 extracting sha256:5f32ed3c3f278edda4fc571c880b5277355a29ae8f52b52cdf865f058378a590 3.1s done
+#4 extracting sha256:0c8cc2f24a4dcb64e602e086fc9446b0a541e8acd9ad72d2e90df3ba22f158b3
+#4 extracting sha256:0c8cc2f24a4dcb64e602e086fc9446b0a541e8acd9ad72d2e90df3ba22f158b3 0.1s done
+#4 extracting sha256:0d27a8e861329007574c6766fba946d48e20d2c8e964e873de352603f22c4ceb
+#4 extracting sha256:0d27a8e861329007574c6766fba946d48e20d2c8e964e873de352603f22c4ceb done
+#4 DONE 56.8s
+
+#6 [stage-1 2/8] WORKDIR /app
+#6 DONE 0.2s
+
+#7 [builder 3/6] COPY package.json yarn.lock ./
+#7 DONE 0.5s
+
+#8 [stage-1 3/8] RUN adduser --disabled-password myuser
+#8 2.619 Adding user `myuser' ...
+#8 2.619 Adding new group `myuser' (1001) ...
+#8 2.751 Adding new user `myuser' (1001) with group `myuser' ...
+#8 3.041 Creating home directory `/home/myuser' ...
+#8 3.041 Copying files from `/etc/skel' ...
+#8 3.246 Changing the user information for myuser
+#8 3.246 Enter the new value, or press ENTER for the default
+#8 3.246 	Full Name []: 	Room Number []: 	Work Phone []: 	Home Phone []: 	Other []: Use of uninitialized value $answer in chop at /usr/sbin/adduser line 582.
+#8 3.279 Use of uninitialized value $answer in pattern match (m//) at /usr/sbin/adduser line 583.
+#8 3.279 Is the information correct? [Y/n] 
+#8 DONE 3.4s
+
+#9 [builder 4/6] RUN yarn install --frozen-lockfile
+#9 2.109 yarn install v1.22.19
+#9 2.192 [1/4] Resolving packages...
+#9 2.488 [2/4] Fetching packages...
+#9 2.496 warning Pattern ["string-width@^4.1.0"] is trying to unpack in the same destination "/usr/local/share/.cache/yarn/v6/npm-string-width-cjs-4.2.3-integrity/node_modules/string-width-cjs" as pattern ["string-width-cjs@npm:string-width@^4.2.0"]. This could result in non-deterministic behavior, skipping.
+#9 58.59 error @azure/core-rest-pipeline@1.13.0: The engine "node" is incompatible with this module. Expected version ">=18.0.0". Got "14.21.3"
+#9 58.60 error Found incompatible module.
+#9 58.60 info Visit https://yarnpkg.com/en/docs/cli/install for documentation about this command.
+#9 ERROR: process "/bin/sh -c yarn install --frozen-lockfile" did not complete successfully: exit code: 1
+------
+ > [builder 4/6] RUN yarn install --frozen-lockfile:
+2.109 yarn install v1.22.19
+2.192 [1/4] Resolving packages...
+2.488 [2/4] Fetching packages...
+2.496 warning Pattern ["string-width@^4.1.0"] is trying to unpack in the same destination "/usr/local/share/.cache/yarn/v6/npm-string-width-cjs-4.2.3-integrity/node_modules/string-width-cjs" as pattern ["string-width-cjs@npm:string-width@^4.2.0"]. This could result in non-deterministic behavior, skipping.
+58.59 error @azure/core-rest-pipeline@1.13.0: The engine "node" is incompatible with this module. Expected version ">=18.0.0". Got "14.21.3"
+58.60 error Found incompatible module.
+58.60 info Visit https://yarnpkg.com/en/docs/cli/install for documentation about this command.
+------
+Dockerfile:9
+--------------------
+   7 |     
+   8 |     # Install dependencies
+   9 | >>> RUN yarn install --frozen-lockfile
+  10 |     
+  11 |     # Copy the rest of your app's source code
+--------------------
+ERROR: failed to solve: process "/bin/sh -c yarn install --frozen-lockfile" did not complete successfully: exit code: 1
+Error response from daemon: No such image: timeentrydenextdockerimage-31030:latest
+Local Docker Images:
+REPOSITORY   TAG       IMAGE ID   CREATED   SIZE
+Pushing Docker Image to ACR...
+The push refers to repository [timeentrydenextacr31030.azurecr.io/timeentrydenextdockerimage-31030]
+An image does not exist locally with the tag: timeentrydenextacr31030.azurecr.io/timeentrydenextdockerimage-31030
+Creating App Service plan...
+WARNING: Readonly attribute name will be ignored in class <class 'azure.mgmt.web.v2023_01_01.models._models_py3.AppServicePlan'>
+{
+  "elasticScaleEnabled": false,
+  "extendedLocation": null,
+  "freeOfferExpirationTime": "2024-02-25T12:45:46.050000",
+  "geoRegion": "West Europe",
+  "hostingEnvironmentProfile": null,
+  "hyperV": false,
+  "id": "/subscriptions/66283e96-2d6d-40bf-9c5b-e368a7ab7f7f/resourceGroups/timeentrydenext31030/providers/Microsoft.Web/serverfarms/timeentrydenextAppService-31030",
+  "isSpot": false,
+  "isXenon": false,
+  "kind": "linux",
+  "kubeEnvironmentProfile": null,
+  "location": "westeurope",
+  "maximumElasticWorkerCount": 1,
+  "maximumNumberOfWorkers": 0,
+  "name": "timeentrydenextAppService-31030",
+  "numberOfSites": 0,
+  "numberOfWorkers": 1,
+  "perSiteScaling": false,
+  "provisioningState": "Succeeded",
+  "reserved": true,
+  "resourceGroup": "timeentrydenext31030",
+  "sku": {
+    "capabilities": null,
+    "capacity": 1,
+    "family": "B",
+    "locations": null,
+    "name": "B1",
+    "size": "B1",
+    "skuCapacity": null,
+    "tier": "Basic"
+  },
+  "spotExpirationTime": null,
+  "status": "Ready",
+  "subscription": "66283e96-2d6d-40bf-9c5b-e368a7ab7f7f",
+  "tags": null,
+  "targetWorkerCount": 0,
+  "targetWorkerSizeId": 0,
+  "type": "Microsoft.Web/serverfarms",
+  "workerTierName": null,
+  "zoneRedundant": false
+}
+Creating Web App...
+WARNING: No credential was provided to access Azure Container Registry. Trying to look up...
+WARNING: App settings have been redacted. Use `az webapp/logicapp/functionapp config appsettings list` to view.
+WARNING: App settings have been redacted. Use `az webapp/logicapp/functionapp config appsettings list` to view.
+{
+  "availabilityState": "Normal",
+  "clientAffinityEnabled": true,
+  "clientCertEnabled": false,
+  "clientCertExclusionPaths": null,
+  "clientCertMode": "Required",
+  "cloningInfo": null,
+  "containerSize": 0,
+  "customDomainVerificationId": "0CEF4E8CFBAAC8F7716BF22E3B9CFC7338207D03377C619DB8AACB0D8A98394A",
+  "dailyMemoryTimeQuota": 0,
+  "daprConfig": null,
+  "defaultHostName": "timeentrydenextwebapp-31030.azurewebsites.net",
+  "enabled": true,
+  "enabledHostNames": [
+    "timeentrydenextwebapp-31030.azurewebsites.net",
+    "timeentrydenextwebapp-31030.scm.azurewebsites.net"
+  ],
+  "extendedLocation": null,
+  "ftpPublishingUrl": "ftps://waws-prod-am2-729.ftp.azurewebsites.windows.net/site/wwwroot",
+  "hostNameSslStates": [
+    {
+      "certificateResourceId": null,
+      "hostType": "Standard",
+      "ipBasedSslResult": null,
+      "ipBasedSslState": "NotConfigured",
+      "name": "timeentrydenextwebapp-31030.azurewebsites.net",
+      "sslState": "Disabled",
+      "thumbprint": null,
+      "toUpdate": null,
+      "toUpdateIpBasedSsl": null,
+      "virtualIPv6": null,
+      "virtualIp": null
+    },
+    {
+      "certificateResourceId": null,
+      "hostType": "Repository",
+      "ipBasedSslResult": null,
+      "ipBasedSslState": "NotConfigured",
+      "name": "timeentrydenextwebapp-31030.scm.azurewebsites.net",
+      "sslState": "Disabled",
+      "thumbprint": null,
+      "toUpdate": null,
+      "toUpdateIpBasedSsl": null,
+      "virtualIPv6": null,
+      "virtualIp": null
+    }
+  ],
+  "hostNames": [
+    "timeentrydenextwebapp-31030.azurewebsites.net"
+  ],
+  "hostNamesDisabled": false,
+  "hostingEnvironmentProfile": null,
+  "httpsOnly": false,
+  "hyperV": false,
+  "id": "/subscriptions/66283e96-2d6d-40bf-9c5b-e368a7ab7f7f/resourceGroups/timeentrydenext31030/providers/Microsoft.Web/sites/timeentrydenextWebApp-31030",
+  "identity": null,
+  "inProgressOperationId": null,
+  "isDefaultContainer": null,
+  "isXenon": false,
+  "keyVaultReferenceIdentity": "SystemAssigned",
+  "kind": "app,linux,container",
+  "lastModifiedTimeUtc": "2024-01-26T12:45:57.110000",
+  "location": "West Europe",
+  "managedEnvironmentId": null,
+  "maxNumberOfWorkers": null,
+  "name": "timeentrydenextWebApp-31030",
+  "outboundIpAddresses": "20.238.219.192,20.238.220.45,20.238.220.46,20.238.220.89,20.238.220.107,20.238.220.129,20.31.147.21,20.31.147.191,20.31.147.214,20.31.149.159,20.31.150.135,20.238.217.29,20.105.216.36",
+  "possibleOutboundIpAddresses": "20.238.219.192,20.238.220.45,20.238.220.46,20.238.220.89,20.238.220.107,20.238.220.129,20.31.147.21,20.31.147.191,20.31.147.214,20.31.149.159,20.31.150.135,20.238.217.29,20.31.146.187,20.238.218.73,20.238.218.116,20.238.218.177,20.238.219.3,20.238.219.11,20.31.145.61,20.238.219.28,20.238.219.42,20.238.219.88,20.238.219.111,20.238.219.155,20.238.219.192,20.238.220.45,20.238.220.46,20.238.220.89,20.238.220.107,20.238.220.129,20.238.221.17,20.238.221.52,20.238.221.103,20.103.128.18,20.238.221.158,20.238.221.206,20.105.216.36",
+  "publicNetworkAccess": null,
+  "redundancyMode": "None",
+  "repositorySiteName": "timeentrydenextWebApp-31030",
+  "reserved": true,
+  "resourceConfig": null,
+  "resourceGroup": "timeentrydenext31030",
+  "scmSiteAlsoStopped": false,
+  "serverFarmId": "/subscriptions/66283e96-2d6d-40bf-9c5b-e368a7ab7f7f/resourceGroups/timeentrydenext31030/providers/Microsoft.Web/serverfarms/timeentrydenextAppService-31030",
+  "siteConfig": {
+    "acrUseManagedIdentityCreds": false,
+    "acrUserManagedIdentityId": null,
+    "alwaysOn": false,
+    "antivirusScanEnabled": null,
+    "apiDefinition": null,
+    "apiManagementConfig": null,
+    "appCommandLine": null,
+    "appSettings": null,
+    "autoHealEnabled": null,
+    "autoHealRules": null,
+    "autoSwapSlotName": null,
+    "azureMonitorLogCategories": null,
+    "azureStorageAccounts": null,
+    "connectionStrings": null,
+    "cors": null,
+    "customAppPoolIdentityAdminState": null,
+    "customAppPoolIdentityTenantState": null,
+    "defaultDocuments": null,
+    "detailedErrorLoggingEnabled": null,
+    "documentRoot": null,
+    "elasticWebAppScaleLimit": 0,
+    "experiments": null,
+    "fileChangeAuditEnabled": null,
+    "ftpsState": null,
+    "functionAppScaleLimit": null,
+    "functionsRuntimeScaleMonitoringEnabled": null,
+    "handlerMappings": null,
+    "healthCheckPath": null,
+    "http20Enabled": false,
+    "http20ProxyFlag": null,
+    "httpLoggingEnabled": null,
+    "ipSecurityRestrictions": [
+      {
+        "action": "Allow",
+        "description": "Allow all access",
+        "headers": null,
+        "ipAddress": "Any",
+        "name": "Allow all",
+        "priority": 2147483647,
+        "subnetMask": null,
+        "subnetTrafficTag": null,
+        "tag": null,
+        "vnetSubnetResourceId": null,
+        "vnetTrafficTag": null
+      }
+    ],
+    "ipSecurityRestrictionsDefaultAction": null,
+    "javaContainer": null,
+    "javaContainerVersion": null,
+    "javaVersion": null,
+    "keyVaultReferenceIdentity": null,
+    "limits": null,
+    "linuxFxVersion": "",
+    "loadBalancing": null,
+    "localMySqlEnabled": null,
+    "logsDirectorySizeLimit": null,
+    "machineKey": null,
+    "managedPipelineMode": null,
+    "managedServiceIdentityId": null,
+    "metadata": null,
+    "minTlsCipherSuite": null,
+    "minTlsVersion": null,
+    "minimumElasticInstanceCount": 0,
+    "netFrameworkVersion": null,
+    "nodeVersion": null,
+    "numberOfWorkers": 1,
+    "phpVersion": null,
+    "powerShellVersion": null,
+    "preWarmedInstanceCount": null,
+    "publicNetworkAccess": null,
+    "publishingPassword": null,
+    "publishingUsername": null,
+    "push": null,
+    "pythonVersion": null,
+    "remoteDebuggingEnabled": null,
+    "remoteDebuggingVersion": null,
+    "requestTracingEnabled": null,
+    "requestTracingExpirationTime": null,
+    "routingRules": null,
+    "runtimeADUser": null,
+    "runtimeADUserPassword": null,
+    "scmIpSecurityRestrictions": [
+      {
+        "action": "Allow",
+        "description": "Allow all access",
+        "headers": null,
+        "ipAddress": "Any",
+        "name": "Allow all",
+        "priority": 2147483647,
+        "subnetMask": null,
+        "subnetTrafficTag": null,
+        "tag": null,
+        "vnetSubnetResourceId": null,
+        "vnetTrafficTag": null
+      }
+    ],
+    "scmIpSecurityRestrictionsDefaultAction": null,
+    "scmIpSecurityRestrictionsUseMain": null,
+    "scmMinTlsVersion": null,
+    "scmType": null,
+    "sitePort": null,
+    "sitePrivateLinkHostEnabled": null,
+    "storageType": null,
+    "supportedTlsCipherSuites": null,
+    "tracingOptions": null,
+    "use32BitWorkerProcess": null,
+    "virtualApplications": null,
+    "vnetName": null,
+    "vnetPrivatePortsCount": null,
+    "vnetRouteAllEnabled": null,
+    "webSocketsEnabled": null,
+    "websiteTimeZone": null,
+    "winAuthAdminState": null,
+    "winAuthTenantState": null,
+    "windowsConfiguredStacks": null,
+    "windowsFxVersion": null,
+    "xManagedServiceIdentityId": null
+  },
+  "slotSwapStatus": null,
+  "state": "Running",
+  "storageAccountRequired": false,
+  "suspendedTill": null,
+  "tags": null,
+  "targetSwapSlot": null,
+  "trafficManagerHostNames": null,
+  "type": "Microsoft.Web/sites",
+  "usageState": "Normal",
+  "virtualNetworkSubnetId": null,
+  "vnetContentShareEnabled": false,
+  "vnetImagePullEnabled": false,
+  "vnetRouteAllEnabled": false,
+  "workloadProfileName": null
+}
+Checking Web App Configuration...
+{
+  "acrUseManagedIdentityCreds": false,
+  "acrUserManagedIdentityId": null,
+  "alwaysOn": false,
+  "apiDefinition": null,
+  "apiManagementConfig": null,
+  "appCommandLine": "",
+  "appSettings": null,
+  "autoHealEnabled": false,
+  "autoHealRules": null,
+  "autoSwapSlotName": null,
+  "azureStorageAccounts": {},
+  "connectionStrings": null,
+  "cors": null,
+  "defaultDocuments": [
+    "Default.htm",
+    "Default.html",
+    "Default.asp",
+    "index.htm",
+    "index.html",
+    "iisstart.htm",
+    "default.aspx",
+    "index.php",
+    "hostingstart.html"
+  ],
+  "detailedErrorLoggingEnabled": false,
+  "documentRoot": null,
+  "elasticWebAppScaleLimit": 0,
+  "experiments": {
+    "rampUpRules": []
+  },
+  "ftpsState": "FtpsOnly",
+  "functionAppScaleLimit": null,
+  "functionsRuntimeScaleMonitoringEnabled": false,
+  "handlerMappings": null,
+  "healthCheckPath": null,
+  "http20Enabled": true,
+  "httpLoggingEnabled": false,
+  "id": "/subscriptions/66283e96-2d6d-40bf-9c5b-e368a7ab7f7f/resourceGroups/timeentrydenext31030/providers/Microsoft.Web/sites/timeentrydenextWebApp-31030/config/web",
+  "ipSecurityRestrictions": [
+    {
+      "action": "Allow",
+      "description": "Allow all access",
+      "headers": null,
+      "ipAddress": "Any",
+      "name": "Allow all",
+      "priority": 2147483647,
+      "subnetMask": null,
+      "subnetTrafficTag": null,
+      "tag": null,
+      "vnetSubnetResourceId": null,
+      "vnetTrafficTag": null
+    }
+  ],
+  "ipSecurityRestrictionsDefaultAction": null,
+  "javaContainer": null,
+  "javaContainerVersion": null,
+  "javaVersion": null,
+  "keyVaultReferenceIdentity": null,
+  "kind": null,
+  "limits": null,
+  "linuxFxVersion": "DOCKER|timeentrydenextacr31030.azurecr.io/timeentrydenextdockerimage-31030:latest",
+  "loadBalancing": "LeastRequests",
+  "localMySqlEnabled": false,
+  "location": "West Europe",
+  "logsDirectorySizeLimit": 35,
+  "machineKey": null,
+  "managedPipelineMode": "Integrated",
+  "managedServiceIdentityId": null,
+  "metadata": null,
+  "minTlsCipherSuite": null,
+  "minTlsVersion": "1.2",
+  "minimumElasticInstanceCount": 0,
+  "name": "timeentrydenextWebApp-31030",
+  "netFrameworkVersion": "v4.0",
+  "nodeVersion": "",
+  "numberOfWorkers": 1,
+  "phpVersion": "",
+  "powerShellVersion": "",
+  "preWarmedInstanceCount": 0,
+  "publicNetworkAccess": null,
+  "publishingUsername": "$timeentrydenextWebApp-31030",
+  "push": null,
+  "pythonVersion": "",
+  "remoteDebuggingEnabled": false,
+  "remoteDebuggingVersion": "VS2019",
+  "requestTracingEnabled": false,
+  "requestTracingExpirationTime": null,
+  "resourceGroup": "timeentrydenext31030",
+  "scmIpSecurityRestrictions": [
+    {
+      "action": "Allow",
+      "description": "Allow all access",
+      "headers": null,
+      "ipAddress": "Any",
+      "name": "Allow all",
+      "priority": 2147483647,
+      "subnetMask": null,
+      "subnetTrafficTag": null,
+      "tag": null,
+      "vnetSubnetResourceId": null,
+      "vnetTrafficTag": null
+    }
+  ],
+  "scmIpSecurityRestrictionsDefaultAction": null,
+  "scmIpSecurityRestrictionsUseMain": false,
+  "scmMinTlsVersion": "1.2",
+  "scmType": "None",
+  "tracingOptions": null,
+  "type": "Microsoft.Web/sites/config",
+  "use32BitWorkerProcess": true,
+  "virtualApplications": [
+    {
+      "physicalPath": "site\\wwwroot",
+      "preloadEnabled": false,
+      "virtualDirectories": null,
+      "virtualPath": "/"
+    }
+  ],
+  "vnetName": "",
+  "vnetPrivatePortsCount": 0,
+  "vnetRouteAllEnabled": false,
+  "webSocketsEnabled": false,
+  "websiteTimeZone": null,
+  "windowsFxVersion": null,
+  "xManagedServiceIdentityId": null
+}
+Deployment complete. Visit your app at http://timeentrydenextWebApp-31030.azurewebsites.net
+Searching for existing resource groups starting with timeentrydenext...
+Deleting resource group timeentrydenext31030...
+Creating resource group timeentrydenext42973...
+{
+  "id": "/subscriptions/66283e96-2d6d-40bf-9c5b-e368a7ab7f7f/resourceGroups/timeentrydenext42973",
+  "location": "westeurope",
+  "managedBy": null,
+  "name": "timeentrydenext42973",
+  "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "tags": null,
+  "type": "Microsoft.Resources/resourceGroups"
+}
+Creating Azure Container Registry...
+{
+  "adminUserEnabled": true,
+  "anonymousPullEnabled": false,
+  "creationDate": "2024-01-26T13:47:03.336906+00:00",
+  "dataEndpointEnabled": false,
+  "dataEndpointHostNames": [],
+  "encryption": {
+    "keyVaultProperties": null,
+    "status": "disabled"
+  },
+  "id": "/subscriptions/66283e96-2d6d-40bf-9c5b-e368a7ab7f7f/resourceGroups/timeentrydenext42973/providers/Microsoft.ContainerRegistry/registries/timeentrydenextacr42973",
+  "identity": null,
+  "location": "westeurope",
+  "loginServer": "timeentrydenextacr42973.azurecr.io",
+  "name": "timeentrydenextacr42973",
+  "networkRuleBypassOptions": "AzureServices",
+  "networkRuleSet": null,
+  "policies": {
+    "azureAdAuthenticationAsArmPolicy": {
+      "status": "enabled"
+    },
+    "exportPolicy": {
+      "status": "enabled"
+    },
+    "quarantinePolicy": {
+      "status": "disabled"
+    },
+    "retentionPolicy": {
+      "days": 7,
+      "lastUpdatedTime": "2024-01-26T13:47:09.793224+00:00",
+      "status": "disabled"
+    },
+    "softDeletePolicy": {
+      "lastUpdatedTime": "2024-01-26T13:47:09.793271+00:00",
+      "retentionDays": 7,
+      "status": "disabled"
+    },
+    "trustPolicy": {
+      "status": "disabled",
+      "type": "Notary"
+    }
+  },
+  "privateEndpointConnections": [],
+  "provisioningState": "Succeeded",
+  "publicNetworkAccess": "Enabled",
+  "resourceGroup": "timeentrydenext42973",
+  "sku": {
+    "name": "Basic",
+    "tier": "Basic"
+  },
+  "status": null,
+  "systemData": {
+    "createdAt": "2024-01-26T13:47:03.336906+00:00",
+    "createdBy": "juergenrichert@gmx.de",
+    "createdByType": "User",
+    "lastModifiedAt": "2024-01-26T13:47:03.336906+00:00",
+    "lastModifiedBy": "juergenrichert@gmx.de",
+    "lastModifiedByType": "User"
+  },
+  "tags": {},
+  "type": "Microsoft.ContainerRegistry/registries",
+  "zoneRedundancy": "Disabled"
+}
+ACR Login Server: timeentrydenextacr42973.azurecr.io
+Retrieving Azure Container Registry credentials...
+ACR Login Server: timeentrydenextacr42973.azurecr.io
+Logging into Azure Container Registry...
+Login Succeeded
+Logging into Azure Container Registry...
+Login Succeeded
+Retrieving Azure Container Registry credentials...
+Logging into Docker registry...
+WARNING! Using --password via the CLI is insecure. Use --password-stdin.
+WARNING! Your password will be stored unencrypted in /home/node/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+Current Directory: /workspaces/TimeEntryDE3
+Directory for Docker Build: /workspaces/TimeEntryDE3/timeentrydenjs2
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 848B done
+#1 DONE 0.1s
+
+#2 [internal] load .dockerignore
+#2 transferring context: 2B done
+#2 DONE 0.1s
+
+#3 [internal] load metadata for docker.io/library/node:18
+#3 ...
+
+#4 [auth] library/node:pull token for registry-1.docker.io
+#4 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:18
+#3 DONE 1.6s
+
+#5 [builder 1/6] FROM docker.io/library/node:18@sha256:995a5f4314885452a4a785abc25a0fec40e26c346559e11e709d58bb7a927cf4
+#5 resolve docker.io/library/node:18@sha256:995a5f4314885452a4a785abc25a0fec40e26c346559e11e709d58bb7a927cf4 0.1s done
+#5 sha256:995a5f4314885452a4a785abc25a0fec40e26c346559e11e709d58bb7a927cf4 1.21kB / 1.21kB done
+#5 sha256:084b3c822003a20d41f793237286e112d1b5a1c0c7b8b04cb53a17a963a76ed7 2.00kB / 2.00kB done
+#5 sha256:1b13d4e1a46e5e969702ec92b7c787c1b6891bff7c21ad378ff6dbc9e751d5d4 0B / 49.56MB 0.1s
+#5 sha256:ef847f8b5ae3554df13851034f22683a8b9aef31b3659033211775d8d6cb6b79 7.34kB / 7.34kB done
+#5 sha256:1b13d4e1a46e5e969702ec92b7c787c1b6891bff7c21ad378ff6dbc9e751d5d4 8.39MB / 49.56MB 0.3s
+#5 sha256:1c74526957fc2157e8b0989072dc99b9582b398c12d1dcd40270fd76231bab0c 0B / 24.05MB 0.3s
+#5 sha256:30d85599795460b2d9d24c6b87c53ec60555b601705cc83bea31632240500980 0B / 64.14MB 0.3s
+#5 sha256:1b13d4e1a46e5e969702ec92b7c787c1b6891bff7c21ad378ff6dbc9e751d5d4 13.47MB / 49.56MB 0.4s
+#5 sha256:1c74526957fc2157e8b0989072dc99b9582b398c12d1dcd40270fd76231bab0c 4.13MB / 24.05MB 0.4s
+#5 sha256:1b13d4e1a46e5e969702ec92b7c787c1b6891bff7c21ad378ff6dbc9e751d5d4 16.78MB / 49.56MB 0.5s
+#5 sha256:1c74526957fc2157e8b0989072dc99b9582b398c12d1dcd40270fd76231bab0c 18.87MB / 24.05MB 0.5s
+#5 sha256:1b13d4e1a46e5e969702ec92b7c787c1b6891bff7c21ad378ff6dbc9e751d5d4 19.92MB / 49.56MB 0.6s
+#5 sha256:1c74526957fc2157e8b0989072dc99b9582b398c12d1dcd40270fd76231bab0c 24.05MB / 24.05MB 0.6s
+#5 sha256:30d85599795460b2d9d24c6b87c53ec60555b601705cc83bea31632240500980 8.39MB / 64.14MB 0.6s
+#5 sha256:1b13d4e1a46e5e969702ec92b7c787c1b6891bff7c21ad378ff6dbc9e751d5d4 23.07MB / 49.56MB 0.7s
+#5 sha256:30d85599795460b2d9d24c6b87c53ec60555b601705cc83bea31632240500980 12.58MB / 64.14MB 0.7s
+#5 sha256:1b13d4e1a46e5e969702ec92b7c787c1b6891bff7c21ad378ff6dbc9e751d5d4 31.46MB / 49.56MB 0.9s
+#5 sha256:1c74526957fc2157e8b0989072dc99b9582b398c12d1dcd40270fd76231bab0c 24.05MB / 24.05MB 0.8s done
+#5 sha256:30d85599795460b2d9d24c6b87c53ec60555b601705cc83bea31632240500980 22.02MB / 64.14MB 0.9s
+#5 sha256:ad5739181616b815fae7edc6bba689496674acbcf44e48a57fc7cc13a379b3a2 0B / 211.10MB 0.9s
+#5 sha256:1b13d4e1a46e5e969702ec92b7c787c1b6891bff7c21ad378ff6dbc9e751d5d4 39.85MB / 49.56MB 1.0s
+#5 sha256:30d85599795460b2d9d24c6b87c53ec60555b601705cc83bea31632240500980 28.31MB / 64.14MB 1.0s
+#5 sha256:1b13d4e1a46e5e969702ec92b7c787c1b6891bff7c21ad378ff6dbc9e751d5d4 45.62MB / 49.56MB 1.1s
+#5 sha256:30d85599795460b2d9d24c6b87c53ec60555b601705cc83bea31632240500980 34.60MB / 64.14MB 1.1s
+#5 sha256:1b13d4e1a46e5e969702ec92b7c787c1b6891bff7c21ad378ff6dbc9e751d5d4 49.56MB / 49.56MB 1.2s
+#5 sha256:30d85599795460b2d9d24c6b87c53ec60555b601705cc83bea31632240500980 39.85MB / 64.14MB 1.2s
+#5 sha256:30d85599795460b2d9d24c6b87c53ec60555b601705cc83bea31632240500980 45.09MB / 64.14MB 1.4s
+#5 sha256:ad5739181616b815fae7edc6bba689496674acbcf44e48a57fc7cc13a379b3a2 12.58MB / 211.10MB 1.4s
+#5 sha256:1b13d4e1a46e5e969702ec92b7c787c1b6891bff7c21ad378ff6dbc9e751d5d4 49.56MB / 49.56MB 1.5s done
+#5 sha256:30d85599795460b2d9d24c6b87c53ec60555b601705cc83bea31632240500980 56.92MB / 64.14MB 1.6s
+#5 sha256:ad5739181616b815fae7edc6bba689496674acbcf44e48a57fc7cc13a379b3a2 28.31MB / 211.10MB 1.6s
+#5 sha256:b2aed33d4664181472f1d65045888f7184526fd927cdd9db1eff9c641a35cde4 0B / 3.37kB 1.7s
+#5 sha256:30d85599795460b2d9d24c6b87c53ec60555b601705cc83bea31632240500980 64.14MB / 64.14MB 1.9s
+#5 sha256:ad5739181616b815fae7edc6bba689496674acbcf44e48a57fc7cc13a379b3a2 44.04MB / 211.10MB 1.9s
+#5 sha256:b2aed33d4664181472f1d65045888f7184526fd927cdd9db1eff9c641a35cde4 3.37kB / 3.37kB 1.9s
+#5 extracting sha256:1b13d4e1a46e5e969702ec92b7c787c1b6891bff7c21ad378ff6dbc9e751d5d4
+#5 sha256:ad5739181616b815fae7edc6bba689496674acbcf44e48a57fc7cc13a379b3a2 57.67MB / 211.10MB 2.3s
+#5 sha256:30d85599795460b2d9d24c6b87c53ec60555b601705cc83bea31632240500980 64.14MB / 64.14MB 2.3s done
+#5 sha256:ad5739181616b815fae7edc6bba689496674acbcf44e48a57fc7cc13a379b3a2 70.25MB / 211.10MB 2.5s
+#5 sha256:b2aed33d4664181472f1d65045888f7184526fd927cdd9db1eff9c641a35cde4 3.37kB / 3.37kB 2.3s done
+#5 sha256:b8fcf7bcab1a2406ec5f7b8afe5e6a573d4f28a1c2b4d7250af16a6052cfd90a 1.05MB / 46.04MB 2.5s
+#5 sha256:357c1fee0e47543d440f65b962449890814a1dd39ad4e70217c7906044779c88 0B / 2.21MB 2.5s
+#5 sha256:b8fcf7bcab1a2406ec5f7b8afe5e6a573d4f28a1c2b4d7250af16a6052cfd90a 5.24MB / 46.04MB 2.6s
+#5 sha256:357c1fee0e47543d440f65b962449890814a1dd39ad4e70217c7906044779c88 1.72MB / 2.21MB 2.6s
+#5 sha256:b8fcf7bcab1a2406ec5f7b8afe5e6a573d4f28a1c2b4d7250af16a6052cfd90a 7.85MB / 46.04MB 2.7s
+#5 sha256:357c1fee0e47543d440f65b962449890814a1dd39ad4e70217c7906044779c88 2.21MB / 2.21MB 2.7s
+#5 sha256:b8fcf7bcab1a2406ec5f7b8afe5e6a573d4f28a1c2b4d7250af16a6052cfd90a 12.58MB / 46.04MB 2.8s
+#5 sha256:357c1fee0e47543d440f65b962449890814a1dd39ad4e70217c7906044779c88 2.21MB / 2.21MB 2.7s done
+#5 sha256:ad5739181616b815fae7edc6bba689496674acbcf44e48a57fc7cc13a379b3a2 88.08MB / 211.10MB 3.0s
+#5 sha256:b8fcf7bcab1a2406ec5f7b8afe5e6a573d4f28a1c2b4d7250af16a6052cfd90a 25.17MB / 46.04MB 3.0s
+#5 sha256:4b7f0f45f1275dbc07758f5ee47a5b62562022e36fd46d059d54f9c10efcd814 0B / 452B 3.0s
+#5 sha256:4b7f0f45f1275dbc07758f5ee47a5b62562022e36fd46d059d54f9c10efcd814 452B / 452B 3.0s done
+#5 sha256:ad5739181616b815fae7edc6bba689496674acbcf44e48a57fc7cc13a379b3a2 102.76MB / 211.10MB 3.3s
+#5 sha256:b8fcf7bcab1a2406ec5f7b8afe5e6a573d4f28a1c2b4d7250af16a6052cfd90a 36.62MB / 46.04MB 3.3s
+#5 sha256:b8fcf7bcab1a2406ec5f7b8afe5e6a573d4f28a1c2b4d7250af16a6052cfd90a 42.89MB / 46.04MB 3.4s
+#5 sha256:ad5739181616b815fae7edc6bba689496674acbcf44e48a57fc7cc13a379b3a2 114.29MB / 211.10MB 3.6s
+#5 sha256:b8fcf7bcab1a2406ec5f7b8afe5e6a573d4f28a1c2b4d7250af16a6052cfd90a 46.04MB / 46.04MB 3.6s
+#5 sha256:ad5739181616b815fae7edc6bba689496674acbcf44e48a57fc7cc13a379b3a2 130.02MB / 211.10MB 3.9s
+#5 sha256:b8fcf7bcab1a2406ec5f7b8afe5e6a573d4f28a1c2b4d7250af16a6052cfd90a 46.04MB / 46.04MB 3.8s done
+#5 sha256:ad5739181616b815fae7edc6bba689496674acbcf44e48a57fc7cc13a379b3a2 146.63MB / 211.10MB 4.1s
+#5 sha256:ad5739181616b815fae7edc6bba689496674acbcf44e48a57fc7cc13a379b3a2 165.68MB / 211.10MB 4.3s
+#5 sha256:ad5739181616b815fae7edc6bba689496674acbcf44e48a57fc7cc13a379b3a2 176.37MB / 211.10MB 4.5s
+#5 sha256:ad5739181616b815fae7edc6bba689496674acbcf44e48a57fc7cc13a379b3a2 198.95MB / 211.10MB 5.0s
+#5 sha256:ad5739181616b815fae7edc6bba689496674acbcf44e48a57fc7cc13a379b3a2 211.10MB / 211.10MB 5.3s
+#5 sha256:ad5739181616b815fae7edc6bba689496674acbcf44e48a57fc7cc13a379b3a2 211.10MB / 211.10MB 6.7s done
+#5 extracting sha256:1b13d4e1a46e5e969702ec92b7c787c1b6891bff7c21ad378ff6dbc9e751d5d4 5.1s
+#5 ...
+
+#6 [internal] load build context
+#6 transferring context: 5.73MB 7.4s done
+#6 DONE 7.7s
+
+#5 [builder 1/6] FROM docker.io/library/node:18@sha256:995a5f4314885452a4a785abc25a0fec40e26c346559e11e709d58bb7a927cf4
+#5 extracting sha256:1b13d4e1a46e5e969702ec92b7c787c1b6891bff7c21ad378ff6dbc9e751d5d4 6.8s done
+#5 extracting sha256:1c74526957fc2157e8b0989072dc99b9582b398c12d1dcd40270fd76231bab0c
+#5 extracting sha256:1c74526957fc2157e8b0989072dc99b9582b398c12d1dcd40270fd76231bab0c 0.7s done
+#5 extracting sha256:30d85599795460b2d9d24c6b87c53ec60555b601705cc83bea31632240500980
+#5 extracting sha256:30d85599795460b2d9d24c6b87c53ec60555b601705cc83bea31632240500980 3.5s done
+#5 extracting sha256:ad5739181616b815fae7edc6bba689496674acbcf44e48a57fc7cc13a379b3a2
+#5 extracting sha256:ad5739181616b815fae7edc6bba689496674acbcf44e48a57fc7cc13a379b3a2 5.1s
+#5 extracting sha256:ad5739181616b815fae7edc6bba689496674acbcf44e48a57fc7cc13a379b3a2 9.0s done
+#5 extracting sha256:b2aed33d4664181472f1d65045888f7184526fd927cdd9db1eff9c641a35cde4
+#5 extracting sha256:b2aed33d4664181472f1d65045888f7184526fd927cdd9db1eff9c641a35cde4 done
+#5 extracting sha256:b8fcf7bcab1a2406ec5f7b8afe5e6a573d4f28a1c2b4d7250af16a6052cfd90a
+#5 extracting sha256:b8fcf7bcab1a2406ec5f7b8afe5e6a573d4f28a1c2b4d7250af16a6052cfd90a 2.6s done
+#5 extracting sha256:357c1fee0e47543d440f65b962449890814a1dd39ad4e70217c7906044779c88
+#5 extracting sha256:357c1fee0e47543d440f65b962449890814a1dd39ad4e70217c7906044779c88 0.1s done
+#5 extracting sha256:4b7f0f45f1275dbc07758f5ee47a5b62562022e36fd46d059d54f9c10efcd814
+#5 extracting sha256:4b7f0f45f1275dbc07758f5ee47a5b62562022e36fd46d059d54f9c10efcd814 done
+#5 DONE 31.9s
+
+#7 [builder 2/6] WORKDIR /app
+#7 DONE 0.2s
+
+#8 [builder 3/6] COPY package.json yarn.lock ./
+#8 DONE 0.4s
+
+#9 [stage-1 3/8] RUN adduser --disabled-password myuser
+#9 0.827 Adding user `myuser' ...
+#9 0.827 Adding new group `myuser' (1001) ...
+#9 0.944 Adding new user `myuser' (1001) with group `myuser (1001)' ...
+#9 1.198 Creating home directory `/home/myuser' ...
+#9 1.198 Copying files from `/etc/skel' ...
+#9 1.207 Changing the user information for myuser
+#9 1.207 Enter the new value, or press ENTER for the default
+#9 1.207 	Full Name []: 	Room Number []: 	Work Phone []: 	Home Phone []: 	Other []: Use of uninitialized value $answer in chop at /usr/sbin/adduser line 766.
+#9 1.248 Use of uninitialized value $answer in pattern match (m//) at /usr/sbin/adduser line 767.
+#9 1.248 Use of uninitialized value $answer in pattern match (m//) at /usr/sbin/adduser line 768.
+#9 1.249 Is the information correct? [Y/n] Adding new user `myuser' to supplemental / extra groups `users' ...
+#9 1.249 Adding user `myuser' to group `users' ...
+#9 DONE 1.5s
+
+#10 [builder 4/6] RUN yarn install --frozen-lockfile
+#10 0.740 yarn install v1.22.19
+#10 0.820 [1/4] Resolving packages...
+#10 1.350 [2/4] Fetching packages...
+#10 1.369 warning Pattern ["string-width@^4.1.0"] is trying to unpack in the same destination "/usr/local/share/.cache/yarn/v6/npm-string-width-cjs-4.2.3-integrity/node_modules/string-width-cjs" as pattern ["string-width-cjs@npm:string-width@^4.2.0"]. This could result in non-deterministic behavior, skipping.
+#10 49.97 [3/4] Linking dependencies...
+#10 49.98 warning " > @mui/x-date-pickers@6.18.7" has unmet peer dependency "@mui/system@^5.8.0".
+#10 49.98 warning "eslint-config-next > @typescript-eslint/parser > @typescript-eslint/typescript-estree > ts-api-utils@1.0.3" has unmet peer dependency "typescript@>=4.2.0".
+#10 92.92 [4/4] Building fresh packages...
+#10 93.45 Done in 92.71s.
+#10 DONE 94.2s
+
+#11 [builder 5/6] COPY . ./
+#11 DONE 41.2s
+
+#12 [builder 6/6] RUN yarn build
+#12 0.903 yarn run v1.22.19
+#12 0.932 $ next build
+#12 1.737    ▲ Next.js 14.1.0
+#12 1.738    - Environments: .env.local
+#12 1.738 
+#12 1.738    Linting and checking validity of types ...
+#12 3.784 
+#12 3.784 ./pages/config.js
+#12 3.784 97:8  Warning: React Hook useEffect has a missing dependency: 'fetchData'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+#12 3.784 
+#12 3.784 ./pages/timeentry.js
+#12 3.784 43:8  Warning: React Hook useMemo has an unnecessary dependency: 'isMobile'. Either exclude it or remove the dependency array.  react-hooks/exhaustive-deps
+#12 3.784 116:8  Warning: React Hook useEffect has a missing dependency: 'fetchTableData'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+#12 3.784 248:9  Warning: React Hook useMemo has a missing dependency: 'isMobile'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+#12 3.784 
+#12 3.784 info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/basic-features/eslint#disabling-rules
+#12 3.820    Creating an optimized production build ...
+#12 23.70  ✓ Compiled successfully
+#12 23.71    Collecting page data ...
+#12 26.32    Generating static pages (0/6) ...
+#12 26.71    Generating static pages (1/6) 
+#12 26.80    Generating static pages (2/6) 
+#12 26.91    Generating static pages (4/6) 
+#12 27.01  ✓ Generating static pages (6/6) 
+#12 28.11    Finalizing page optimization ...
+#12 28.11    Collecting build traces ...
+#12 46.10 
+#12 46.10 Route (pages)                              Size     First Load JS
+#12 46.10 ┌ ○ /                                      2.92 kB         455 kB
+#12 46.10 ├   /_app                                  0 B             452 kB
+#12 46.10 ├ ○ /404                                   181 B           453 kB
+#12 46.10 ├ λ /api/employer/add_row                  0 B             452 kB
+#12 46.10 ├ λ /api/employer/delete_row               0 B             452 kB
+#12 46.10 ├ λ /api/employer/get_data                 0 B             452 kB
+#12 46.10 ├ λ /api/employer/update_row               0 B             452 kB
+#12 46.10 ├ λ /api/log                               0 B             452 kB
+#12 46.10 ├ λ /api/login                             0 B             452 kB
+#12 46.10 ├ λ /api/logout                            0 B             452 kB
+#12 46.10 ├ λ /api/session                           0 B             452 kB
+#12 46.10 ├ λ /api/signup                            0 B             452 kB
+#12 46.10 ├ λ /api/timeentry/add_row                 0 B             452 kB
+#12 46.10 ├ λ /api/timeentry/delete_row              0 B             452 kB
+#12 46.10 ├ λ /api/timeentry/get_data                0 B             452 kB
+#12 46.10 ├ λ /api/timeentry/update_row              0 B             452 kB
+#12 46.10 ├ ○ /config                                180 B           453 kB
+#12 46.10 ├ ○ /LoginC                                181 B           453 kB
+#12 46.10 └ ○ /timeentry                             3.74 kB         456 kB
+#12 46.10 + First Load JS shared by all              452 kB
+#12 46.10   ├ chunks/framework-5429a50ba5373c56.js   45.2 kB
+#12 46.10   ├ chunks/main-930135e47dff83e9.js        31.8 kB
+#12 46.10   ├ chunks/pages/_app-308a86eb02829760.js  375 kB
+#12 46.10   └ other shared chunks (total)            1.01 kB
+#12 46.10 
+#12 46.10 ○  (Static)   prerendered as static content
+#12 46.10 λ  (Dynamic)  server-rendered on demand using Node.js
+#12 46.10 
+#12 46.14 Done in 45.24s.
+#12 DONE 46.9s
+
+#13 [stage-1 4/8] COPY --from=builder /app/next.config.js ./
+#13 DONE 0.3s
+
+#14 [stage-1 5/8] COPY --from=builder /app/public ./public
+#14 DONE 0.2s
+
+#15 [stage-1 6/8] COPY --from=builder /app/.next ./.next
+#15 DONE 2.1s
+
+#16 [stage-1 7/8] COPY --from=builder /app/node_modules ./node_modules
+#16 DONE 18.8s
+
+#17 [stage-1 8/8] COPY --from=builder /app/package.json ./package.json
+#17 DONE 0.4s
+
+#18 exporting to image
+#18 exporting layers
+#18 exporting layers 24.5s done
+#18 writing image sha256:31c5fff46fa9769e87ca59af739636a4aa51be289954a3f161def8ae5dad1f70 0.1s done
+#18 naming to docker.io/library/timeentrydenextdockerimage-42973:latest 0.1s done
+#18 DONE 24.8s
+Local Docker Images:
+REPOSITORY                                                            TAG       IMAGE ID       CREATED          SIZE
+timeentrydenextdockerimage-42973                                      latest    31c5fff46fa9   26 seconds ago   1.8GB
+timeentrydenextacr42973.azurecr.io/timeentrydenextdockerimage-42973   latest    31c5fff46fa9   26 seconds ago   1.8GB
+Pushing Docker Image to ACR...
+The push refers to repository [timeentrydenextacr42973.azurecr.io/timeentrydenextdockerimage-42973]
+d6b2e6c92cdb: Preparing
+243b541350f6: Preparing
+82ac22134405: Preparing
+101f341967d7: Preparing
+68276a240d74: Preparing
+57366d4c82b4: Preparing
+52b5e33804ba: Preparing
+4186f57e1afd: Preparing
+ef2935b587d7: Preparing
+bd343755f481: Preparing
+c13263a86bbe: Preparing
+a876dfc51caa: Preparing
+5bb1de08f5af: Preparing
+0dfa23fffa41: Preparing
+aa904f36746c: Preparing
+57366d4c82b4: Waiting
+52b5e33804ba: Waiting
+4186f57e1afd: Waiting
+ef2935b587d7: Waiting
+bd343755f481: Waiting
+c13263a86bbe: Waiting
+a876dfc51caa: Waiting
+5bb1de08f5af: Waiting
+0dfa23fffa41: Waiting
+aa904f36746c: Waiting
+d6b2e6c92cdb: Pushed
+101f341967d7: Pushed
+68276a240d74: Pushed
+52b5e33804ba: Pushed
+57366d4c82b4: Pushed
+4186f57e1afd: Pushed
+c13263a86bbe: Pushed
+ef2935b587d7: Pushed
+82ac22134405: Pushed
+0dfa23fffa41: Pushed
+5bb1de08f5af: Pushed
+bd343755f481: Pushed
+aa904f36746c: Pushed
+a876dfc51caa: Pushed
+243b541350f6: Pushed
+latest: digest: sha256:6b8881b8d3fca83d6bbde820d30b65171997dc3e69e5f0f9602b5dd5581cefac size: 3467
+Creating App Service plan...
+WARNING: Readonly attribute name will be ignored in class <class 'azure.mgmt.web.v2023_01_01.models._models_py3.AppServicePlan'>
+{
+  "elasticScaleEnabled": false,
+  "extendedLocation": null,
+  "freeOfferExpirationTime": "2024-02-25T13:53:14.043333",
+  "geoRegion": "West Europe",
+  "hostingEnvironmentProfile": null,
+  "hyperV": false,
+  "id": "/subscriptions/66283e96-2d6d-40bf-9c5b-e368a7ab7f7f/resourceGroups/timeentrydenext42973/providers/Microsoft.Web/serverfarms/timeentrydenextAppService-42973",
+  "isSpot": false,
+  "isXenon": false,
+  "kind": "linux",
+  "kubeEnvironmentProfile": null,
+  "location": "westeurope",
+  "maximumElasticWorkerCount": 1,
+  "maximumNumberOfWorkers": 0,
+  "name": "timeentrydenextAppService-42973",
+  "numberOfSites": 0,
+  "numberOfWorkers": 1,
+  "perSiteScaling": false,
+  "provisioningState": "Succeeded",
+  "reserved": true,
+  "resourceGroup": "timeentrydenext42973",
+  "sku": {
+    "capabilities": null,
+    "capacity": 1,
+    "family": "B",
+    "locations": null,
+    "name": "B1",
+    "size": "B1",
+    "skuCapacity": null,
+    "tier": "Basic"
+  },
+  "spotExpirationTime": null,
+  "status": "Ready",
+  "subscription": "66283e96-2d6d-40bf-9c5b-e368a7ab7f7f",
+  "tags": null,
+  "targetWorkerCount": 0,
+  "targetWorkerSizeId": 0,
+  "type": "Microsoft.Web/serverfarms",
+  "workerTierName": null,
+  "zoneRedundant": false
+}
+Creating Web App...
+WARNING: No credential was provided to access Azure Container Registry. Trying to look up...
+WARNING: App settings have been redacted. Use `az webapp/logicapp/functionapp config appsettings list` to view.
+WARNING: App settings have been redacted. Use `az webapp/logicapp/functionapp config appsettings list` to view.
+{
+  "availabilityState": "Normal",
+  "clientAffinityEnabled": true,
+  "clientCertEnabled": false,
+  "clientCertExclusionPaths": null,
+  "clientCertMode": "Required",
+  "cloningInfo": null,
+  "containerSize": 0,
+  "customDomainVerificationId": "0CEF4E8CFBAAC8F7716BF22E3B9CFC7338207D03377C619DB8AACB0D8A98394A",
+  "dailyMemoryTimeQuota": 0,
+  "daprConfig": null,
+  "defaultHostName": "timeentrydenextwebapp-42973.azurewebsites.net",
+  "enabled": true,
+  "enabledHostNames": [
+    "timeentrydenextwebapp-42973.azurewebsites.net",
+    "timeentrydenextwebapp-42973.scm.azurewebsites.net"
+  ],
+  "extendedLocation": null,
+  "ftpPublishingUrl": "ftps://waws-prod-am2-751.ftp.azurewebsites.windows.net/site/wwwroot",
+  "hostNameSslStates": [
+    {
+      "certificateResourceId": null,
+      "hostType": "Standard",
+      "ipBasedSslResult": null,
+      "ipBasedSslState": "NotConfigured",
+      "name": "timeentrydenextwebapp-42973.azurewebsites.net",
+      "sslState": "Disabled",
+      "thumbprint": null,
+      "toUpdate": null,
+      "toUpdateIpBasedSsl": null,
+      "virtualIPv6": null,
+      "virtualIp": null
+    },
+    {
+      "certificateResourceId": null,
+      "hostType": "Repository",
+      "ipBasedSslResult": null,
+      "ipBasedSslState": "NotConfigured",
+      "name": "timeentrydenextwebapp-42973.scm.azurewebsites.net",
+      "sslState": "Disabled",
+      "thumbprint": null,
+      "toUpdate": null,
+      "toUpdateIpBasedSsl": null,
+      "virtualIPv6": null,
+      "virtualIp": null
+    }
+  ],
+  "hostNames": [
+    "timeentrydenextwebapp-42973.azurewebsites.net"
+  ],
+  "hostNamesDisabled": false,
+  "hostingEnvironmentProfile": null,
+  "httpsOnly": false,
+  "hyperV": false,
+  "id": "/subscriptions/66283e96-2d6d-40bf-9c5b-e368a7ab7f7f/resourceGroups/timeentrydenext42973/providers/Microsoft.Web/sites/timeentrydenextWebApp-42973",
+  "identity": null,
+  "inProgressOperationId": null,
+  "isDefaultContainer": null,
+  "isXenon": false,
+  "keyVaultReferenceIdentity": "SystemAssigned",
+  "kind": "app,linux,container",
+  "lastModifiedTimeUtc": "2024-01-26T13:53:25.553333",
+  "location": "West Europe",
+  "managedEnvironmentId": null,
+  "maxNumberOfWorkers": null,
+  "name": "timeentrydenextWebApp-42973",
+  "outboundIpAddresses": "20.8.20.201,20.8.20.216,20.8.19.69,20.8.20.217,20.8.21.120,20.8.21.121,20.31.12.199,4.175.242.173,20.8.17.65,4.175.245.22,4.175.246.32,4.175.246.56,20.105.224.46",
+  "possibleOutboundIpAddresses": "20.8.20.201,20.8.20.216,20.8.19.69,20.8.20.217,20.8.21.120,20.8.21.121,20.31.12.199,4.175.242.173,20.8.17.65,4.175.245.22,4.175.246.32,4.175.246.56,20.31.15.84,20.31.15.85,20.8.16.157,20.8.17.122,20.8.18.60,20.8.19.55,20.76.228.97,20.8.20.48,20.8.20.19,20.8.21.128,20.8.20.130,20.8.20.157,20.8.20.201,20.8.20.216,20.8.19.69,20.8.20.217,20.8.21.120,20.8.21.121,20.8.21.188,20.8.21.210,20.8.21.211,20.8.21.214,20.8.21.215,20.8.22.0,20.105.224.46",
+  "publicNetworkAccess": null,
+  "redundancyMode": "None",
+  "repositorySiteName": "timeentrydenextWebApp-42973",
+  "reserved": true,
+  "resourceConfig": null,
+  "resourceGroup": "timeentrydenext42973",
+  "scmSiteAlsoStopped": false,
+  "serverFarmId": "/subscriptions/66283e96-2d6d-40bf-9c5b-e368a7ab7f7f/resourceGroups/timeentrydenext42973/providers/Microsoft.Web/serverfarms/timeentrydenextAppService-42973",
+  "siteConfig": {
+    "acrUseManagedIdentityCreds": false,
+    "acrUserManagedIdentityId": null,
+    "alwaysOn": false,
+    "antivirusScanEnabled": null,
+    "apiDefinition": null,
+    "apiManagementConfig": null,
+    "appCommandLine": null,
+    "appSettings": null,
+    "autoHealEnabled": null,
+    "autoHealRules": null,
+    "autoSwapSlotName": null,
+    "azureMonitorLogCategories": null,
+    "azureStorageAccounts": null,
+    "connectionStrings": null,
+    "cors": null,
+    "customAppPoolIdentityAdminState": null,
+    "customAppPoolIdentityTenantState": null,
+    "defaultDocuments": null,
+    "detailedErrorLoggingEnabled": null,
+    "documentRoot": null,
+    "elasticWebAppScaleLimit": 0,
+    "experiments": null,
+    "fileChangeAuditEnabled": null,
+    "ftpsState": null,
+    "functionAppScaleLimit": null,
+    "functionsRuntimeScaleMonitoringEnabled": null,
+    "handlerMappings": null,
+    "healthCheckPath": null,
+    "http20Enabled": false,
+    "http20ProxyFlag": null,
+    "httpLoggingEnabled": null,
+    "ipSecurityRestrictions": [
+      {
+        "action": "Allow",
+        "description": "Allow all access",
+        "headers": null,
+        "ipAddress": "Any",
+        "name": "Allow all",
+        "priority": 2147483647,
+        "subnetMask": null,
+        "subnetTrafficTag": null,
+        "tag": null,
+        "vnetSubnetResourceId": null,
+        "vnetTrafficTag": null
+      }
+    ],
+    "ipSecurityRestrictionsDefaultAction": null,
+    "javaContainer": null,
+    "javaContainerVersion": null,
+    "javaVersion": null,
+    "keyVaultReferenceIdentity": null,
+    "limits": null,
+    "linuxFxVersion": "",
+    "loadBalancing": null,
+    "localMySqlEnabled": null,
+    "logsDirectorySizeLimit": null,
+    "machineKey": null,
+    "managedPipelineMode": null,
+    "managedServiceIdentityId": null,
+    "metadata": null,
+    "minTlsCipherSuite": null,
+    "minTlsVersion": null,
+    "minimumElasticInstanceCount": 0,
+    "netFrameworkVersion": null,
+    "nodeVersion": null,
+    "numberOfWorkers": 1,
+    "phpVersion": null,
+    "powerShellVersion": null,
+    "preWarmedInstanceCount": null,
+    "publicNetworkAccess": null,
+    "publishingPassword": null,
+    "publishingUsername": null,
+    "push": null,
+    "pythonVersion": null,
+    "remoteDebuggingEnabled": null,
+    "remoteDebuggingVersion": null,
+    "requestTracingEnabled": null,
+    "requestTracingExpirationTime": null,
+    "routingRules": null,
+    "runtimeADUser": null,
+    "runtimeADUserPassword": null,
+    "scmIpSecurityRestrictions": [
+      {
+        "action": "Allow",
+        "description": "Allow all access",
+        "headers": null,
+        "ipAddress": "Any",
+        "name": "Allow all",
+        "priority": 2147483647,
+        "subnetMask": null,
+        "subnetTrafficTag": null,
+        "tag": null,
+        "vnetSubnetResourceId": null,
+        "vnetTrafficTag": null
+      }
+    ],
+    "scmIpSecurityRestrictionsDefaultAction": null,
+    "scmIpSecurityRestrictionsUseMain": null,
+    "scmMinTlsVersion": null,
+    "scmType": null,
+    "sitePort": null,
+    "sitePrivateLinkHostEnabled": null,
+    "storageType": null,
+    "supportedTlsCipherSuites": null,
+    "tracingOptions": null,
+    "use32BitWorkerProcess": null,
+    "virtualApplications": null,
+    "vnetName": null,
+    "vnetPrivatePortsCount": null,
+    "vnetRouteAllEnabled": null,
+    "webSocketsEnabled": null,
+    "websiteTimeZone": null,
+    "winAuthAdminState": null,
+    "winAuthTenantState": null,
+    "windowsConfiguredStacks": null,
+    "windowsFxVersion": null,
+    "xManagedServiceIdentityId": null
+  },
+  "slotSwapStatus": null,
+  "state": "Running",
+  "storageAccountRequired": false,
+  "suspendedTill": null,
+  "tags": null,
+  "targetSwapSlot": null,
+  "trafficManagerHostNames": null,
+  "type": "Microsoft.Web/sites",
+  "usageState": "Normal",
+  "virtualNetworkSubnetId": null,
+  "vnetContentShareEnabled": false,
+  "vnetImagePullEnabled": false,
+  "vnetRouteAllEnabled": false,
+  "workloadProfileName": null
+}
+Checking Web App Configuration...
+{
+  "acrUseManagedIdentityCreds": false,
+  "acrUserManagedIdentityId": null,
+  "alwaysOn": false,
+  "apiDefinition": null,
+  "apiManagementConfig": null,
+  "appCommandLine": "",
+  "appSettings": null,
+  "autoHealEnabled": false,
+  "autoHealRules": null,
+  "autoSwapSlotName": null,
+  "azureStorageAccounts": {},
+  "connectionStrings": null,
+  "cors": null,
+  "defaultDocuments": [
+    "Default.htm",
+    "Default.html",
+    "Default.asp",
+    "index.htm",
+    "index.html",
+    "iisstart.htm",
+    "default.aspx",
+    "index.php",
+    "hostingstart.html"
+  ],
+  "detailedErrorLoggingEnabled": false,
+  "documentRoot": null,
+  "elasticWebAppScaleLimit": 0,
+  "experiments": {
+    "rampUpRules": []
+  },
+  "ftpsState": "FtpsOnly",
+  "functionAppScaleLimit": null,
+  "functionsRuntimeScaleMonitoringEnabled": false,
+  "handlerMappings": null,
+  "healthCheckPath": null,
+  "http20Enabled": true,
+  "httpLoggingEnabled": false,
+  "id": "/subscriptions/66283e96-2d6d-40bf-9c5b-e368a7ab7f7f/resourceGroups/timeentrydenext42973/providers/Microsoft.Web/sites/timeentrydenextWebApp-42973/config/web",
+  "ipSecurityRestrictions": [
+    {
+      "action": "Allow",
+      "description": "Allow all access",
+      "headers": null,
+      "ipAddress": "Any",
+      "name": "Allow all",
+      "priority": 2147483647,
+      "subnetMask": null,
+      "subnetTrafficTag": null,
+      "tag": null,
+      "vnetSubnetResourceId": null,
+      "vnetTrafficTag": null
+    }
+  ],
+  "ipSecurityRestrictionsDefaultAction": null,
+  "javaContainer": null,
+  "javaContainerVersion": null,
+  "javaVersion": null,
+  "keyVaultReferenceIdentity": null,
+  "kind": null,
+  "limits": null,
+  "linuxFxVersion": "DOCKER|timeentrydenextacr42973.azurecr.io/timeentrydenextdockerimage-42973:latest",
+  "loadBalancing": "LeastRequests",
+  "localMySqlEnabled": false,
+  "location": "West Europe",
+  "logsDirectorySizeLimit": 35,
+  "machineKey": null,
+  "managedPipelineMode": "Integrated",
+  "managedServiceIdentityId": null,
+  "metadata": null,
+  "minTlsCipherSuite": null,
+  "minTlsVersion": "1.2",
+  "minimumElasticInstanceCount": 0,
+  "name": "timeentrydenextWebApp-42973",
+  "netFrameworkVersion": "v4.0",
+  "nodeVersion": "",
+  "numberOfWorkers": 1,
+  "phpVersion": "",
+  "powerShellVersion": "",
+  "preWarmedInstanceCount": 0,
+  "publicNetworkAccess": null,
+  "publishingUsername": "$timeentrydenextWebApp-42973",
+  "push": null,
+  "pythonVersion": "",
+  "remoteDebuggingEnabled": false,
+  "remoteDebuggingVersion": "VS2019",
+  "requestTracingEnabled": false,
+  "requestTracingExpirationTime": null,
+  "resourceGroup": "timeentrydenext42973",
+  "scmIpSecurityRestrictions": [
+    {
+      "action": "Allow",
+      "description": "Allow all access",
+      "headers": null,
+      "ipAddress": "Any",
+      "name": "Allow all",
+      "priority": 2147483647,
+      "subnetMask": null,
+      "subnetTrafficTag": null,
+      "tag": null,
+      "vnetSubnetResourceId": null,
+      "vnetTrafficTag": null
+    }
+  ],
+  "scmIpSecurityRestrictionsDefaultAction": null,
+  "scmIpSecurityRestrictionsUseMain": false,
+  "scmMinTlsVersion": "1.2",
+  "scmType": "None",
+  "tracingOptions": null,
+  "type": "Microsoft.Web/sites/config",
+  "use32BitWorkerProcess": true,
+  "virtualApplications": [
+    {
+      "physicalPath": "site\\wwwroot",
+      "preloadEnabled": false,
+      "virtualDirectories": null,
+      "virtualPath": "/"
+    }
+  ],
+  "vnetName": "",
+  "vnetPrivatePortsCount": 0,
+  "vnetRouteAllEnabled": false,
+  "webSocketsEnabled": false,
+  "websiteTimeZone": null,
+  "windowsFxVersion": null,
+  "xManagedServiceIdentityId": null
+}
+Deployment complete. Visit your app at http://timeentrydenextWebApp-42973.azurewebsites.net
