@@ -1,3 +1,6 @@
+/** 
+ * lib.js */
+
 export const defaultSession = {
     username: "",
     isLoggedIn: false,
@@ -16,10 +19,12 @@ export const defaultSession = {
   };
 
 
-export default async function logToServer(...args) {
-  // Join the arguments with a separator and convert them into a string
-  const msg = args.join(' - ');
-
+export default async function logToServer(message) {
+  // check if this is called from client
+  if (typeof window === 'undefined') {
+    return;
+  }
+  const msg = message;
   try {
     await fetch('/api/log', {
       method: 'POST',
@@ -29,6 +34,6 @@ export default async function logToServer(...args) {
       body: JSON.stringify({ message: msg })
     });
   } catch (e) {
-    console.error("Error logging to server:", e);
+    console.log("Error logging to server: ");
   }
 }

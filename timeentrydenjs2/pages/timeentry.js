@@ -104,7 +104,7 @@ const TimeEntry = () => {
             console.log('response');
             console.log(data);
             setData(data);
-            logToServer('fetchData: ', data)
+            logToServer('fetchData: ' + data)
         } catch (error) {
             console.error("Error fetching DataTable data", error);
         }
@@ -164,7 +164,7 @@ const TimeEntry = () => {
         };
 
         try {
-            logToServer('handleEditRow: ', payload);
+            logToServer('handleEditRow: ' + payload);
             // call the /api/timeentry/update_row next.js api
             const response = await fetch("/api/timeentry/update_row", {
                 method: "POST",
@@ -193,7 +193,7 @@ const TimeEntry = () => {
     const handleDeleteRow = async (row) => {
         try {
 
-            logToServer('handleDeleteRow: ', row.id);
+            logToServer('handleDeleteRow: ' + row.id);
             const response = await fetch("/api/timeentry/delete_row", {
                 method: "POST",
                 headers: {

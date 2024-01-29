@@ -30,6 +30,9 @@ az storage table create --name Times --account-name $storage_account --account-k
 # Create Employer Table
 az storage table create --name Employer --account-name $storage_account --account-key $storage_key
 
+# Create Session Table
+az storage table create --name Session --account-name $storage_account --account-key $storage_key
+
 # Retrieve the Connection String
 connection_string=$(az storage account show-connection-string --name $storage_account --resource-group $resource_group --query "connectionString" -o tsv)
 

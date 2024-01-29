@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-import { defaultSession } from './lib';
+import logToServer, { defaultSession } from './lib';
 import useSWRMutation from 'swr/mutation';
 
 const sessionApiRoute = '../api/session';
@@ -28,6 +28,7 @@ function doLogout(url) {
 }
 
 export default function useSession() {
+   
     const { data: session, isLoading } = useSWR(sessionApiRoute, fetchJson, {
         fallbackData: defaultSession,
     });
@@ -36,6 +37,5 @@ export default function useSession() {
         revalidate: false,
     });
     const { trigger: logout } = useSWRMutation(sessionApiRoute, doLogout);
-
     return { session, logout, login, isLoading };
 }
