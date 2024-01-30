@@ -55,6 +55,8 @@ export async function loginUser(username, password) {
     let count = 0;
     let authenticatedEntity = null; // Initialize the variable to store the authenticated entity
     for await (const entity of entities) {
+      // map rowKey to username
+      entity.username = entity.rowKey;
       authenticatedEntity = entity; // Assign the current entity to the variable
       count++;
     }

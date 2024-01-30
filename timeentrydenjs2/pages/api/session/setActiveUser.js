@@ -7,6 +7,7 @@
 import { TableClient, AzureNamedKeyCredential } from "@azure/data-tables";
 import { getTableClient } from '../../../utils/db/db';
 import { getIronSession } from "iron-session";
+import logToServer from "@/utils/lib";
 
 
 
@@ -30,8 +31,12 @@ export default async function handler(req, res) {
         console.log(req.headers);
 
         const data = req.body;
+        // get activeUser from URL
+        const activeUser = req.query.user;
+        console.log('activeUser', activeUser);  
 
-        data.username = session.username;
+        // get username from session
+        const username = session.username;
         
 
         const tableName = 'Session';
@@ -41,9 +46,10 @@ export default async function handler(req, res) {
             partitionKey: aPartitionKey,
             rowKey: username,
             Key: "ActiveUser",
-            Value: data.Value,
+            Value: activeUser,
 
         };
+        console.log('updateEntity', updateEntity);
         const strObject = JSON.stringify(updateEntity);
 
 
@@ -54,13 +60,29 @@ export default async function handler(req, res) {
 
 
             // update the entity in the table 'times' with replace
-            const response = await client.updateEntity(updateEntity, 'Replace');
+            // if activeUser = '' then delete the entry
+            let response;
+            if (activeUser === '') {
+                // delete the entry
+                response = await client.deleteEntity(aPartitionKey, username);
+            } else {
+                // update the entry
+                try {
+                    response = await client.updateEntity(updateEntity, 'Replace');
+                }
+                // if error then create
+                catch (error) {
+                    console.log('error', error);
+                    response = await client.createEntity(updateEntity);
+                }
+               
+            }
 
             console.log(`Updated row from table '${tableName}'.`);
             console.log(response);
             res.status(200).json(response);
         } catch (error) {
-            console.error(`Error updating row from table '${tableName}'`, error);
+            console.log(`Error updating row from table '${tableName}' ` +  error);
             throw error;
         }
     } else {

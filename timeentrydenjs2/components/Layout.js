@@ -27,6 +27,8 @@ import { defaultSession } from "../utils/lib";
 import { useRouter } from 'next/router';
 import LoginC from '../pages/LoginC';
 import ConfigPage from '../pages/config';
+import { useContext } from 'react';
+import { ActiveUserContext } from './ActiveUserContext';
 
 const drawerWidth = 240;
 
@@ -35,7 +37,7 @@ export default function Layout({ children }) {
   const { session, isLoading } = useSession();
   const { logout } = useSession();
   const router = useRouter();
-
+  const { activeUser } = useContext(ActiveUserContext);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -60,10 +62,16 @@ export default function Layout({ children }) {
             Time Entry App
           </Typography>
 
+          {/* Show activeUser if available */}
+          <Typography variant="subtitle1" noWrap sx={{ mr: 2 }}>
+            {activeUser ? `Active User: ${activeUser}` : null}
+          </Typography>
+
+
           {/* Show username */}
           {session.isLoggedIn && (
             <Typography variant="subtitle1" noWrap sx={{ mr: 2 }}>
-              {session.username}
+              {session.username ? `Logged in as: ${session.username}` : null}
             </Typography>
           )}
 

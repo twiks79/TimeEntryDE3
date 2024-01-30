@@ -14,6 +14,8 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import LogoutIcon from '@mui/icons-material/Logout';
 import IconButton from '@mui/material/IconButton';
+import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
+
 import MailIcon from '@mui/icons-material/Mail';
 import HomeIcon from '@mui/icons-material/Home';
 import TimerIcon from '@mui/icons-material/Timer';
@@ -23,6 +25,7 @@ import Link from 'next/link';
 import { Icon } from '@mui/material';
 import useSession from "../utils/useSession";
 import { defaultSession } from "../utils/lib";
+import { useRouter } from 'next/router';
 import LoginC from '../pages/LoginC';
 import ConfigPage from '../pages/config';
 
@@ -32,7 +35,7 @@ export default function Layout({ children }) {
   const [open, setOpen] = React.useState(true);
   const { session, isLoading } = useSession();
   const { logout } = useSession();
-
+  const router = useRouter();
 
 
   const handleDrawerOpen = () => {
@@ -75,6 +78,8 @@ export default function Layout({ children }) {
               logout(null, {
                 optimisticData: defaultSession,
               });
+              // reroute to login page
+              router.push('/LoginC');
             }}
           >
             <LogoutIcon />
@@ -117,7 +122,14 @@ export default function Layout({ children }) {
               </ListItemIcon>
               <ListItemText primary="Configuration" />
             </ListItemButton>
-
+          {/* For Employers Item */}
+          <ListItemButton component={Link} href="/employers">
+            <ListItemIcon>
+              <BusinessCenterIcon />
+            </ListItemIcon>
+            <ListItemText primary="For Employers" />
+          </ListItemButton>
+          
             {/* About Us Item */}
             <ListItemButton component={Link} href="/about">
               <ListItemIcon>
@@ -171,19 +183,26 @@ export default function CategorySection({ category, cards }) {
         </>
     );
 }File: ./components/InfoCard.js
-// components/InfoCard.js
-
 import React from 'react';
-import { Card, CardActionArea, CardContent, Typography, Box } from '@mui/material';
+import { Card, CardActionArea, CardContent, Typography, Box, useTheme, useMediaQuery } from '@mui/material';
 
 function InfoCard({ icon, title, additionalText, link }) {
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+  // Customize the icon size based on the screen size
+  const iconSize = isSmallScreen ? 'small' : 'large'; // Or use specific values like '48px'
+
+  // Clone the icon element with new props
+  const adjustedIcon = React.cloneElement(icon, { fontSize: iconSize, color: 'primary'});
+
   return (
-    <Card sx={{ maxWidth: 345 }}>
-      <CardActionArea onClick={() => { window.location.href = link; }}>
+    <Card sx={{ width: '80%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <CardActionArea onClick={() => { window.location.href = link; }} sx={{ flex: 1 }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 2 }}>
-          <Box sx={{ fontSize: 20, color: 'primary.main' }}>{icon}</Box>
-          <CardContent>
-            <Typography gutterBottom variant="h6" component="div">
+          {adjustedIcon}
+          <CardContent sx={{ textAlign: 'center', alignContent: 'center', justifyContent: 'center'}}>
+            <Typography gutterBottom variant="body1" component="div">
               {title}
             </Typography>
             <Typography variant="body2" color="text.secondary">
@@ -196,7 +215,11 @@ function InfoCard({ icon, title, additionalText, link }) {
   );
 }
 
-export default InfoCard;File: ./utils/lib.js
+export default InfoCard;
+File: ./utils/lib.js
+/** 
+ * lib.js */
+
 export const defaultSession = {
     username: "",
     isLoggedIn: false,
@@ -215,10 +238,12 @@ export const defaultSession = {
   };
 
 
-export default async function logToServer(...args) {
-  // Join the arguments with a separator and convert them into a string
-  const msg = args.join(' - ');
-
+export default async function logToServer(message) {
+  // check if this is called from client
+  if (typeof window === 'undefined') {
+    return;
+  }
+  const msg = message;
   try {
     await fetch('/api/log', {
       method: 'POST',
@@ -228,7 +253,7 @@ export default async function logToServer(...args) {
       body: JSON.stringify({ message: msg })
     });
   } catch (e) {
-    console.error("Error logging to server:", e);
+    console.log("Error logging to server: ");
   }
 }
 File: ./utils/db/db.js
@@ -434,7 +459,7 @@ export async function updateTimesRow(delEntity) {
 }
 File: ./utils/useSession.js
 import useSWR from 'swr';
-import { defaultSession } from './lib';
+import logToServer, { defaultSession } from './lib';
 import useSWRMutation from 'swr/mutation';
 
 const sessionApiRoute = '../api/session';
@@ -463,6 +488,7 @@ function doLogout(url) {
 }
 
 export default function useSession() {
+   
     const { data: session, isLoading } = useSWR(sessionApiRoute, fetchJson, {
         fallbackData: defaultSession,
     });
@@ -471,7 +497,6 @@ export default function useSession() {
         revalidate: false,
     });
     const { trigger: logout } = useSWRMutation(sessionApiRoute, doLogout);
-
     return { session, logout, login, isLoading };
 }File: ./utils/useUser.js
 
@@ -559,6 +584,8 @@ export async function loginUser(username, password) {
     let count = 0;
     let authenticatedEntity = null; // Initialize the variable to store the authenticated entity
     for await (const entity of entities) {
+      // map rowKey to username
+      entity.username = entity.rowKey;
       authenticatedEntity = entity; // Assign the current entity to the variable
       count++;
     }
@@ -685,14 +712,17 @@ import { loginUser } from '../../utils/login/loginUser';
 
 // login
 export default async function handler(request, response) {
+    
     const session = await getIronSession(request, response, { password: process.env.SECRET_COOKIE_PASSWORD, cookieName: "timeentry" });
+    
     console.log('Client logging to server');
+    
     if (!session.isLoggedIn) {
         return response.status(401).json({ error: 'Unauthorized' });
     }
     if (request.method === "POST") {
         // log the body
-        console.log('Client Log: ', request.body);
+        console.log('Client Log: ', request.body.message);
         // return a 200
         return response.status(200).json({ result: 'ok' });
 
@@ -932,6 +962,64 @@ export default async function handler(req, res) {
     }
     res.status(405).json({ error: 'Method Not Allowed' });
 };
+File: ./pages/api/employer/get_data_employer.js
+/**
+ * get_data_employer.js
+ * 
+ *
+ */
+
+
+import { getTableClient } from '../../../utils/db/db';
+import dayjs from 'dayjs';
+import logToServer from '../../../utils/lib';
+
+export default async function handler(req, res) {
+    logToServer('employer / get_data_employer.js: handler()');
+
+    const aPartitionKey = 'partition1'
+
+    logToServer(req.query);
+
+    const username = req.query.employer;
+    logToServer('employer: ' + username);
+
+    const tableName = 'employer';
+    // difference: employer instead of employee
+    const filter = `PartitionKey eq '${aPartitionKey}' and employer eq '${username}'`;
+    const queryOptions = { filter: filter };
+
+    try {
+
+        const client = getTableClient(tableName);
+
+        const iterator = client.listEntities(queryOptions);
+        // from the result, get only the list of available employees
+        
+
+
+        const rows = [];
+
+        for await (const entity of iterator) {
+                const employee = entity.employee;
+                logToServer('employee: ' + employee);
+                rows.push(employee);
+        }
+
+        console.log(`Retrieved ${rows.length} rows from table '${tableName}' with filter '${queryOptions}'.`);
+
+        console.log('rows', rows);
+
+        const data = rows;
+
+        console.log('data', data);
+        res.status(200).json(data);
+    } catch (error) {
+        console.error(`Error retrieving rows from table '${tableName}' with filter '${queryOptions}':`, error);
+        throw error; // rethrow the error after logging
+    }
+
+}
 File: ./pages/api/employer/update_row.js
 /**
  * update_row.js
@@ -940,8 +1028,8 @@ File: ./pages/api/employer/update_row.js
  */
 
 import { TableClient, AzureNamedKeyCredential } from "@azure/data-tables";
-import { addRowToTable } from '../../../utils/db/db';
-import { updateTimesRow } from '../../../utils/db/db';
+import { getTableClient } from '../../../utils/db/db';
+
 import { getIronSession } from "iron-session";
 
 
@@ -954,28 +1042,189 @@ import { getIronSession } from "iron-session";
 
 export default async function handler(req, res) {
     console.log('update_row.js: handler()');
-    
+
     const session = await getIronSession(req, res, { password: process.env.SECRET_COOKIE_PASSWORD, cookieName: "timeentry" });
     if (!session.isLoggedIn) {
         return response.status(401).json({ error: 'Unauthorized' });
     }
-    
+
     if (req.method === 'POST') {
         console.log('Update Row POST');
         console.log(req.body);
         console.log(req.headers);
-        
+
         const data = req.body;
-   
+
         data.username = session.username;
-        console.log('add_row: data: ', data);
+        console.log('update_row: data: ', data);
 
-        const result = await updateTimesRow(data);
+        const tableName = 'employer';
+        const aPartitionKey = 'partition1';
 
-        console.log('result', result);
-        res.status(200).json(result);
+        const updateEntity = {
+            partitionKey: aPartitionKey,
+            rowKey: data.rowKey,
+            employee: data.employee,
+            employer: data.employer,
+            contractName: data.contractName,
+            startDate: data.startDate,
+            endDate: data.endDate,
+            hoursPerWeek: data.hoursPerWeek,
+            compensationPerHour: data.compensationPerHour,
+
+        };
+        const strObject = JSON.stringify(updateEntity);
+
+
+        try {
+
+            const client = getTableClient(tableName);
+            console.log(`Updating row from table '${tableName}' with entity '${strObject}'.`);
+
+
+            // update the entity in the table 'times' with replace
+            const response = await client.updateEntity(updateEntity, 'Replace');
+
+            console.log(`Updated row from table '${tableName}'.`);
+            console.log(response);
+            res.status(200).json(response);
+        } catch (error) {
+            console.error(`Error updating row from table '${tableName}'`, error);
+            throw error;
+        }
+    } else {
+
+        res.status(405).json({ error: 'Method Not Allowed' });
     }
-    res.status(405).json({ error: 'Method Not Allowed' });
+}
+File: ./pages/api/session/setActiveUser.js
+/**
+ * setActiveUser.js
+ * 
+ *
+ */
+
+import { TableClient, AzureNamedKeyCredential } from "@azure/data-tables";
+import { getTableClient } from '../../../utils/db/db';
+import { getIronSession } from "iron-session";
+import logToServer from "@/utils/lib";
+
+
+
+/**
+ * handler function
+ * 
+ * 
+ * */
+
+export default async function handler(req, res) {
+    console.log('setActiveUser.js: handler()');
+
+    const session = await getIronSession(req, res, { password: process.env.SECRET_COOKIE_PASSWORD, cookieName: "timeentry" });
+    if (!session.isLoggedIn) {
+        return response.status(401).json({ error: 'Unauthorized' });
+    }
+
+    if (req.method === 'POST') {
+        console.log('Update Row POST');
+        console.log(req.body);
+        console.log(req.headers);
+
+        const data = req.body;
+        // get activeUser from URL
+        const activeUser = req.query.user;
+
+        // get username from session
+        const username = session.username;
+        
+
+        const tableName = 'Session';
+        const aPartitionKey = 'partition1';
+
+        const updateEntity = {
+            partitionKey: aPartitionKey,
+            rowKey: username,
+            Key: "ActiveUser",
+            Value: activeUser,
+
+        };
+        console.log('updateEntity', updateEntity);
+        const strObject = JSON.stringify(updateEntity);
+
+
+        try {
+
+            const client = getTableClient(tableName);
+            console.log(`Updating row from table '${tableName}' with entity '${strObject}'.`);
+
+
+            // update the entity in the table 'times' with replace
+            const response = await client.updateEntity(updateEntity, 'Replace');
+
+            console.log(`Updated row from table '${tableName}'.`);
+            console.log(response);
+            res.status(200).json(response);
+        } catch (error) {
+            console.log(`Error updating row from table '${tableName}' ` +  error);
+            throw error;
+        }
+    } else {
+
+        res.status(405).json({ error: 'Method Not Allowed' });
+    }
+}
+File: ./pages/api/session/getActiveUser.js
+/**
+ * getActiveUser.js
+ * 
+ *
+ */
+
+
+import { getTableClient } from '../../../utils/db/db';
+
+
+export default async function handler(req, res) {
+    
+    console.log('employer / getActiveUser.js: handler()');
+    const aPartitionKey = 'partition1'
+
+    const username = req.query.user;
+    console.log('username', username);
+
+    const tableName = 'Session';
+    const filter = `PartitionKey eq 'partition1' and RowKey eq '${username}'`;
+    const queryOptions = { filter: filter };
+
+    try {
+
+        const client = getTableClient(tableName);
+
+        console.log('Query Filter:', queryOptions); // Log the actual filter string
+
+        const iterator = client.listEntities(queryOptions);
+
+        let ActiveUser = '';
+
+        for await (const entity of iterator) {
+                if (entity.Key == "ActiveUser") then
+                {
+                    ActiveUser = entity.Value;
+                    break;
+                }
+            }
+        }
+
+        console.log(`Retrieved ${rows.length} rows from table '${tableName}' with filter '${queryOptions}'.`);
+
+        console.log('Active User:', ActiveUser);
+
+        res.status(200).json(ActiveUser);
+    } catch (error) {
+        console.error(`Error retrieving rows from table '${tableName}' with filter '${queryOptions}':`, error);
+        throw error; // rethrow the error after logging
+    }
+
 }
 File: ./pages/api/timeentry/get_data.js
 /**
@@ -1325,8 +1574,9 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import useSession from "../utils/useSession";
-import { defaultSession } from "../utils/lib";
+import logToServer, { defaultSession } from "../utils/lib";
 import { loginUser } from '../utils/login/loginUser';
+
 
 const theme = createTheme();
 
@@ -1369,7 +1619,7 @@ const LoginC = () => {
                     // Assuming the server responds with user data on successful login
                     console.log('User signed up', data.user);
                     // Call any method that sets the user session or any redirection if needed
-                    router.push('/');
+                    router.push('/index');
                 } else {
                     throw new Error(data.error || 'Login failed');
                 }
@@ -1392,7 +1642,7 @@ const LoginC = () => {
 
                 if (res.ok) {
                     // Assuming the server responds with user data on successful login
-                    console.log('User logged in', data.user);
+                    logToServer('User logged in ' + data.username);
                     // Call any method that sets the user session or any redirection if needed
                     
                     router.push('/');
@@ -1517,6 +1767,7 @@ File: ./pages/config.js
 
 import React, { useEffect, useState } from 'react';
 import { Box, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, TextField, Tooltip, Typography, useMediaQuery } from '@mui/material';
+import { Autocomplete, } from '@mui/material';
 import { AccessTime, Delete, Description as DescriptionIcon, Edit, Surfing } from '@mui/icons-material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -1536,10 +1787,8 @@ const ConfigPage = () => {
     logToServer("config.js: data", data);
 
 
-    const [createModalOpen, setCreateModalOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
-    const [currentRow, setCurrentRow] = useState(null);
-    const [tableRenderKey, setTableRenderKey] = useState(0);
+
 
 
     const [open, setOpen] = useState(false);
@@ -1549,7 +1798,7 @@ const ConfigPage = () => {
         setFormData({ ...formData, endDate: dayjs("9999-12-31") });
     };
 
-    const [rowToUpdate, setRowToUpdate] = useState(null);
+
     const [employers, setEmployers] = useState([]);
 
 
@@ -1613,7 +1862,6 @@ const ConfigPage = () => {
     }, []); // Empty dependency array to ensure it runs only once on mount
 
 
-
     const [formData, setFormData] = useState({
         employee: session ? session.username : null,
         employer: "test",
@@ -1625,230 +1873,269 @@ const ConfigPage = () => {
     });
 
 
-    const handleDelete = async (row) => {
-        logToServer("config.js: handleDelete");
-        try {
-            const response = await fetch('/api/employer/delete_row', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json', // This line is essential
-                },
-                body: JSON.stringify(row)
+    const [employerInputValue, setEmployerInputValue] = useState('');
+
+    const handleEmployerChange = (event, newValue) => {
+        setFormData({ ...formData, employer: newValue });
+    };
+
+    const handleEmployerInputChange = (event, newInputValue) => {
+
+        if (employers.includes(newInputValue)) {
+            // Existing employer, use object format
+            setFormData({
+                ...formData,
+                employer: {
+                    label: newInputValue
+                }
             });
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            await fetchData();
-        } catch (err) {
-            console.error("Error in handleDelete: ", err);
-        }
-    }
-
-    const handleAdd = async () => {
-        try {
-            const response = await fetch('/api/employer/add_row', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json', // This line is essential
-                },
-                body: JSON.stringify({ ...formData, ...newData })
+        } else {
+            // New employer, just set directly
+            setFormData({
+                ...formData,
+                employer: newInputValue
             });
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            setOpen(false);
-            setNewData({});
-            await fetchData();
-        } catch (err) {
-            console.error("Error in handleAdd: ", err);
         }
-    }
 
-    const handleUpdate = async () => {
-        try {
-            const response = await fetch('/api/employer/update_row', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json', // This line is essential
-                },
-                body: JSON.stringify({
-                    ...rowToUpdate,
-                    ...newData
-                })
-            });
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            setOpen(false);
-            setRowToUpdate(null);
-            setNewData({});
-            await fetchData();
-        } catch (err) {
-            console.error("Error in handleUpdate: ", err);
+        setEmployerInputValue(newInputValue);
+
+    };
+
+// Update DatePicker handling
+const handleStartDateChange = (newValue) => {
+    setFormData({ ...formData, startDate: newValue });
+};
+
+const handleEndDateChange = (newValue) => {
+    setFormData({ ...formData, endDate: newValue });
+};
+
+const handleDelete = async (row) => {
+    logToServer("config.js: handleDelete");
+    try {
+        const response = await fetch('/api/employer/delete_row', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', // This line is essential
+            },
+            body: JSON.stringify(row)
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
+        await fetchData();
+    } catch (err) {
+        console.error("Error in handleDelete: ", err);
+    }
+}
+
+const handleAdd = async () => {
+    try {
+        const response = await fetch('/api/employer/add_row', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', // This line is essential
+            },
+            body: JSON.stringify({ ...formData })
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        setOpen(false);
+        await fetchData();
+    } catch (err) {
+        console.error("Error in handleAdd: ", err);
+    }
+}
+
+const handleUpdate = async () => {
+    try {
+        const response = await fetch('/api/employer/update_row', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', // This line is essential
+            },
+            body: JSON.stringify({
+                ...formData
+            })
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        setOpen(false);
+        setIsEditing(null);
+        await fetchData();
+    } catch (err) {
+        console.error("Error in handleUpdate: ", err);
+    }
+}
+
+const getOptionLabel = (option) => {
+
+    // If option is a string, just return the string
+    if (typeof option === 'string') {
+        return option;
     }
 
+    // Option must be an object - return the label prop
+    return option.label;
 
-    const renderRowActions = (row) => {
-        return (
-            <Box>
-                <Tooltip title="Edit">
-                    <IconButton
-                        onClick={() => {
-                            setIsEditing(true);
-                            setOpen(true);
-                            // setCurrentRow(row.original);
-                            setFormData({
-                                ...row.original,
-                                startDate: dayjs(row.original.startDate),
-                                endDate: dayjs(row.original.endDate)
-                            });
-                            // setCreateModalOpen(true);
-                        }}
-                    >
-                        <Edit />
-                    </IconButton>
-                </Tooltip>
+}
 
-                <Tooltip title="Delete">
-                    <IconButton onClick={() => {
-                        logToServer('Delete onClick');
-                        handleDelete(row.original)
-                    }}>
-                        <Delete color="error" />
-                    </IconButton>
-                </Tooltip>
-            </Box>
-        );
-    }
-
+const renderRowActions = (row) => {
     return (
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <div style={{ mt: '20px' }}>
-                <MaterialReactTable
-                    columns={columns}
-                    initialState={{
-                        sorting: [{ id: "startDate", desc: true }],
-                        columnVisibility: { partitionKey: false, rowKey: false },
-                        density: "compact",
+        <Box>
+            <Tooltip title="Edit">
+                <IconButton
+                    onClick={() => {
+                        setIsEditing(true);
+                        setOpen(true);
+                        // setCurrentRow(row.original);
+                        setFormData({
+                            ...row.original,
+                            startDate: dayjs(row.original.startDate),
+                            endDate: dayjs(row.original.endDate)
+                        });
+                        // setCreateModalOpen(true);
                     }}
-                    margin="normal"
-                    padding="normal"
-                    data={data}
-                    dense={true}
-                    small={true}
-                    renderRowActions={renderRowActions}
+                >
+                    <Edit />
+                </IconButton>
+            </Tooltip>
 
-
-                    renderTopToolbarCustomActions={() => (
-                        <Box sx={{ display: "flex", gap: "1rem" }}>
-                            <Button
-                                startIcon={<DescriptionIcon />}
-                                color="primary"
-                                variant="contained"
-                                onClick={() => {
-                                    setOpen(true);
-                                    setRowToUpdate(null);
-                                }}
-                            >
-                                Add Contract
-                            </Button>
-                        </Box>
-                    )}
-                />
-            </div>
-            <Dialog open={open}>
-                <DialogTitle>
-                    {rowToUpdate ? 'Edit Row' : 'Add Row'}
-                </DialogTitle>
-                <DialogContent>
-                    <Grid container spacing={2} sx={{ mt: 1 }}>
-                        <Grid item xs={12} sm={6} md={4}>
-                            <TextField
-                                fullWidth
-                                label="Employee"
-                                value={formData.employee}
-                                onChange={(e) => setFormData({ ...formData, employee: e.target.value })}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4}>
-                            <FormControl fullWidth>
-                                <InputLabel>Employer</InputLabel>
-                                <Select
-                                    label="Employer"
-                                    value={formData.employer}
-                                    onChange={(e) => setFormData({ ...formData, employer: e.target.value })}
-                                >
-                                    {employers.map((employer, index) => (
-                                        <MenuItem key={index} value={employer}>
-                                            {employer}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4}>
-                            <TextField
-                                fullWidth
-                                label="Contract Name"
-                                value={formData.contractName}
-                                onChange={(e) => setFormData({ ...formData, contractName: e.target.value })}
-                            />
-                        </Grid>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <Grid item xs={12} sm={6} md={4}>
-                                <DatePicker
-                                    fullWidth
-                                    label="Start Date"
-                                    value={formData.startDate}
-                                    onChange={(newValue) => setFormData({ ...formData, startDate: newValue })}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6} md={4}>
-                                <DatePicker
-                                    fullWidth
-                                    label="End Date"
-                                    value={formData.endDate}
-                                    onChange={(newValue) => setFormData({ ...formData, endDate: newValue })}
-                                />
-                                <Button
-                                    startIcon={<DescriptionIcon />}
-                                    color="primary"
-                                    variant="contained"
-                                    sx={{ mt: 1 }}
-                                    onClick={handleNoEndDate}>
-                                    No End Date
-                                </Button>
-                            </Grid>
-                        </LocalizationProvider>
-                        <Grid item xs={12} sm={6} md={4}>
-                            <TextField
-                                fullWidth
-                                label="Hours Per Week"
-                                value={formData.hoursPerWeek}
-                                onChange={(e) => setFormData({ ...formData, hoursPerWeek: e.target.value })}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4}>
-                            <TextField
-                                fullWidth
-                                label="Compensation Per Hour"
-                                value={formData.compensationPerHour}
-                                onChange={(e) => setFormData({ ...formData, compensationPerHour: e.target.value })}
-                            />
-                        </Grid>
-                    </Grid>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setOpen(false)}>Cancel</Button>
-                    <Button onClick={rowToUpdate ? handleUpdate : handleAdd}>
-                        {rowToUpdate ? 'Save' : 'Add'}
-                    </Button>
-                </DialogActions>
-            </Dialog>
-
-        </LocalizationProvider>
+            <Tooltip title="Delete">
+                <IconButton onClick={() => {
+                    logToServer('Delete onClick');
+                    handleDelete(row.original)
+                }}>
+                    <Delete color="error" />
+                </IconButton>
+            </Tooltip>
+        </Box>
     );
+}
+
+return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <div style={{ mt: '20px' }}>
+            <MaterialReactTable
+                columns={columns}
+                initialState={{
+                    sorting: [{ id: "startDate", desc: true }],
+                    columnVisibility: { partitionKey: false, rowKey: false },
+                    density: "compact",
+                }}
+                margin="normal"
+                padding="normal"
+                data={data}
+                dense={true}
+                small={true}
+                renderRowActions={renderRowActions}
+
+
+                renderTopToolbarCustomActions={() => (
+                    <Box sx={{ display: "flex", gap: "1rem" }}>
+                        <Button
+                            startIcon={<DescriptionIcon />}
+                            color="primary"
+                            variant="contained"
+                            onClick={() => {
+                                setOpen(true);
+                                setIsEditing(null);
+                            }}
+                        >
+                            Add Contract
+                        </Button>
+                    </Box>
+                )}
+            />
+        </div>
+        <Dialog open={open}>
+            <DialogTitle>
+                {isEditing ? 'Edit Row' : 'Add Row'}
+            </DialogTitle>
+            <DialogContent>
+                <Grid container spacing={2} sx={{ mt: 1 }}>
+                    <Grid item xs={12} sm={6} md={4}>
+                        <TextField
+                            fullWidth
+                            label="Employee"
+                            value={formData.employee}
+                            onChange={(e) => setFormData({ ...formData, employee: e.target.value })}
+                        />
+                    </Grid>
+
+                    <Grid item xs={12} sm={6} md={4}>
+                        <Autocomplete
+                            freeSolo
+                            value={formData.employer}
+                            onChange={handleEmployerChange}
+                            inputValue={employerInputValue}
+                            onInputChange={handleEmployerInputChange}
+                            options={employers.map((option) => option)}
+                            getOptionLabel={getOptionLabel}
+                            renderInput={(params) => (
+                                <TextField {...params} label="Employer" />
+                            )}
+                        />
+
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                        <TextField
+                            fullWidth
+                            label="Contract Name"
+                            value={formData.contractName}
+                            onChange={(e) => setFormData({ ...formData, contractName: e.target.value })}
+                        />
+                    </Grid>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <Grid item xs={12} sm={6} md={4}>
+                            <DatePicker
+                                fullWidth
+                                label="Start Date"
+                                value={formData.startDate}
+                                onChange={handleStartDateChange}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={4}>
+                            <DatePicker
+                                fullWidth
+                                label="End Date"
+                                value={formData.endDate}
+                                onChange={handleEndDateChange}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
+                        </Grid>
+                    </LocalizationProvider>
+                    <Grid item xs={12} sm={6} md={4}>
+                        <TextField
+                            fullWidth
+                            label="Hours Per Week"
+                            value={formData.hoursPerWeek}
+                            onChange={(e) => setFormData({ ...formData, hoursPerWeek: e.target.value })}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                        <TextField
+                            fullWidth
+                            label="Compensation Per Hour"
+                            value={formData.compensationPerHour}
+                            onChange={(e) => setFormData({ ...formData, compensationPerHour: e.target.value })}
+                        />
+                    </Grid>
+                </Grid>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={() => setOpen(false)}>Cancel</Button>
+                <Button onClick={isEditing ? handleUpdate : handleAdd}>
+                    {isEditing ? 'Save' : 'Add'}
+                </Button>
+            </DialogActions>
+        </Dialog>
+
+    </LocalizationProvider>
+);
 }
 
 export default ConfigPage;File: ./pages/_document.js
@@ -1865,6 +2152,140 @@ export default function Document() {
     </Html>
   )
 }
+File: ./pages/employers.jsx
+// pages/employers.js
+
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { Box, Button, Container, FormControl, InputLabel, Select, MenuItem, Typography } from '@mui/material';
+import useSession from '../utils/useSession';
+import logToServer from '@/utils/lib';
+
+const EmployersPage = () => {
+	const [selectedEmployee, setSelectedEmployee] = useState('');
+	const [employees, setEmployees] = useState([]);
+
+	const { session } = useSession();
+	const username = session.username;
+
+	logToServer('Employers session: ' + username);
+
+	const fetchEmployees = async (username) => {
+		try {
+
+			const response = await fetch(`/api/employer/get_data_employer?employer=${encodeURIComponent(username)}`, {
+				method: 'GET'
+			});
+			// Handle 404 specifically
+			if (response.status === 404) {
+				logToServer('API route not found')
+			}
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+			logToServer('fetch employees response: ' + JSON.stringify(response));
+			const data = await response.json();
+			logToServer('fetch employees data: ' + data);
+			logToServer(data);
+
+			// Map data to array of objects with username 
+			const employees = data.map(username => ({ username }));
+			// kill duplicates
+			for (let i = 0; i < employees.length; i++) {
+				for (let j = i + 1; j < employees.length; j++) {
+					if (employees[i].username === employees[j].username) {
+						employees.splice(j--, 1);
+					}
+				}
+			}
+
+			// Log to inspect
+			for (const employee of employees) {
+				logToServer('Employee: ' + employee.username);
+			}
+
+			setEmployees(employees);
+		} catch (error) {
+			logToServer('fetch employees error: ' + error);
+			console.error(error);
+		}
+	}
+	useEffect(() => {
+		fetchEmployees(username);
+	}, [username]);
+
+
+
+
+	const handleEmployeeChange = (event) => {
+		setSelectedEmployee(event.target.value);
+	};
+
+	const setActiveUser = async () => {
+		logToServer('setActiveUser: ' + selectedEmployee);
+		try {
+			const response = await fetch(`/api/session/setActiveUser?user=${encodeURIComponent(selectedEmployee)}`, {
+				method: 'POST'
+			});
+			// Handle 404 specifically
+			if (response.status === 404) {
+				logToServer('API route not found')
+			}
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+			logToServer('setActiveUser response: ' + JSON.stringify(response));
+			const data = await response.json();
+			logToServer('setActiveUser data: ' + data);
+			logToServer(data);
+		}
+		catch (error) {
+			logToServer('setActiveUser error: ' + error);
+			console.error(error);
+		}
+		const response = await fetch(`/api/session/setActiveUser?user=${encodeURIComponent(selectedEmployee)}`);
+		const data = await response.json();
+	};
+
+	return (
+		<Container component="main" sx={{ padding: '4px' }}>
+			<Box
+				sx={{
+					marginTop: 2,
+					display: 'flex',
+					flexDirection: 'column',
+					alignItems: 'center',
+				}}
+			>
+				<Typography variant="h4" component="h1" gutterBottom>
+					Employer Dashboard
+				</Typography>
+
+				<FormControl fullWidth sx={{ m: 1 }}>
+					<InputLabel id="employee-select-label">Select Employee</InputLabel>
+					<Select
+						labelId="employee-select-label"
+						id="employee-select"
+						value={selectedEmployee}
+						label="Select Employee"
+						onChange={handleEmployeeChange}
+					>
+						{employees.map((employee) => (
+							<MenuItem key={employee.username} value={employee.username}>{employee.username}</MenuItem>
+						))}
+					</Select>
+
+				</FormControl>
+
+				<Button variant="contained" color="primary" onClick={setActiveUser}>
+					Set Active User
+				</Button>
+			</Box>
+		</Container>
+	);
+};
+
+export default EmployersPage;
 File: ./pages/_app.js
 import Layout from '../components/Layout';
 import { useEffect } from 'react';
@@ -1873,7 +2294,7 @@ import { SessionProvider } from 'next-auth/react'
 
 export default function App({ Component, pageProps: { session, ...pageProps } }) {
   useEffect(() => {
-    logToServer('pages/_app.js', 'useEffect', 'start');
+    logToServer('pages/_app.js ' + ' useEffect' + ' start');
   }, []);
 
   return (
@@ -2097,7 +2518,7 @@ const TimeEntry = () => {
             console.log('response');
             console.log(data);
             setData(data);
-            logToServer('fetchData: ', data)
+            logToServer('fetchData: ' + data)
         } catch (error) {
             console.error("Error fetching DataTable data", error);
         }
@@ -2157,7 +2578,7 @@ const TimeEntry = () => {
         };
 
         try {
-            logToServer('handleEditRow: ', payload);
+            logToServer('handleEditRow: ' + payload);
             // call the /api/timeentry/update_row next.js api
             const response = await fetch("/api/timeentry/update_row", {
                 method: "POST",
@@ -2186,7 +2607,7 @@ const TimeEntry = () => {
     const handleDeleteRow = async (row) => {
         try {
 
-            logToServer('handleDeleteRow: ', row.id);
+            logToServer('handleDeleteRow: ' + row.id);
             const response = await fetch("/api/timeentry/delete_row", {
                 method: "POST",
                 headers: {

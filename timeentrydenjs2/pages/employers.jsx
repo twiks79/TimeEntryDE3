@@ -1,15 +1,16 @@
-// pages/employers.js
-
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Box, Button, Container, FormControl, InputLabel, Select, MenuItem, Typography } from '@mui/material';
+import { Box, Button, Container, FormControl, InputLabel, Select, MenuItem, Typography, IconButton } from '@mui/material';
+import { Delete } from '@mui/icons-material'; // Import the Delete icon
 import useSession from '../utils/useSession';
 import logToServer from '@/utils/lib';
+import { useContext } from 'react';
+import { ActiveUserContext } from '../components/ActiveUserContext';
 
 const EmployersPage = () => {
 	const [selectedEmployee, setSelectedEmployee] = useState('');
 	const [employees, setEmployees] = useState([]);
-
+	const { activeUser, setActiveUser } = useContext(ActiveUserContext);
 	const { session } = useSession();
 	const username = session.username;
 
@@ -17,50 +18,63 @@ const EmployersPage = () => {
 
 	const fetchEmployees = async (username) => {
 		try {
-
 			const response = await fetch(`/api/employer/get_data_employer?employer=${encodeURIComponent(username)}`, {
 				method: 'GET'
 			});
-			// Handle 404 specifically
 			if (response.status === 404) {
-				logToServer('API route not found')
+				logToServer('API route not found');
 			}
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
-			logToServer('fetch employees response: ' + JSON.stringify(response));
 			const data = await response.json();
-			logToServer('fetch employees data: ' + data);
-			logToServer(data);
-
-			// Map data to array of objects with username 
-			const employees = data.map(username => ({ username }));
-
-			// Log to inspect
-			for (const employee of employees) {
-				logToServer('Employee: ' + employee.username);
-			}
-
-			setEmployees(employees);
+			const uniqueEmployees = [...new Set(data)]; // Remove duplicates
+			const employeesList = uniqueEmployees.map(username => ({ username }));
+			setEmployees(employeesList);
 		} catch (error) {
 			logToServer('fetch employees error: ' + error);
 			console.error(error);
 		}
-	}
+	};
+
 	useEffect(() => {
 		fetchEmployees(username);
 	}, [username]);
-
-
-
 
 	const handleEmployeeChange = (event) => {
 		setSelectedEmployee(event.target.value);
 	};
 
-	const setActiveUser = async () => {
-		const response = await fetch(`/api/employer/setActiveUser?user=${encodeURIComponent(selectedEmployee)}`);
-		const data = await response.json();
+	const handleDeleteEmployee = async () => {
+		setSelectedEmployee('');
+		setActiveUser('');
+	};
+
+	useEffect(() => {
+		if (selectedEmployee === '' && activeUser === '') {
+			setFormActiveUser();
+		}
+	}, [selectedEmployee, activeUser]);
+
+	const setFormActiveUser = async () => {
+		logToServer('setActiveUser: ' + selectedEmployee);
+		try {
+			const response = await fetch(`/api/session/setActiveUser?user=${encodeURIComponent(selectedEmployee)}`, {
+				method: 'POST'
+			});
+			if (response.status === 404) {
+				logToServer('API route not found');
+			}
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+			setActiveUser(selectedEmployee);
+			logToServer('setActiveUser: ' + selectedEmployee);
+		}
+		catch (error) {
+			logToServer('setActiveUser error: ' + error);
+			console.error(error);
+		}
 	};
 
 	return (
@@ -77,6 +91,17 @@ const EmployersPage = () => {
 					Employer Dashboard
 				</Typography>
 
+				{activeUser && (
+					<Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
+						<Typography variant="subtitle1">
+							Current active employee: {activeUser}
+						</Typography>
+						<IconButton color="error" onClick={handleDeleteEmployee}>
+							<Delete />
+						</IconButton>
+					</Box>
+				)}
+
 				<FormControl fullWidth sx={{ m: 1 }}>
 					<InputLabel id="employee-select-label">Select Employee</InputLabel>
 					<Select
@@ -90,10 +115,9 @@ const EmployersPage = () => {
 							<MenuItem key={employee.username} value={employee.username}>{employee.username}</MenuItem>
 						))}
 					</Select>
-
 				</FormControl>
 
-				<Button variant="contained" color="primary" onClick={setActiveUser}>
+				<Button variant="contained" color="primary" onClick={setFormActiveUser}>
 					Set Active User
 				</Button>
 			</Box>

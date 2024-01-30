@@ -23,7 +23,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import useSession from "../utils/useSession";
-import { defaultSession } from "../utils/lib";
+import logToServer, { defaultSession } from "../utils/lib";
 import { loginUser } from '../utils/login/loginUser';
 
 
@@ -91,10 +91,10 @@ const LoginC = () => {
 
                 if (res.ok) {
                     // Assuming the server responds with user data on successful login
-                    console.log('User logged in', data.user);
+                    logToServer('User logged in ' + data.username);
                     // Call any method that sets the user session or any redirection if needed
                     
-                    router.push('/index');
+                    router.push('/');
                 } else {
                     throw new Error(data.error || 'Login failed');
                 }
