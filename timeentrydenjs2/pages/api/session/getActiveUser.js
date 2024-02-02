@@ -9,7 +9,7 @@ import { getTableClient } from '../../../utils/db/db';
 
 
 export default async function handler(req, res) {
-    
+
     console.log('employer / getActiveUser.js: handler()');
     const aPartitionKey = 'partition1'
 
@@ -31,22 +31,22 @@ export default async function handler(req, res) {
         let ActiveUser = '';
 
         for await (const entity of iterator) {
-                if (entity.Key == "ActiveUser") then
-                {
-                    ActiveUser = entity.Value;
-                    break;
-                }
+            if (entity.Key == "ActiveUser") then
+            {
+                ActiveUser = entity.Value;
+                break;
             }
         }
 
-        console.log(`Retrieved ${rows.length} rows from table '${tableName}' with filter '${queryOptions}'.`);
+    
+    console.log(`Retrieved ${rows.length} rows from table '${tableName}' with filter '${queryOptions}'.`);
 
-        console.log('Active User:', ActiveUser);
+    console.log('Active User:', ActiveUser);
 
-        res.status(200).json(ActiveUser);
+    res.status(200).json(ActiveUser);
     } catch (error) {
-        console.error(`Error retrieving rows from table '${tableName}' with filter '${queryOptions}':`, error);
-        throw error; // rethrow the error after logging
+    console.error(`Error retrieving rows from table '${tableName}' with filter '${queryOptions}':`, error);
+    throw error; // rethrow the error after logging
     }
 
 }
