@@ -20,6 +20,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import TimerIcon from '@mui/icons-material/Timer';
 import InfoIcon from '@mui/icons-material/Info';
 import ConfigIcon from '@mui/icons-material/Settings';
+import OverviewIcon from '@mui/icons-material/Visibility'; 
 import Link from 'next/link';
 import { Icon } from '@mui/material';
 import useSession from "../utils/useSession";
@@ -59,7 +60,7 @@ export default function Layout({ children }) {
         <Toolbar>
           <TimerIcon sx={{ mr: 2 }} />
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            Time Entry App
+            Time Entry App - Beta Version
           </Typography>
 
           {/* Show activeUser if available */}
@@ -129,6 +130,15 @@ export default function Layout({ children }) {
               </ListItemIcon>
               <ListItemText primary="Configuration" />
             </ListItemButton>
+
+             {/* For Overview Item */}
+          <ListItemButton component={Link} href="/overview">
+            <ListItemIcon>
+              <OverviewIcon />
+            </ListItemIcon>
+            <ListItemText primary="Your Overview" />
+          </ListItemButton>
+
           {/* For Employers Item */}
           <ListItemButton component={Link} href="/employers">
             <ListItemIcon>

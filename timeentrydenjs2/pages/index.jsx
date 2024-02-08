@@ -19,10 +19,9 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import BusinessIcon from '@mui/icons-material/Business';
 import OvertimeIcon from '@mui/icons-material/AccessAlarms';
 import VacationIcon from '@mui/icons-material/FlightTakeoff';
+ 
 
 import useSession from "../utils/useSession";
-import { defaultSession } from "../utils/lib";
-import loginUser from '../utils/login/loginUser'
 import LoginC from './LoginC';
 import { useContext } from 'react';
 import { ActiveUserContext } from '../components/ActiveUserContext';
@@ -58,13 +57,13 @@ export default function Home() {
         title: 'Define Contract',
         icon: <DescriptionIcon />,
         additionalText: 'Set up your work contract details',
-        link: '#'
+        link: '/config'
       },
       {
         title: 'Assign Employer',
         icon: <BusinessIcon />,
         additionalText: 'Set your employer information',
-        link: '#'
+        link: '/employers'
       },
     ],
     overview: [
@@ -72,13 +71,13 @@ export default function Home() {
         title: 'Get Overtime Overview',
         icon: <OvertimeIcon />,
         additionalText: 'See overtime balances',
-        link: '#'
+        link: '/overview#balance'
       },
       {
         title: 'Get Vacation Overview',
         icon: <VacationIcon />,
         additionalText: 'Check your vacation status',
-        link: '#'
+        link: '/overview#vacation'
       },
     ],
   };
