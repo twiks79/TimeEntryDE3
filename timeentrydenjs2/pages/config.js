@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Box, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, TextField, Tooltip, Typography, useMediaQuery } from '@mui/material';
 import { Autocomplete, } from '@mui/material';
@@ -10,12 +9,15 @@ import { MaterialReactTable } from 'material-react-table';
 import dayjs from 'dayjs';
 import useSession from '../utils/useSession';
 import logToServer from '../utils/lib';
+import { useContext } from 'react';
+import { ActiveUserContext } from '../components/ActiveUserContext';
 
 const ConfigPage = () => {
     logToServer("config.js: ConfigPage");
 
     const { session, isLoading } = useSession();
     const { username } = session.username;
+    const { activeUser, setActiveUser } = useContext(ActiveUserContext);
 
     const [data, setData] = useState([]);
     logToServer("config.js: data", data);
@@ -58,10 +60,13 @@ const ConfigPage = () => {
 
     const fetchData = async () => {
         try {
-            const user2 = session ? session.username : null;
+            let user2 = session ? session.username : null;
             if (!user2) {
                 console.error("Session username is not available");
                 return;
+            }
+            if (activeUser) {
+                user2 = activeUser;
             }
 
             logToServer("config.js: fetching data");
@@ -95,9 +100,11 @@ const ConfigPage = () => {
         fetchInitialData();
     }, []); // Empty dependency array to ensure it runs only once on mount
 
-
+    let theEmployee;
+    if (activeUser) {theEmployee = activeUser}
+    else {theEmployee = session ? session.username : null}
     const [formData, setFormData] = useState({
-        employee: session ? session.username : null,
+        employee: theEmployee,
         employer: "test",
         contractName: "test",
         startDate: dayjs("2024-01-02"),

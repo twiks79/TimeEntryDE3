@@ -29,12 +29,15 @@ import dayjs from "dayjs";
 import useMediaQuery from "@mui/material/useMediaQuery"; // Import useMediaQuery
 import useSession from "../utils/useSession";
 import logToServer, { defaultSession } from "../utils/lib";
+import { useContext } from 'react';
+import { ActiveUserContext } from '../components/ActiveUserContext';
 
 
 const TimeEntry = () => {
     const { session, isLoading } = useSession();
     const { username } = session.username;
-
+    const { activeUser, setActiveUser } = useContext(ActiveUserContext);
+    
     const isMobile = useMediaQuery("(max-width:600px)"); // Check if the screen width is less than or equal to 600px
 
     // Add 'isMobile' as a dependency in the useMemo dependency array

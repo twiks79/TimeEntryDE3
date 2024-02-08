@@ -24,10 +24,13 @@ import useSession from "../utils/useSession";
 import { defaultSession } from "../utils/lib";
 import loginUser from '../utils/login/loginUser'
 import LoginC from './LoginC';
+import { useContext } from 'react';
+import { ActiveUserContext } from '../components/ActiveUserContext';
 
 
 export default function Home() {
   const { session, isLoading } = useSession();
+  const { activeUser, setActiveUser } = useContext(ActiveUserContext);
 
   const cardData = {
     timeEntry: [
