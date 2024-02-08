@@ -1,56 +1,36 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { useRouter } from 'next/router';
-import { 
-  Box, 
-  Button, 
-  Container, 
-  FormControl, 
-  InputLabel, 
-  Select, 
-  MenuItem, 
-  Typography, 
-  IconButton, 
-  CircularProgress, 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableRow 
-} from '@mui/material';
-import { Delete } from '@mui/icons-material'; // Import the Delete icon only once
-import useSession from '../utils/useSession'; // Assuming useSession is a custom hook for session management
-import logToServer from '@/utils/lib'; // Ensure the correct path if it's reused
-import { ActiveUserContext } from '../components/ActiveUserContext'; // Import context only once
-import dayjs from 'dayjs'; // Import dayjs only once for date manipulation
-
+import React, { useEffect, useState } from 'react';
+import { Container, Typography, CircularProgress, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import logToServer from '@/utils/lib';
 
 const Overview = () => {
-    // State for storing fetched data
-    const [data, setData] = useState({
-        hoursPerMonth: [],
-        sickDays: [],
-        vacationDays: [],
-    });
+    const [weeklyStats, setWeeklyStats] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Fetch data (you might need to replace this with your actual fetching logic)
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                // Replace URL with your actual API endpoint
-                const response = await fetch('/api/timeentry/overview');
+                const response = await fetch('/api/timeentry/overview', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
                 if (!response.ok) {
-                    logToServer('Failed to fetch data');
                     throw new Error('Failed to fetch data');
                 }
                 const result = await response.json();
-                setData({
-                    hoursPerMonth: result.hoursPerMonth,
-                    sickDays: result.sickDays,
-                    vacationDays: result.vacationDays,
-                });
+                logToServer('Overview data fetched successfully');
+                logToServer('Weekly Stats:' + JSON.stringify(result, null, 2));
+
+
+                setWeeklyStats(result || {});
+                
+                await logToServer('setData');
+                await logToServer('data' + JSON.stringify(weeklyStats, null, 2));
+
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -66,22 +46,41 @@ const Overview = () => {
 
     return (
         <Container component="main" sx={{ padding: '4px' }}>
-            <Box>
-                <Typography variant="h4" gutterBottom>
-                    Overview
-                </Typography>
-                {/* Render Hours Per Month Overview */}
-                <Typography variant="h6">Hours Per Month</Typography>
-                {/* Implement your logic to display hours per month and overtime/undertime */}
+            <Typography variant="h4" gutterBottom>Overview</Typography>
+           
+            {/* Debug: Print weeklyStats as a string */}
+            <pre>{JSON.stringify(data.weeklyStats, null, 2)}</pre>
 
-                {/* Render Sick Days Overview */}
-                <Typography variant="h6">Sick Days</Typography>
-                {/* Implement your logic to display sick days */}
 
-                {/* Render Vacation Days Overview */}
-                <Typography variant="h6">Vacation Days</Typography>
-                {/* Implement your logic to display vacation days */}
-            </Box>
+            {/* Table for Weekly Stats */}
+            <Typography variant="h6" gutterBottom>Weekly Stats</Typography>
+            <Table size="small">
+                <TableHead>
+                    <TableRow>
+                        <TableCell>Week Number</TableCell>
+                        <TableCell align="right">Hours Worked</TableCell>
+                        <TableCell align="right">Sick Days</TableCell>
+                        <TableCell align="right">Vacation Days</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {Object.entries(data.weeklyStats).map(([week, stats]) => (
+                        <TableRow key={week}>
+                            <TableCell component="th" scope="row">
+                                {week}
+                            </TableCell>
+                            <TableCell align="right">{parseInt(stats.hours, 10)}</TableCell>
+                            <TableCell align="right">{stats.sickDays}</TableCell>
+                            <TableCell align="right">{stats.vacationDays}</TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+
+            {/* Display remaining vacation days */}
+            <Typography variant="h6" gutterBottom style={{ marginTop: '20px' }}>
+                Remaining Vacation Days: {data.remainingVacationDays}
+            </Typography>
         </Container>
     );
 };
