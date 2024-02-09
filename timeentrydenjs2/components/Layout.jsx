@@ -1,4 +1,7 @@
-import * as React from 'react';
+// Layout.jsx
+
+import { ActiveUserContext } from './ActiveUserContext';
+import React, { useContext, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import AppBar from '@mui/material/AppBar';
@@ -10,26 +13,20 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
 import LogoutIcon from '@mui/icons-material/Logout';
 import IconButton from '@mui/material/IconButton';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
-
-import MailIcon from '@mui/icons-material/Mail';
 import HomeIcon from '@mui/icons-material/Home';
 import TimerIcon from '@mui/icons-material/Timer';
 import InfoIcon from '@mui/icons-material/Info';
 import ConfigIcon from '@mui/icons-material/Settings';
 import OverviewIcon from '@mui/icons-material/Visibility'; 
 import Link from 'next/link';
-import { Icon } from '@mui/material';
 import useSession from "../utils/useSession";
 import { defaultSession } from "../utils/lib";
 import { useRouter } from 'next/router';
 import LoginC from '../pages/LoginC';
-import ConfigPage from '../pages/config';
-import { useContext } from 'react';
-import { ActiveUserContext } from './ActiveUserContext';
+
 
 const drawerWidth = 240;
 
@@ -38,7 +35,25 @@ export default function Layout({ children }) {
   const { session, isLoading } = useSession();
   const { logout } = useSession();
   const router = useRouter();
-  const { activeUser } = useContext(ActiveUserContext);
+  const { activeUser, updateActiveUser } = useContext(ActiveUserContext);
+
+  useEffect(() => {
+    // Fetch active user data on mount
+    const fetchActiveUser = async () => {
+      try {
+        const response = await fetch('/api/session/getActiveUser', {
+          method: 'GET',
+        });
+        if (response.ok) {
+          const data = await response.json();
+          updateActiveUser(data); // Update active user context
+        }
+      } catch (error) {
+        console.error('Error fetching active user:', error);
+      }
+    };
+    fetchActiveUser();
+  }, []);
 
   const handleDrawerOpen = () => {
     setOpen(true);

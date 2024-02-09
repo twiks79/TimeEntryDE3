@@ -6,14 +6,17 @@
 
 
 import { getTableClient } from '../../../utils/db/db';
+import { getIronSession } from 'iron-session';
 
 
 export default async function handler(req, res) {
 
-    console.log('employer / getActiveUser.js: handler()');
+    console.log('session / getActiveUser.js: handler()');
     const aPartitionKey = 'partition1'
 
-    const username = req.query.user;
+    const session = await getIronSession(req, res, { password: process.env.SECRET_COOKIE_PASSWORD, cookieName: "timeentry" });
+    const username = session.username;
+    
     console.log('username', username);
 
     const tableName = 'Session';
@@ -29,15 +32,12 @@ export default async function handler(req, res) {
     let ActiveUser = '';
 
     for await (const entity of iterator) {
-        if (entity.Key == "ActiveUser") then
+        if (entity.Key == "ActiveUser")
         {
             ActiveUser = entity.Value;
             break;
         }
     }
-
-
-    console.log(`Retrieved ${rows.length} rows from table '${tableName}' with filter '${queryOptions}'.`);
 
     console.log('Active User:', ActiveUser);
 

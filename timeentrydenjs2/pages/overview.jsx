@@ -47,11 +47,7 @@ const Overview = () => {
     return (
         <Container component="main" sx={{ padding: '4px' }}>
             <Typography variant="h4" gutterBottom>Overview</Typography>
-           
-            {/* Debug: Print weeklyStats as a string */}
-            <pre>{JSON.stringify(data.weeklyStats, null, 2)}</pre>
-
-
+            
             {/* Table for Weekly Stats */}
             <Typography variant="h6" gutterBottom>Weekly Stats</Typography>
             <Table size="small">
@@ -64,7 +60,7 @@ const Overview = () => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {Object.entries(data.weeklyStats).map(([week, stats]) => (
+                    {Object.entries(weeklyStats).map(([week, stats]) => (
                         <TableRow key={week}>
                             <TableCell component="th" scope="row">
                                 {week}
@@ -79,7 +75,7 @@ const Overview = () => {
 
             {/* Display remaining vacation days */}
             <Typography variant="h6" gutterBottom style={{ marginTop: '20px' }}>
-                Remaining Vacation Days: {data.remainingVacationDays}
+                Remaining Vacation Days: {}
             </Typography>
         </Container>
     );
