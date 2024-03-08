@@ -22,7 +22,10 @@ IMAGE_TAG="latest"
 # Check if az is logged in, exit if not
 if [ -z "$(az account show 2> /dev/null)" ]; then
     echo "Please login to Azure first."
-    exit 1
+    # get AZURE_TENANT_ID from gh codespace secrets
+    AZURE_TENANT_ID=$(gh secret get AZURE_TENANT_ID -r $GITHUB_REPOSITORY --json value -q)
+    # login using device and tenant id
+    az login --use-device-code --tenant $AZURE_TENANT_ID
 fi
 
 # Search and delete existing resource groups with the same prefix

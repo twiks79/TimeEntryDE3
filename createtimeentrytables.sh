@@ -12,6 +12,15 @@ location="westeurope"
 storage_sku="Standard_GRS" # Cheapest SKU
 github_repo=$GITHUB_REPOSITORY
 
+# Check if az is logged in, exit if not
+if [ -z "$(az account show 2> /dev/null)" ]; then
+    echo "Please login to Azure first."
+    # get AZURE_TENANT_ID from gh codespace secrets
+    AZURE_TENANT_ID=$(gh secret get AZURE_TENANT_ID -r $GITHUB_REPOSITORY --json value -q)
+    # login using device and tenant id
+    az login --use-device-code --tenant $AZURE_TENANT_ID
+fi
+
 # Create Resource Group
 az group create --name $resource_group --location $location
 
