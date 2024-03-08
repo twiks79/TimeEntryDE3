@@ -20,6 +20,7 @@
 import { TableClient, AzureNamedKeyCredential } from "@azure/data-tables";
 import { deleteTimeEntryRow } from '../../../utils/db/db';
 import { getIronSession } from "iron-session";
+import { dbGetActiveUser } from '../../../utils/db/db';
 
 
 
@@ -48,7 +49,7 @@ export default async function handler(req, res) {
         console.log(req.headers);
         const data = req.body;
    
-        data.username = session.username;
+        data.username = await dbGetActiveUser(session.username);
         console.log('delete_row: data: ', data);
         const id = data.id;
         const result = await deleteTimeEntryRow(id);

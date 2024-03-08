@@ -20,6 +20,7 @@
     "@okta/okta-auth-js": "^7.5.0",
     "babel": "^6.23.0",
     "dayjs": "^1.11.10",
+    "dayjs-plugin-utc": "^0.1.2",
     "dotenv": "^16.3.1",
     "eslint-config": "^0.3.0",
     "iron-session": "^8.0.1",

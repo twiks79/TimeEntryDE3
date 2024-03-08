@@ -20,6 +20,7 @@
 import { TableClient, AzureNamedKeyCredential } from "@azure/data-tables";
 import { addRowToTable } from '../../../utils/db/db';
 import { getIronSession } from "iron-session";
+import { dbGetActiveUser } from '../../../utils/db/db';
 
 
 
@@ -37,6 +38,9 @@ import { getIronSession } from "iron-session";
  */
 
 export default async function handler(req, res) {
+    // TODO implement this everywhere in the backend so that dayjs always uses UTC
+
+    process.env.TZ = 'UTC';
     const session = await getIronSession(req, res, { password: process.env.SECRET_COOKIE_PASSWORD, cookieName: "timeentry" });
     if (!session.isLoggedIn) {
         return response.status(401).json({ error: 'Unauthorized' });
@@ -48,7 +52,7 @@ export default async function handler(req, res) {
         console.log(req.headers);
         const data = req.body;
    
-        data.username = session.username;
+        data.username = await dbGetActiveUser(session.username);
         console.log('add_row: data: ', data);
 
         const result = await addRowToTable('times', data);

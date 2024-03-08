@@ -21,6 +21,7 @@ import { TableClient, AzureNamedKeyCredential } from "@azure/data-tables";
 import { addRowToTable } from '../../../utils/db/db';
 import { updateTimesRow } from '../../../utils/db/db';
 import { getIronSession } from "iron-session";
+import { dbGetActiveUser } from '../../../utils/db/db';
 
 
 
@@ -50,7 +51,7 @@ export default async function handler(req, res) {
         
         const data = req.body;
    
-        data.username = session.username;
+        data.username = await dbGetActiveUser(session.username);
         console.log('add_row: data: ', data);
 
         const result = await updateTimesRow(data);

@@ -21,15 +21,12 @@ const Overview = () => {
                 if (!response.ok) {
                     throw new Error('Failed to fetch data');
                 }
+
                 const result = await response.json();
                 logToServer('Overview data fetched successfully');
                 logToServer('Weekly Stats:' + JSON.stringify(result, null, 2));
 
-
-                setWeeklyStats(result || {});
-                
-                await logToServer('setData');
-                await logToServer('data' + JSON.stringify(weeklyStats, null, 2));
+                setWeeklyStats(result?.weeklyStats || {}); // Update state with weeklyStats
 
             } catch (err) {
                 setError(err.message);
@@ -44,11 +41,14 @@ const Overview = () => {
     if (loading) return <CircularProgress />;
     if (error) return <Typography color="error">{error}</Typography>;
 
+    // Calculate total sick days and vacation days
+    const totalSickDays = Object.values(weeklyStats).reduce((acc, week) => acc + week.sickDays, 0);
+    const totalVacationDays = Object.values(weeklyStats).reduce((acc, week) => acc + week.vacationDays, 0);
+
     return (
         <Container component="main" sx={{ padding: '4px' }}>
             <Typography variant="h4" gutterBottom>Overview</Typography>
             
-            {/* Table for Weekly Stats */}
             <Typography variant="h6" gutterBottom>Weekly Stats</Typography>
             <Table size="small">
                 <TableHead>
@@ -65,7 +65,7 @@ const Overview = () => {
                             <TableCell component="th" scope="row">
                                 {week}
                             </TableCell>
-                            <TableCell align="right">{parseInt(stats.hours, 10)}</TableCell>
+                            <TableCell align="right">{stats.hours}</TableCell>
                             <TableCell align="right">{stats.sickDays}</TableCell>
                             <TableCell align="right">{stats.vacationDays}</TableCell>
                         </TableRow>
@@ -73,9 +73,11 @@ const Overview = () => {
                 </TableBody>
             </Table>
 
-            {/* Display remaining vacation days */}
             <Typography variant="h6" gutterBottom style={{ marginTop: '20px' }}>
-                Remaining Vacation Days: {}
+                Total Vacation Days: {totalVacationDays}
+            </Typography>
+            <Typography variant="h6" gutterBottom>
+                Total Sick Days: {totalSickDays}
             </Typography>
         </Container>
     );

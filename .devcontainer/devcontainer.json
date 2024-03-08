@@ -12,34 +12,36 @@
 	"customizations": {
 	  "vscode": {
 		"extensions": [
-		  "dbaeumer.vscode-eslint",
-		  "github.codespaces",
-		  "github.copilot",
-		  "github.copilot-chat",
-		  "github.github-vscode-theme",
-		  "github.vscode-pull-request-github",
-		  "ms-azuretools.azure-dev",
-		  "ms-azuretools.vscode-azureappservice",
-		  "ms-azuretools.vscode-azurecontainerapps",
-		  "ms-azuretools.vscode-azurefunctions",
-		  "ms-azuretools.vscode-azureresourcegroups",
-		  "ms-azuretools.vscode-azurestaticwebapps",
-		  "ms-azuretools.vscode-azurestorage",
-		  "ms-azuretools.vscode-azurevirtualmachines",
-		  "ms-azuretools.vscode-bicep",
-		  "ms-azuretools.vscode-cosmosdb",
-		  "ms-azuretools.vscode-docker",
-		  "ms-dotnettools.vscode-dotnet-runtime",
-		  "ms-vscode.azure-account",
-		  "ms-vscode.azurecli",
-		  "ms-vscode.vscode-node-azure-pack"
+			"dbaeumer.vscode-eslint",
+			"github.codespaces",
+			"github.copilot",
+			"github.copilot-chat",
+			"github.github-vscode-theme",
+			"github.vscode-pull-request-github",
+			"ms-azuretools.azure-dev",
+			"ms-azuretools.vscode-azureappservice",
+			"ms-azuretools.vscode-azurecontainerapps",
+			"ms-azuretools.vscode-azurefunctions",
+			"ms-azuretools.vscode-azureresourcegroups",
+			"ms-azuretools.vscode-azurestaticwebapps",
+			"ms-azuretools.vscode-azurestorage",
+			"ms-azuretools.vscode-azurevirtualmachines",
+			"ms-azuretools.vscode-bicep",
+			"ms-azuretools.vscode-cosmosdb",
+			"ms-azuretools.vscode-docker",
+			"ms-dotnettools.vscode-dotnet-runtime",
+			"ms-vscode.azure-account",
+			"ms-vscode.azurecli",
+			"ms-vscode.vscode-node-azure-pack",
+			"chakrounanas.turbo-console-log",
+			"aaron-bond.better-comments"
 		],
 		"settings": {
 		  "azureFunctions.preDeployTask": "yarn run build",
 		  "workbench.colorCustomizations": {
 			"tree.indentGuidesStroke": "#00ff00",
 			"git.autofetch": true,
-			"workbench.tree.indent": 20,
+			"workbench.tree.indent": 30,
 			"workbench.tree.renderIndentGuides": "always",
 			"editor.guides.highlightActiveIndentation": "always"
 		  }
@@ -50,7 +52,8 @@
 		  "AZURE_TENANT_ID": "${{ secrets.AZURE_TENANT_ID }}",
 		  "AZURE_SUBSCRIPTION_ID": "${{ secrets.AZURE_SUBSCRIPTION_ID }}",
 		  "SECRET_COOKIE_PASSWORD": "${{ secrets.SECRET_COOKIE_PASSWORD }}"
-		}
+		},
+		"postCreateCommand": "cd timeentrydenjs2 && yarn install && yarn build"
 	  }
 	}
   }

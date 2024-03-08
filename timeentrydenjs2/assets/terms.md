@@ -4,7 +4,7 @@ Herzlich willkommen auf unserer Webseite. Wenn Sie unsere Webseite nutzen, erkl�
 
 ## Nutzung der Webseite
 
-Die Inhalte unserer Webseite sind für den persönlichen und nicht kommerziellen Gebrauch bestimmt. Eine Vervielfältigung oder Verwendung der Inhalte für andere Zwecke ist ohne ausdrückliche Zustimmung nicht erlaubt.
+Die Inhalte unserer Webseite sind für den persönlichen und nicht kommerziellen Gebrauch bestimmt. Eine Vervielfältigung oder Verwendung der Inhalte für andere Zwecke ist ohne ausdrückliche Zustimmung nicht erlaubt. Die Nutzung dieser Seite basiert auf einer freiwilligen privaten Leistung und kann jederzeit und ohne Vorwarnung eingestellt werden. Eine kommerzielle Nutzung ist nicht vorgesehen. Sollte zu einem späteren Zeitpunkt eine kommerzielle Nutzung möglich sein, werden alle Nutzer entsprechend informiert, sofern der Benutzername eine zustellfähige eMail-Adresse beinhaltet.
 
 ## Urheberrechte
 

@@ -25,7 +25,7 @@ Unsere Website verwendet keine nicht technisch notwendigen Cookies.
 
 ## Auskunftsrecht und Kontakt
 
-Sie haben das Recht, jederzeit Auskunft über Ihre gespeicherten Daten zu erhalten. Bei Fragen zur Erhebung, Verarbeitung oder Nutzung Ihrer personenbezogenen Daten, bei Auskünften, Berichtigung, Sperrung oder Löschung von Daten kontaktieren Sie uns bitte unter timeentry@gmx.de oder senden Sie uns Ihr Verlangen per Post.
+Sie haben das Recht, jederzeit Auskunft über Ihre gespeicherten Daten zu erhalten. Bei Fragen zur Erhebung, Verarbeitung oder Nutzung Ihrer personenbezogenen Daten, bei Auskünften, Berichtigung, Sperrung oder Löschung von Daten kontaktieren Sie uns bitte unter juergenrichert(at)gmx.de oder senden Sie uns Ihr Verlangen per Post.
 
 ## Änderungen dieser Datenschutzerklärung
 

@@ -22,17 +22,19 @@
 
 
 import { getTimeEntryRowsForUsername } from '../../../utils/db/db';
+import { getIronSession } from "iron-session";
+import { dbGetActiveUser } from '../../../utils/db/db';
 
 
 export default async function handler(req, res) {
-
+  const session = await getIronSession(req, res, { password: process.env.SECRET_COOKIE_PASSWORD, cookieName: "timeentry" });
   const aPartitionKey = 'partition1'
 
   console.log('timeentry get_data: ' + req.query);
 
   // get current user name from session
   // get username from query string
-  const username = req.query.user2;
+  const username = await dbGetActiveUser(session.username);
   console.log('user2', username);
 
 

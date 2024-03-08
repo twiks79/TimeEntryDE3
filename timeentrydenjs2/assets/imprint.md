@@ -13,7 +13,7 @@
 - **E-Mail:** juergenrichert(at)gmx.de
 
 ### Umsatzsteuer-ID:
-- **Umsatzsteuer-Identifikationsnummer gemäß §27 a Umsatzsteuergesetz:** DE123456789
+- **Umsatzsteuer-Identifikationsnummer gemäß §27 a Umsatzsteuergesetz:** n/a
 
 ### Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV:
 - **Name:** Jürgen Richert

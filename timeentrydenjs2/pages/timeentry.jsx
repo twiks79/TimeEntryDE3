@@ -89,8 +89,9 @@ const TimeEntry = () => {
 
     const fetchTableData = async () => {
         logToServer('Client: ', '++++++++++++ Fetching DataTable data');
-
-        const user2 = session.username;
+        
+        // user2 = activeUser or if not available, use the session username
+        const user2 = activeUser ? activeUser : session.username;
 
         try {
             // Construct the query parameter string
@@ -261,7 +262,7 @@ const TimeEntry = () => {
             
         }
         if (params.get('action') === 'addTime') {
-            setEntryType("Vacation Day"); // Add this line
+            setEntryType("Time Entry"); // Add this line
         }
         if (params.get('action') === 'addVacation') {
             setEntryType("Vacation Day"); // Add this line

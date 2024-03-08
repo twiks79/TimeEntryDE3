@@ -15,6 +15,8 @@ import { TableClient, AzureNamedKeyCredential } from "@azure/data-tables";
 import { v4 as uuidv4 } from 'uuid';
 import getironSession from 'next-iron-session';
 import logToServer from "../lib";
+import { getIronSession } from "iron-session";
+import useSession from "../useSession";
 
 
 
@@ -198,3 +200,38 @@ export async function updateTimesRow(delEntity) {
         throw error;
     }
 }
+
+// get Active user or the session user if not existing.
+export async function dbGetActiveUser(username) {
+    console.log('dbGetActiveUser');
+
+    console.log('username', username);
+
+    const aPartitionKey = 'partition1';
+
+    
+    const tableName = 'Session';
+    const filter = `PartitionKey eq 'partition1' and RowKey eq '${username}'`;
+    
+    const queryOptions = { filter: filter };
+
+    const client = getTableClient(tableName);
+
+    console.log('Query Filter:', queryOptions); // Log the actual filter string
+
+    const iterator = client.listEntities(queryOptions);
+
+    let ActiveUser = '';
+
+    for await (const entity of iterator) {
+        if (entity.Key == "ActiveUser") {
+            ActiveUser = entity.Value;
+            break;
+        }
+    }
+
+    console.log('Active User:', ActiveUser);
+    // return active user or username if empty
+    return ActiveUser || username;
+}
+

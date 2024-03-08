@@ -1,15 +1,29 @@
 import { getIronSession } from "iron-session";
 import { getTableClient } from '../../../utils/db/db';
 import { getTimeEntryRowsForUsername } from "../../../utils/db/db";
+import { dbGetActiveUser } from '../../../utils/db/db';
+
+/*
+Data Structure from Database:
+- entry: {Object} - Represents a single entry from the database.
+    - etag: {string} - ETag of the entry.
+    - partitionKey: {string} - Partition key of the entry.
+    - rowKey: {string} - Row key of the entry.
+    - timestamp: {string} - Timestamp of the entry.
+    - date: {string} - Date of the entry.
+    - hours: {string} - Hours worked or number of vacation/sick days.
+    - type: {string} - Type of entry (e.g., "Time Entry", "Sick Leave", "Vacation Day").
+    - username: {string} - Username associated with the entry.
+*/
 
 async function handler(req, res) {
     console.log('overview.js');
-    console.log(req);
+
     const aPartitionKey = 'partition1';
     
     const session = await getIronSession(req, res, { password: process.env.SECRET_COOKIE_PASSWORD, cookieName: "timeentry" });
     console.log('session: ', session);
-    let username = session.username;
+    let username = await dbGetActiveUser(session.username);
 
     const tableName = 'Session';
     const filter = `PartitionKey eq 'partition1' and RowKey eq '${username}'`;
@@ -40,29 +54,34 @@ async function handler(req, res) {
 }
 
 async function calculateWeeklyStats(timeEntries) {
+
     const currentYear = new Date().getFullYear();
     let weeklyStats = {};
-    let totalVacationDays = 0; // Assuming totalVacationDays is a fixed value or calculated elsewhere
-    let usedVacationDays = 0;
+    let totalVacationDays = 0;
+    let totalSickDays = 0;
 
     timeEntries.forEach(entry => {
+        console.log('entry: ', entry);
         if (new Date(entry.date).getFullYear() === currentYear) {
             const weekNumber = getWeekNumber(new Date(entry.date));
             if (!weeklyStats[weekNumber]) {
                 weeklyStats[weekNumber] = { hours: 0, sickDays: 0, vacationDays: 0 };
             }
-            if (entry.sickDay) {
+            if (entry.type === 'Sick Leave') {
                 weeklyStats[weekNumber].sickDays += 1;
-            } else if (entry.vacationDay) {
+                totalSickDays += 1;
+            } else if (entry.type === 'Vacation Day') {
                 weeklyStats[weekNumber].vacationDays += 1;
-                usedVacationDays += 1;
+                totalVacationDays += 1;
             } else {
-                weeklyStats[weekNumber].hours += entry.hours;
+                weeklyStats[weekNumber].hours += parseFloat(entry.hours);
             }
         }
     });
-    return weeklyStats;
+
+    return { weeklyStats, totalVacationDays, totalSickDays };
 }
+
 // Helper function to get week number
 function getWeekNumber(date) {
     const firstDayOfYear = new Date(date.getFullYear(), 0, 1);

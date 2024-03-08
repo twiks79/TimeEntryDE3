@@ -34,8 +34,16 @@ for rg in $EXISTING_GROUPS; do
     az group delete --name $rg --yes --no-wait
 done
 
+# get github repo from the environment
+GITHUB_REPOSITORY=$GITHUB_REPOSITORY
+echo "GitHub Repository: $GITHUB_REPOSITORY"
+
+# get AZURE_SUBSCRIPTION_ID from gh codespace secrets
+AZURE_SUBSCRIPTION_ID=$(gh secret get AZURE_SUBSCRIPTION_ID -r $GITHUB_REPOSITORY --json value -q) 
+echo "Azure Subscription ID: $AZURE_SUBSCRIPTION_ID"
+
 # Ensure Azure subscription is set
-az account set --subscription "66283e96-2d6d-40bf-9c5b-e368a7ab7f7f"
+az account set --subscription $AZURE_SUBSCRIPTION_ID
 
 # Create a new resource group
 echo "Creating resource group $RESOURCE_GROUP..."
