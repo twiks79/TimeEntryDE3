@@ -37,3 +37,4 @@ next-env.d.ts
 
 # temp files
 collected_source_code.txt
+../log.txt
