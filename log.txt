@@ -255,3 +255,44 @@ Directory for Docker Build: /workspaces/TimeEntryDE3/timeentrydenjs2
 #6 ...
 
 #5 [internal] load build context
+#5 transferring context: 723.08MB 65.6s
+#5 transferring context: 786.58MB 69.5s done
+#5 DONE 70.1s
+
+#6 [stage-1 1/8] FROM docker.io/library/node:18@sha256:aa329c613f0067755c0787d2a3a9802c7d95eecdb927d62b910ec1d28689882f
+#6 extracting sha256:c558fac597f8ecbb7a66712e14912ce1d83b23a92ca8b6ff14eef209ab01aff2 29.4s done
+#6 extracting sha256:449619e06fe37ae34d5d3e31b928b174f8b0eee07dfca3669c4a8e6326b8e82c done
+#6 extracting sha256:f52e55fee2455f6af71ffa5cfbdbb01603063f889fff52c2fd74df2673f07500 5.7s
+#6 extracting sha256:f52e55fee2455f6af71ffa5cfbdbb01603063f889fff52c2fd74df2673f07500 6.3s done
+#6 extracting sha256:b51b5379e841a41fe00a85aaf18cc0ab927c2d42ef40a9cc3211df2e2cddaf25
+#6 extracting sha256:b51b5379e841a41fe00a85aaf18cc0ab927c2d42ef40a9cc3211df2e2cddaf25 0.4s done
+#6 extracting sha256:806ff1e3aadedd43a235140404bf6ff4b790d4dfd56c93a7dfb3cc78e50ebca5
+#6 extracting sha256:806ff1e3aadedd43a235140404bf6ff4b790d4dfd56c93a7dfb3cc78e50ebca5 done
+#6 DONE 74.4s
+
+#7 [stage-1 2/8] WORKDIR /app
+#7 DONE 0.2s
+
+#8 [builder 3/6] COPY package.json yarn.lock ./
+#8 DONE 0.5s
+
+#9 [stage-1 3/8] RUN adduser --disabled-password myuser
+#9 2.282 Adding user `myuser' ...
+#9 2.282 Adding new group `myuser' (1001) ...
+#9 2.494 Adding new user `myuser' (1001) with group `myuser (1001)' ...
+#9 2.875 Creating home directory `/home/myuser' ...
+#9 2.875 Copying files from `/etc/skel' ...
+#9 2.974 Changing the user information for myuser
+#9 2.974 Enter the new value, or press ENTER for the default
+#9 2.974 	Full Name []: 	Room Number []: 	Work Phone []: 	Home Phone []: 	Other []: Use of uninitialized value $answer in chop at /usr/sbin/adduser line 766.
+#9 3.038 Use of uninitialized value $answer in pattern match (m//) at /usr/sbin/adduser line 767.
+#9 3.038 Use of uninitialized value $answer in pattern match (m//) at /usr/sbin/adduser line 768.
+#9 3.038 Is the information correct? [Y/n] Adding new user `myuser' to supplemental / extra groups `users' ...
+#9 3.038 Adding user `myuser' to group `users' ...
+#9 DONE 3.3s
+
+#10 [builder 4/6] RUN yarn install --frozen-lockfile
+#10 1.806 yarn install v1.22.19
+#10 1.891 [1/4] Resolving packages...
+#10 2.364 [2/4] Fetching packages...
+#10 2.407 warning Pattern ["string-width@^4.1.0"] is trying to unpack in the same destination "/usr/local/share/.cache/yarn/v6/npm-string-width-cjs-4.2.3-269c7117d27b05ad2e536830a8ec895ef9c6d010-integrity/node_modules/string-width-cjs" as pattern ["string-width-cjs@npm:string-width@^4.2.0"]. This could result in non-deterministic behavior, skipping.
