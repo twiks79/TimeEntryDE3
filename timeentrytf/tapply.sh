@@ -27,4 +27,5 @@ export TF_VAR_acr_password="$ACR_PASSWORD"
 env | grep ARM
 env | grep TF_VAR
 
-terraform init
+
+terraform apply -var="acr_username=${TF_VAR_acr_username}" -var="acr_password=${TF_VAR_acr_password}"

@@ -35,24 +35,29 @@
                 "ms-vscode.vscode-node-azure-pack",
                 "chakrounanas.turbo-console-log",
                 "aaron-bond.better-comments",
-                "hashicorp.terraform"
+                "hashicorp.terraform",
+                "ms-python.python"
             ],
             "settings": {
+                "workbench.colorTheme": "Light+ (default light)",
                 "azureFunctions.preDeployTask": "yarn run build",
                 "workbench.colorCustomizations": {
-                    "tree.indentGuidesStroke": "#00ff00",
-                    "git.autofetch": true,
-                    "workbench.tree.indent": 30,
-                    "workbench.tree.renderIndentGuides": "always",
-                    "editor.guides.highlightActiveIndentation": "always"
-                }
+                    "tree.indentGuidesStroke": "#00ff00"
+                },
+                "git.autofetch": true,
+                "workbench.tree.indent": 30,
+                "workbench.tree.renderIndentGuides": "always",
+                "editor.guides.highlightActiveIndentation": "always",
+                "terminal.integrated.shell.linux": "/bin/zsh",
+                "terminal.integrated.defaultProfile.linux": "zsh"
             },
             "env": {
                 "AZURE_CLIENT_ID": "${{ secrets.AZURE_CLIENT_ID }}",
                 "AZURE_CLIENT_SECRET": "${{ secrets.AZURE_CLIENT_SECRET }}",
                 "AZURE_TENANT_ID": "${{ secrets.AZURE_TENANT_ID }}",
                 "AZURE_SUBSCRIPTION_ID": "${{ secrets.AZURE_SUBSCRIPTION_ID }}",
-                "SECRET_COOKIE_PASSWORD": "${{ secrets.SECRET_COOKIE_PASSWORD }}"
+                "SECRET_COOKIE_PASSWORD": "${{ secrets.SECRET_COOKIE_PASSWORD }}",
+                "OPENAI_API_KEY": "${{ secrets.OPENAI_API_KEY }}"
             },
             "postCreateCommand": "cd timeentrydenjs2 && yarn install && yarn build"
         }

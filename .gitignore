@@ -1,1 +1,19 @@
 log.txt
+
+timeentrytf/*.tfstate*
+*.tfstate
+*.tfstate.*
+timeentrytf/backups/terraform.tfstate.backup
+timeentrytf/backups/terraform.tfstate.1710248096.backup
+timeentrytf/.terraform.lock.hcl
+
+<<<<<<< HEAD
+timeentrytf/.terraform/providers/registry.terraform.io/hashicorp/dns/3.4.0/linux_amd64/terraform-provider-dns_v3.4.0_x5
+<<<<<<< HEAD
+timeentrytf/backups/terraform.tfstate.1710248096.backup
+timeentrytf/backups/terraform.tfstate.backup
+=======
+>>>>>>> df70f7d (Add environment variables for ACR credentials and print all environment variables)
+=======
+timeentrytf/.terraform/
+>>>>>>> ba7d075 (.terraform excluded)

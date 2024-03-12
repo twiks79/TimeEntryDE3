@@ -1,0 +1,16 @@
+#!/bin/bash
+
+RNAME = timeentrydenext3333
+ACR = timeentrydenextacr3333
+APPSERVICE = timeentrydenextAppService-3333
+WEB_APP = timeentrydenextWebApp-3333
+
+terraform import azurerm_dns_zone.dns /subscriptions/$AZURE_SUBSCRIPTION_ID/resourceGroups/StaticResources/providers/Microsoft.Network/dnsZones/timeentry-minijob.com
+
+terraform import azurerm_resource_group.rg /subscriptions/$AZURE_SUBSCRIPTION_ID/resourceGroups/$RNAME
+terraform import azurerm_container_registry.acr /subscriptions/$AZURE_SUBSCRIPTION_ID/resourceGroups/timeentrydenext2543/providers/Microsoft.ContainerRegistry/registries/timeentr$ACR
+terraform import azurerm_service_plan.asp /subscriptions/$AZURE_SUBSCRIPTION_ID/resourceGroups/timeentrydenext2543/providers/Microsoft.Web/serverFarms/$APP_SERVICE
+terraform import azurerm_linux_web_app.webapp /subscriptions/$AZURE_SUBSCRIPTION_ID/resourceGroups/timeentrydenext2543/providers/Microsoft.Web/sites/$WEB_APP
+
+terraform import azurerm_app_service_custom_hostname_binding.custom_hostname /subscriptions/$AZURE_SUBSCRIPTION_ID/resourceGroups/timeentrydenext2543/providers/Microsoft.Web/sites/timeentrydenextWebApp-2543/hostNameBindings/timeentrydenextWebApp-2543.azurewebsites.net
+terraform import azurerm_app_service_custom_hostname_binding.custom_hostname_www /subscriptions/$AZURE_SUBSCRIPTION_ID/resourceGroups/timeentrydenext2543/providers/Microsoft.Web/sites/timeentrydenextWebApp-2543/hostNameBindings/www.timeentrydenextWebApp-2543.azurewebsites.net
