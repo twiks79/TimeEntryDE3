@@ -28,3 +28,5 @@ env | grep ARM
 env | grep TF_VAR
 
 terraform init
+
+terraform refresh   

@@ -1,0 +1,57 @@
+name: Build and Deploy Docker Image to Azure Web App
+
+on:
+  push:
+    branches:
+      - main # Trigger on pushes to the main branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      
+      - name: Set up Azure CLI
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }} # Azure Service Principal credentials
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+      
+      - name: Terraform Init
+        run: terraform init
+      
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+      
+      - name: Retrieve the Container Registry login server
+        run: echo "ACR_LOGIN_SERVER=$(terraform output -raw acr_login_server)" >> $GITHUB_ENV
+      
+      - name: Retrieve ACR Credentials
+        run: |
+          ACR_CREDENTIALS=$(az acr credential show --name "$(terraform output -raw acr_name)" --resource-group "$(terraform output -raw resource_group_name)")
+          ACR_USERNAME=$(echo $ACR_CREDENTIALS | jq -r '.username')
+          ACR_PASSWORD=$(echo $ACR_CREDENTIALS | jq -r '.passwords[0].value')
+          echo "ACR_USERNAME=$ACR_USERNAME" >> $GITHUB_ENV
+          echo "ACR_PASSWORD=$ACR_PASSWORD" >> $GITHUB_ENV
+      
+      - name: Log into the Container Registry
+        run: az acr login --name "$(terraform output -raw acr_name)"
+      
+      - name: Build and push the Docker image
+        run: |
+          cd timeentrydenjs2
+          docker build -t $ACR_LOGIN_SERVER/timeentrydenext:latest .
+          docker push $ACR_LOGIN_SERVER/timeentrydenext:latest
+      
+      - name: Configure the Web App to use the Docker image
+        run: |
+          az webapp config container set \
+            --name "$(terraform output -raw web_app_name)" \
+            --resource-group "$(terraform output -raw resource_group_name)" \
+            --docker-registry-server-url "https://$ACR_LOGIN_SERVER" \
+            --docker-registry-server-user "$ACR_USERNAME" \
+            --docker-registry-server-password "$ACR_PASSWORD" \
+            --docker-custom-image-name "$ACR_LOGIN_SERVER/timeentrydenext:latest"

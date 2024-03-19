@@ -1,0 +1,1 @@
+az role assignment create --assignee "$AZURE_CLIENT_ID" --role Owner --scope /subscriptions/"$AZURE_SUBSCRIPTION_ID"

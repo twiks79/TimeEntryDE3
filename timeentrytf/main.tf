@@ -100,6 +100,49 @@ resource "azurerm_linux_web_app" "webapp" {
   }
 }
 
+resource "azurerm_log_analytics_workspace" "example" {
+  name                = "${local.resource_group_name}-logs"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.rg.name
+  sku                 = "PerGB2018"
+}
+
+resource "azurerm_monitor_diagnostic_setting" "webapp_logs" {
+  name                       = "${local.linux_web_app_name}-logs"
+  target_resource_id         = azurerm_linux_web_app.webapp.id
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.example.id
+
+  log {
+    category = "AppServiceConsoleLogs"
+    enabled  = true
+
+    retention_policy {
+      days    = 90
+      enabled = false
+    }
+  }
+
+  log {
+    category = "AppServiceHTTPLogs"
+    enabled  = true
+
+    retention_policy {
+      days    = 90
+      enabled = false
+    }
+  }
+
+  metric {
+    category = "AllMetrics"
+
+    retention_policy {
+      days    = 90
+      enabled = false
+    }
+  }
+}
+
+
 resource "azurerm_dns_zone" "dns" {
   name                = local.dns_zone_name
   resource_group_name = azurerm_resource_group.rg.name
@@ -113,12 +156,6 @@ resource "azurerm_app_service_custom_hostname_binding" "custom_hostname" {
 
 resource "azurerm_app_service_custom_hostname_binding" "custom_hostname_www" {
   hostname            = "www.${local.dns_zone_name}"
-  app_service_name    = azurerm_linux_web_app.webapp.name
-  resource_group_name = azurerm_resource_group.rg.name
-}
-
-resource "azurerm_app_service_custom_hostname_binding" "custom_hostname_dev" {
-  hostname            = "dev.${local.dns_zone_name}"
   app_service_name    = azurerm_linux_web_app.webapp.name
   resource_group_name = azurerm_resource_group.rg.name
 }
