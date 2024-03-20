@@ -36,7 +36,8 @@
                 "chakrounanas.turbo-console-log",
                 "aaron-bond.better-comments",
                 "hashicorp.terraform",
-                "ms-python.python"
+                "ms-python.python",
+                "github.vscode-github-actions"
             ],
             "settings": {
                 "workbench.colorTheme": "Light+ (default light)",
