@@ -3,6 +3,7 @@ name: Deploy Workflow 1
 on:
   workflow_dispatch: # Trigger on manual run
 
+
   #push:
     #branches:
       #- dev #main # Trigger on pushes to the main branch
@@ -10,6 +11,8 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    environment: TimeEntry  # Specify your environment name here
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
