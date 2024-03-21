@@ -13,6 +13,21 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
+
+      - name: Check Secret Access
+        run: |
+          echo "Checking if secrets are accessible..."
+          if [ -z "${{ secrets.AZURE_TENANT_ID }}" ]; then
+            echo "AZURE_TENANT_ID is not set."
+          else
+            echo "AZURE_TENANT_ID is set."
+          fi
+          echo "Checking if secrets are accessible..."
+          if [ -z "${{ secrets.AZURE_SUBSCRIPTION_ID }}" ]; then
+            echo "AZURE_SUBSCRIPTION_ID is not set."
+          else
+            echo "AZURE_SUBSCRIPTION_ID is set."
+          fi
       
       - name: Azure login
         uses: azure/login@v2
