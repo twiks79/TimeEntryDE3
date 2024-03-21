@@ -3,15 +3,9 @@ name: Deploy Workflow 1
 on:
   workflow_dispatch: # Trigger on manual run
 
-
-  #push:
-    #branches:
-      #- dev #main # Trigger on pushes to the main branch
-
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    environment: TimeEntry  # Specify your environment name here
 
     steps:
       - name: Checkout Repository
@@ -20,25 +14,17 @@ jobs:
       - name: Check Secret Access
         run: |
           echo "Checking if secrets are accessible..."
-          if [ -z "${{ secrets.AZURE_TENANT_ID }}" ]; then
-            echo "AZURE_TENANT_ID is not set."
+          if [ -z "${{ secrets.AZURE_CREDENTIALS }}" ]; then
+            echo "AZURE_CREDENTIALS is not set."
           else
-            echo "AZURE_TENANT_ID is set."
-          fi
-          echo "Checking if secrets are accessible..."
-          if [ -z "${{ secrets.AZURE_SUBSCRIPTION_ID }}" ]; then
-            echo "AZURE_SUBSCRIPTION_ID is not set."
-          else
-            echo "AZURE_SUBSCRIPTION_ID is set."
+            echo "AZURE_CREDENTIALS is set."
           fi
       
       - name: Azure login
         uses: azure/login@v2
         with:
-          auth-type: IDENTITY          
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          enable-AzPSSession: true
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1

@@ -1,3 +1,5 @@
 az login --use-device-code --tenant $AZURE_TENANT_ID
 az account list --output table
 az account show --query tenantId --output tsv
+az ad sp create-for-rbac --name SPTimeEntryAction --sdk-auth --role contributor --scopes /subscriptions/$AZURE_SUBSCRIPTION_ID
+
