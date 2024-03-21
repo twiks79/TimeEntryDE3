@@ -3,7 +3,7 @@ name: Deploy Workflow 1
 on:
   push:
     branches:
-      - main # Trigger on pushes to the main branch
+      - dev #main # Trigger on pushes to the main branch
 
 jobs:
   build-and-deploy:
