@@ -2,7 +2,7 @@ name: Deploy Workflow 1
 
 on:
   workflow_dispatch: # Trigger on manual run
-    
+
   #push:
     #branches:
       #- dev #main # Trigger on pushes to the main branch
@@ -17,7 +17,6 @@ jobs:
       - name: Set up Azure CLI
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CLIENT_SECRET }} # Azure Service Principal credentials
           client-id: ${{ secrets.AZURE_CLIENT_ID }} # Azure Service Principal client ID
           tenant-id: ${{ secrets.AZURE_TENANT_ID }} # Azure Service Principal tenant ID
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }} # Azure subscription ID
