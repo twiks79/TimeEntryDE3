@@ -26,21 +26,19 @@
                 "ms-azuretools.vscode-azurestaticwebapps",
                 "ms-azuretools.vscode-azurestorage",
                 "ms-azuretools.vscode-azurevirtualmachines",
-                "ms-azuretools.vscode-bicep",
                 "ms-azuretools.vscode-cosmosdb",
                 "ms-azuretools.vscode-docker",
                 "ms-dotnettools.vscode-dotnet-runtime",
                 "ms-vscode.azure-account",
                 "ms-vscode.azurecli",
                 "ms-vscode.vscode-node-azure-pack",
-                "chakrounanas.turbo-console-log",
-                "aaron-bond.better-comments",
                 "hashicorp.terraform",
                 "ms-python.python",
-                "github.vscode-github-actions"
+                "github.vscode-github-actions",
+                "esbenp.prettier-vscode"
             ],
             "settings": {
-                "workbench.colorTheme": "Light+ (default light)",
+                "workbench.colorTheme": "GitHub Light", 
                 "azureFunctions.preDeployTask": "yarn run build",
                 "workbench.colorCustomizations": {
                     "tree.indentGuidesStroke": "#00ff00"
@@ -50,7 +48,9 @@
                 "workbench.tree.renderIndentGuides": "always",
                 "editor.guides.highlightActiveIndentation": "always",
                 "terminal.integrated.shell.linux": "/bin/zsh",
-                "terminal.integrated.defaultProfile.linux": "zsh"
+                "terminal.integrated.defaultProfile.linux": "zsh",
+                "editor.formatOnSave": true,
+                "editor.defaultFormatter": "esbenp.prettier-vscode"
             },
             "env": {
                 "AZURE_CLIENT_ID": "${{ secrets.AZURE_CLIENT_ID }}",

@@ -19,16 +19,15 @@ jobs:
           else
             echo "AZURE_CREDENTIALS is set."
           fi
-      
+
       - name: Azure login
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-        
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
-      
+
       - name: Terraform Init
         run: |
           cd timentrytf  
@@ -37,39 +36,49 @@ jobs:
 
           export TF_VAR_acr_username="$ACR_USERNAME"
           export TF_VAR_acr_password="$ACR_PASSWORD"
- 
+          export ARM_TENANT_ID=$AZURE_TENANT_ID
+          export ARM_SUBSCRIPTION_ID=$AZURE_SUBSCRIPTION_ID
+          export ARM_CLIENT_ID=$AZURE_CLIENT_ID
+          export ARM_CLIENT_SECRET=$AZURE_CLIENT_SECRET
+
+
           terraform init
           terraform refresh
-      
+
+      - name: Terraform Plan
+        run: terraform plan -var="acr_username=${TF_VAR_acr_username}" -var="acr_password=${TF_VAR_acr_password}"
+
       - name: Terraform Apply
-        run: #terraform apply -auto-approve
-      
+        run: terraform apply -var="acr_username=${TF_VAR_acr_username}" -var="acr_password=${TF_VAR_acr_password}" -auto-approve
+
       - name: Retrieve the Container Registry login server
-        run: #echo "ACR_LOGIN_SERVER=$(terraform output -raw acr_login_server)" >> $GITHUB_ENV
-      
+        run: echo "ACR_LOGIN_SERVER=$(terraform output -raw acr_login_server)" >> $GITHUB_ENV
+
       - name: Retrieve ACR Credentials
-        run: #|
-          #ACR_CREDENTIALS=$(az acr credential show --name "$(terraform output -raw acr_name)" --resource-group "$(terraform output -raw resource_group_name)")
-          #ACR_USERNAME=$(echo $ACR_CREDENTIALS | jq -r '.username')
-          #ACR_PASSWORD=$(echo $ACR_CREDENTIALS | jq -r '.passwords[0].value')
-          #echo "ACR_USERNAME=$ACR_USERNAME" >> $GITHUB_ENV
-          #echo "ACR_PASSWORD=$ACR_PASSWORD" >> $GITHUB_ENV
-      
+        run: |
+          ACR_CREDENTIALS=$(az acr credential show --name "$(terraform output -raw acr_name)" --resource-group "$(terraform output -raw resource_group_name)")
+          ACR_USERNAME=$(echo $ACR_CREDENTIALS | jq -r '.username')
+          ACR_PASSWORD=$(echo $ACR_CREDENTIALS | jq -r '.passwords[0].value')
+          echo "ACR_USERNAME=$ACR_USERNAME" >> $GITHUB_ENV
+          echo "ACR_PASSWORD=$ACR_PASSWORD" >> $GITHUB_ENV
+
       - name: Log into the Container Registry
-        run: #az acr login --name "$(terraform output -raw acr_name)"
-      
+        run: az acr login --name "$(terraform output -raw acr_name)"
+
       - name: Build and push the Docker image
         run: |
-          #cd timeentrydenjs2
-          #docker build -t $ACR_LOGIN_SERVER/timeentrydenext:latest .
-          #docker push $ACR_LOGIN_SERVER/timeentrydenext:latest
-      
-#      - name: Configure the Web App to use the Docker image
-#        run: |
-#          az webapp config container set \
-#            --name "$(terraform output -raw web_app_name)" \
-#            --resource-group "$(terraform output -raw resource_group_name)" \
-#            --docker-registry-server-url "https://$ACR_LOGIN_SERVER" \
-#            --docker-registry-server-user "$ACR_USERNAME" \
-#            --docker-registry-server-password "$ACR_PASSWORD" \
-#            --docker-custom-image-name "$ACR_LOGIN_SERVER/timeentrydenext:latest"
+          cd ..
+          echo "Current directory is $(pwd)"
+          cd timeentrydenjs2
+          docker build -t $ACR_LOGIN_SERVER/timeentrydenext:latest .
+          docker push $ACR_LOGIN_SERVER/timeentrydenext:latest
+
+      - name: Configure the Web App to use the Docker image
+        run: |
+          az webapp config container set \
+            --name "$(terraform output -raw web_app_name)" \
+            --resource-group "$(terraform output -raw resource_group_name)" \
+            --docker-registry-server-url "https://$ACR_LOGIN_SERVER" \
+            --docker-registry-server-user "$ACR_USERNAME" \
+            --docker-registry-server-password "$ACR_PASSWORD" \
+            --docker-custom-image-name "$ACR_LOGIN_SERVER/timeentrydenext:latest"
