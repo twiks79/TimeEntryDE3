@@ -47,11 +47,14 @@ jobs:
           terraform init
           terraform refresh
           terraform plan -var="acr_username=${TF_VAR_acr_username}" -var="acr_password=${TF_VAR_acr_password}"
+          terraform apply -auto-approve -var="acr_username=${TF_VAR_acr_username}" -var="acr_password=${TF_VAR_acr_password}"
 
       - name: Retrieve the Container Registry login server
-        run: echo "ACR_LOGIN_SERVER=$(terraform output -raw acr_login_server)" >> $GITHUB_ENV
-
-      - name: Retrieve ACR Credentials
+        run: |
+          cd timeentrytf  
+          echo "ACR_LOGIN_SERVER=$(terraform output -raw acr_login_server)" >> $GITHUB_ENV
+      
+          - name: Retrieve ACR Credentials
         run: |
           ACR_CREDENTIALS=$(az acr credential show --name "$(terraform output -raw acr_name)" --resource-group "$(terraform output -raw resource_group_name)")
           ACR_USERNAME=$(echo $ACR_CREDENTIALS | jq -r '.username')
