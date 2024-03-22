@@ -32,6 +32,7 @@ jobs:
         run: |
           echo "Current directory is $(pwd)"
           cd timeentrytf  
+          echo "Current directory is $(pwd)"
           ACR_USERNAME=$(az acr credential show --name "timeentrydenextacr3333" --query username --output tsv)
           ACR_PASSWORD=$(az acr credential show --name "timeentrydenextacr3333" --query "passwords[0].value" --output tsv)
 
@@ -42,15 +43,13 @@ jobs:
           export ARM_CLIENT_ID=$AZURE_CLIENT_ID
           export ARM_CLIENT_SECRET=$AZURE_CLIENT_SECRET
 
-
+          echo "Current directory is $(pwd)"
           terraform init
           terraform refresh
-
-      - name: Terraform Plan
-        run: terraform plan -var="acr_username=${TF_VAR_acr_username}" -var="acr_password=${TF_VAR_acr_password}"
+          terraform plan -var="acr_username=${TF_VAR_acr_username}" -var="acr_password=${TF_VAR_acr_password}"
 
       - name: Terraform Apply
-        run: terraform apply -var="acr_username=${TF_VAR_acr_username}" -var="acr_password=${TF_VAR_acr_password}" -auto-approve
+        # run: terraform apply -var="acr_username=${TF_VAR_acr_username}" -var="acr_password=${TF_VAR_acr_password}" -auto-approve
 
       - name: Retrieve the Container Registry login server
         run: echo "ACR_LOGIN_SERVER=$(terraform output -raw acr_login_server)" >> $GITHUB_ENV
