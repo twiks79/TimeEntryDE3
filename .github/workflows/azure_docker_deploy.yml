@@ -48,9 +48,6 @@ jobs:
           terraform refresh
           terraform plan -var="acr_username=${TF_VAR_acr_username}" -var="acr_password=${TF_VAR_acr_password}"
 
-      - name: Terraform Apply
-        # run: terraform apply -var="acr_username=${TF_VAR_acr_username}" -var="acr_password=${TF_VAR_acr_password}" -auto-approve
-
       - name: Retrieve the Container Registry login server
         run: echo "ACR_LOGIN_SERVER=$(terraform output -raw acr_login_server)" >> $GITHUB_ENV
 
