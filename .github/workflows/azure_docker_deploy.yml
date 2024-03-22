@@ -31,7 +31,7 @@ jobs:
       - name: Terraform Init
         run: |
           echo "Current directory is $(pwd)"
-          cd timentrytf  
+          cd timeentrytf  
           ACR_USERNAME=$(az acr credential show --name "timeentrydenextacr3333" --query username --output tsv)
           ACR_PASSWORD=$(az acr credential show --name "timeentrydenextacr3333" --query "passwords[0].value" --output tsv)
 
