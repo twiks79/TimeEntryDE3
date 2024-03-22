@@ -30,6 +30,7 @@ jobs:
 
       - name: Terraform Init
         run: |
+          echo "Current directory is $(pwd)"
           cd timentrytf  
           ACR_USERNAME=$(az acr credential show --name "timeentrydenextacr3333" --query username --output tsv)
           ACR_PASSWORD=$(az acr credential show --name "timeentrydenextacr3333" --query "passwords[0].value" --output tsv)
@@ -67,9 +68,11 @@ jobs:
 
       - name: Build and push the Docker image
         run: |
+          echo "Current directory is $(pwd)"
           cd ..
           echo "Current directory is $(pwd)"
           cd timeentrydenjs2
+          echo "Current directory is $(pwd)"
           docker build -t $ACR_LOGIN_SERVER/timeentrydenext:latest .
           docker push $ACR_LOGIN_SERVER/timeentrydenext:latest
 
