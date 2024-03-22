@@ -13,13 +13,13 @@ DNS_ZONE="timeentry-minijob.com"
 SUBSCRIPTION_ID=$AZURE_SUBSCRIPTION_ID
 
 # Check if SPTimeEntry service principal exists and create if not
-SP_EXISTS=$(az ad sp list --display-name "SPTimeEntry" --query "length([].appId)" -o tsv)
-if [ "$SP_EXISTS" -eq "0" ]; then
-    echo "Creating SPTimeEntry service principal..."
-    az ad sp create-for-rbac --name "SPTimeEntry" --role="Contributor" --scopes="/subscriptions/$AZURE_SUBSCRIPTION_ID"
-else
-    echo "SPTimeEntry service principal already exists."
-fi
+#SP_EXISTS=$(az ad sp list --display-name "SPTimeEntry" --query "length([].appId)" -o tsv)
+#if [ "$SP_EXISTS" -eq "0" ]; then
+#    echo "Creating SPTimeEntry service principal..."
+#    az ad sp create-for-rbac --name "SPTimeEntry" --role="Contributor" --scopes="/subscriptions/$AZURE_SUBSCRIPTION_ID"
+#else
+#    echo "SPTimeEntry service principal already exists."
+#fi
 
 # Get the client ID and secret of the service principal
 echo "Retrieving SPTimeEntry credentials..."
