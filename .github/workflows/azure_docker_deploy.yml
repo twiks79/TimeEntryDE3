@@ -49,24 +49,16 @@ jobs:
           terraform plan -var="acr_username=${TF_VAR_acr_username}" -var="acr_password=${TF_VAR_acr_password}"
           terraform apply -auto-approve -var="acr_username=${TF_VAR_acr_username}" -var="acr_password=${TF_VAR_acr_password}"
 
-      - name: Retrieve the Container Registry login server
+      - name: Push Docker Image
         run: |
           cd timeentrytf  
           echo "ACR_LOGIN_SERVER=$(terraform output -raw acr_login_server)" >> $GITHUB_ENV
-      
-          - name: Retrieve ACR Credentials
-        run: |
           ACR_CREDENTIALS=$(az acr credential show --name "$(terraform output -raw acr_name)" --resource-group "$(terraform output -raw resource_group_name)")
           ACR_USERNAME=$(echo $ACR_CREDENTIALS | jq -r '.username')
           ACR_PASSWORD=$(echo $ACR_CREDENTIALS | jq -r '.passwords[0].value')
           echo "ACR_USERNAME=$ACR_USERNAME" >> $GITHUB_ENV
           echo "ACR_PASSWORD=$ACR_PASSWORD" >> $GITHUB_ENV
-
-      - name: Log into the Container Registry
-        run: az acr login --name "$(terraform output -raw acr_name)"
-
-      - name: Build and push the Docker image
-        run: |
+          az acr login --name "$(terraform output -raw acr_name)"
           echo "Current directory is $(pwd)"
           cd ..
           echo "Current directory is $(pwd)"
@@ -74,9 +66,6 @@ jobs:
           echo "Current directory is $(pwd)"
           docker build -t $ACR_LOGIN_SERVER/timeentrydenext:latest .
           docker push $ACR_LOGIN_SERVER/timeentrydenext:latest
-
-      - name: Configure the Web App to use the Docker image
-        run: |
           az webapp config container set \
             --name "$(terraform output -raw web_app_name)" \
             --resource-group "$(terraform output -raw resource_group_name)" \
