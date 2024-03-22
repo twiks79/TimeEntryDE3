@@ -39,12 +39,12 @@ variable "acr_password" {
 }
 
 locals {
-  resource_group_name    = "${var.core_name}${var.unique_number}"
-  acr_name               = "${var.core_name}acr${var.unique_number}"
-  app_service_plan_name  = "${var.core_name}AppService-${var.unique_number}"
-  linux_web_app_name     = "${var.core_name}WebApp-${var.unique_number}"
-  dns_zone_name          = "timeentry-minijob.com"
-  common_tags            = {}
+  resource_group_name   = "${var.core_name}${var.unique_number}"
+  acr_name              = "${var.core_name}acr${var.unique_number}"
+  app_service_plan_name = "${var.core_name}AppService-${var.unique_number}"
+  linux_web_app_name    = "${var.core_name}WebApp-${var.unique_number}"
+  dns_zone_name         = "timeentry-minijob.com"
+  common_tags           = {}
 }
 
 resource "azurerm_resource_group" "rg" {

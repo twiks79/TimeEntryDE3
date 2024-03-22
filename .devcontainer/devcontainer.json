@@ -50,6 +50,7 @@
                 "terminal.integrated.shell.linux": "/bin/zsh",
                 "terminal.integrated.defaultProfile.linux": "zsh",
                 "editor.formatOnSave": true,
+                "explorer.sortOrder": "type",
                 "editor.defaultFormatter": "esbenp.prettier-vscode"
             },
             "env": {
